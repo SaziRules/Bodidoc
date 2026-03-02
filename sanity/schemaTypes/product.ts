@@ -76,9 +76,40 @@ export const productType = defineType({
     defineField({
       name: "shortDescription",
       title: "Short Description",
-      description: "One sentence shown on the product card",
+      description: "One sentence shown on the product card and hero panel",
       type: "text",
       rows: 2,
+    }),
+    // ── NEW: full product description ──────────────────────────────────────────
+    defineField({
+      name: "description",
+      title: "Product Description",
+      description: "Full paragraph(s) shown on the product page below the short description — supports bold, italic, and links",
+      type: "array",
+      of: [
+        {
+          type: "block",
+          styles: [
+            { title: "Normal", value: "normal" },
+          ],
+          marks: {
+            decorators: [
+              { title: "Bold", value: "strong" },
+              { title: "Italic", value: "em" },
+            ],
+            annotations: [
+              {
+                name: "link",
+                type: "object",
+                title: "Link",
+                fields: [
+                  { name: "href", type: "url", title: "URL" },
+                ],
+              },
+            ],
+          },
+        },
+      ],
     }),
     defineField({
       name: "mainImage",
@@ -96,7 +127,7 @@ export const productType = defineType({
     defineField({
       name: "ingredientStripImage",
       title: "Ingredient Strip / Banner Image",
-      description: "The wide ingredient highlight banner shown on the product page",
+      description: "The wide ingredient highlight banner shown on the product page (Featherlight / Quick Absorption etc.)",
       type: "image",
       options: { hotspot: true },
     }),
@@ -175,6 +206,23 @@ export const productType = defineType({
       title: "Display Order",
       type: "number",
       description: "Lower number = shown first",
+    }),
+    // ── NEW: ratings ──────────────────────────────────────────────────────────
+    defineField({
+      name: "rating",
+      title: "Average Rating",
+      type: "number",
+      description: "Average star rating 0–5 (supports decimals e.g. 4.5)",
+      validation: (r) => r.min(0).max(5),
+      initialValue: 0,
+    }),
+    defineField({
+      name: "reviewCount",
+      title: "Review Count",
+      type: "number",
+      description: "Total number of customer reviews",
+      validation: (r) => r.min(0).integer(),
+      initialValue: 0,
     }),
   ],
   preview: {

@@ -89,6 +89,7 @@ export type Product = {
   size?: string;
   badge?: string;
   shortDescription?: string;
+  description?: any[];  // Portable Text blocks
   mainImage: SanityImageSource;
   galleryImages?: SanityImageSource[];
   ingredientStripImage?: SanityImageSource;
@@ -100,6 +101,8 @@ export type Product = {
   isBestseller?: boolean;
   isFeatured?: boolean;
   order?: number;
+  rating?: number;       // 0–5, supports 0.5 increments
+  reviewCount?: number;  // total number of reviews
 };
 
 // ─── Product Queries ──────────────────────────────────────────────────────────
@@ -108,7 +111,8 @@ export async function getAllProducts(): Promise<Product[]> {
   return client.fetch(
     `*[_type == "product"] | order(order asc) {
       _id, name, slug, range, productType, skinType, size, badge,
-      shortDescription, mainImage, isBestseller, isFeatured, order
+      shortDescription, mainImage, isBestseller, isFeatured, order,
+      rating, reviewCount
     }`
   );
 }
@@ -117,9 +121,9 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
   return client.fetch(
     `*[_type == "product" && slug.current == $slug][0] {
       _id, name, slug, range, productType, skinType, size, badge,
-      shortDescription, mainImage, galleryImages, ingredientStripImage,
+      shortDescription, description, mainImage, galleryImages, ingredientStripImage,
       benefits, isItForMe, provenResults, ingredients, buyLinks,
-      isBestseller, isFeatured
+      isBestseller, isFeatured, rating, reviewCount
     }`,
     { slug }
   );
@@ -129,7 +133,7 @@ export async function getFeaturedProducts(): Promise<Product[]> {
   return client.fetch(
     `*[_type == "product" && isFeatured == true] | order(order asc) {
       _id, name, slug, range, productType, skinType, size, badge,
-      shortDescription, mainImage, isBestseller
+      shortDescription, mainImage, isBestseller, rating, reviewCount
     }`
   );
 }

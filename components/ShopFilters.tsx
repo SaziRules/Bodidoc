@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { urlFor } from "@/sanity/lib/sanity";
@@ -13,7 +13,6 @@ type Props = {
   types: FilterOption[];
   skins: FilterOption[];
   products: Product[];
-  mobile?: boolean;
 };
 
 const typeLabels: Record<string, string> = {
@@ -23,60 +22,297 @@ const typeLabels: Record<string, string> = {
   "body-lotion": "Body Lotion",
 };
 
-function ProductCard({ product }: { product: Product }) {
+// ─── Star Rating ──────────────────────────────────────────────────────────────
+
+function StarRating({ rating, count }: { rating: number; count: number }) {
   return (
-    <Link href={`/shop/${product.slug.current}`} className="group flex flex-col">
-      <div className="relative overflow-hidden bg-[#f8f6f3] aspect-square mb-4">
-        <Image
-          src={urlFor(product.mainImage).width(600).height(600).url()}
-          alt={product.name}
-          fill
-          className="object-contain p-6 transition-transform duration-700 group-hover:scale-105"
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-        />
-        {product.badge && (
-          <span className="absolute top-3 left-3 px-2.5 py-1 bg-[#112942] text-[9px] tracking-[0.2em] uppercase text-white font-light">
-            {product.badge}
-          </span>
-        )}
-        {product.isBestseller && !product.badge && (
-          <span className="absolute top-3 left-3 px-2.5 py-1 bg-white border border-[#112942]/20 text-[9px] tracking-[0.2em] uppercase text-[#112942] font-light">
-            Bestseller
-          </span>
-        )}
-        <div className="absolute inset-x-0 bottom-0 flex justify-center pb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <span className="text-[10px] tracking-[0.2em] uppercase text-[#112942] font-light bg-white px-4 py-2 shadow-sm">
-            View Product
-          </span>
-        </div>
+    <div className="flex items-center gap-1 mt-1.5">
+      <div className="flex items-center gap-0.5">
+        {[1, 2, 3, 4, 5].map((star) => {
+          const filled = rating >= star;
+          const half   = !filled && rating >= star - 0.5;
+          return (
+            <span
+              key={star}
+              className={`text-[14px] leading-none ${
+                filled ? "text-[#112942]" : half ? "text-[#112942]/60" : "text-[#ccc]"
+              }`}
+            >
+              ★
+            </span>
+          );
+        })}
       </div>
-      <div className="flex flex-col gap-1">
-        <p className="text-[10px] tracking-[0.15em] uppercase text-[#112942]/40 font-light">
-          {typeLabels[product.productType] ?? product.productType}
-        </p>
-        <h3 className="font-display text-[16px] font-normal text-[#112942] leading-snug group-hover:opacity-70 transition-opacity duration-200">
-          {product.name}
-        </h3>
-        {product.size && (
-          <p className="text-[12px] font-light text-[#999]">{product.size}</p>
-        )}
-        {product.shortDescription && (
-          <p className="text-[12px] font-light text-[#777] leading-relaxed mt-1 line-clamp-2">
-            {product.shortDescription}
-          </p>
-        )}
-        <span className="inline-flex items-center gap-1.5 mt-3 text-[10px] tracking-[0.15em] uppercase text-[#112942] font-light group-hover:gap-2.5 transition-all duration-200">
-          View Product
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3">
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-        </span>
-      </div>
-    </Link>
+      <span className="text-[12px] text-[#999] leading-none">({count})</span>
+    </div>
   );
 }
 
-// ─── Checkbox group ───────────────────────────────────────────────────────────
+// ─── Shop Modal ───────────────────────────────────────────────────────────────
+
+function ShopModal({
+  product,
+  onClose,
+}: {
+  product: Product;
+  onClose: () => void;
+}) {
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handler);
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", handler);
+      document.body.style.overflow = "";
+    };
+  }, [onClose]);
+
+  const buyLinks = product.buyLinks ?? [];
+
+  // Heuristic split: in-store retailers by name keyword
+  const inStoreKeywords = ["checkers", "shoprite", "spar", "clicks store", "dischem store", "pnp store", "pick n pay store"];
+  const onlineRetailers = buyLinks.filter(
+    (b) => !inStoreKeywords.some((k) => b.retailer?.toLowerCase().includes(k))
+  );
+  const inStoreRetailers = buyLinks.filter(
+    (b) => inStoreKeywords.some((k) => b.retailer?.toLowerCase().includes(k))
+  );
+
+  // If we can't split, show all under online
+  const showOnline = onlineRetailers.length > 0 ? onlineRetailers : buyLinks;
+  const showInStore = onlineRetailers.length > 0 ? inStoreRetailers : [];
+
+  const RetailerRow = ({
+    link,
+    label,
+  }: {
+    link: { retailer: string; url: string; logo?: any };
+    label: string;
+  }) => (
+    <a
+      href={link.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex items-center justify-between px-4 py-3.5 bg-[#f5f5f5] hover:bg-[#112942] group transition-colors duration-200"
+    >
+      <span className="text-[9px] tracking-[0.2em] uppercase font-light text-[#aaa] group-hover:text-white/50 transition-colors whitespace-nowrap">
+        {label}
+      </span>
+      {link.logo ? (
+        <div className="relative h-7 w-32 flex items-center justify-end shrink-0">
+          <Image
+            src={urlFor(link.logo).width(256).height(56).url()}
+            alt={link.retailer}
+            fill
+            className="object-contain object-right group-hover:brightness-0 group-hover:invert transition-all duration-200"
+          />
+        </div>
+      ) : (
+        <span className="text-[13px] font-normal text-[#112942] group-hover:text-white transition-colors font-display">
+          {link.retailer}
+        </span>
+      )}
+    </a>
+  );
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      onClick={onClose}
+    >
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
+
+      {/* Modal */}
+      <div
+        className="relative z-10 bg-white w-full max-w-105 shadow-2xl max-h-[90vh] overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 w-7 h-7 flex items-center justify-center text-[#112942]/30 hover:text-[#112942] transition-colors z-10"
+          aria-label="Close"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="w-4 h-4">
+            <path d="M18 6L6 18M6 6l12 12" />
+          </svg>
+        </button>
+
+        <div className="p-7">
+          {/* Product identity */}
+          <p className="text-[10px] tracking-[0.2em] uppercase text-[#112942]/40 font-light mb-1">
+            {typeLabels[product.productType] ?? product.productType}
+          </p>
+          <h2 className="font-display text-[19px] font-normal text-[#112942] leading-snug mb-5 pr-8">
+            {product.name}
+          </h2>
+          <div className="h-px bg-[#ebebeb] mb-6" />
+
+          {/* Shop Online */}
+          {showOnline.length > 0 && (
+            <div className="mb-6">
+              <p className="font-display text-[17px] font-normal text-[#112942] leading-none mb-1">
+                Shop <em className="italic">Online</em>
+              </p>
+              <p className="text-[12px] font-light text-[#aaa] mb-3.5">
+                Get your Bodidoc fix delivered to your door
+              </p>
+              <div className="flex flex-col gap-2">
+                {showOnline.map((link, i) => (
+                  <RetailerRow key={i} link={link} label="Shop online at" />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Find In-store */}
+          {showInStore.length > 0 && (
+            <div className="mb-6">
+              <p className="font-display text-[17px] font-normal text-[#112942] leading-none mb-1">
+                Find <em className="italic">In-store</em>
+              </p>
+              <p className="text-[12px] font-light text-[#aaa] mb-3.5">
+                Get your Bodidoc fix from your nearest store
+              </p>
+              <div className="flex flex-col gap-2">
+                {showInStore.map((link, i) => (
+                  <RetailerRow key={i} link={link} label="Shop in-store" />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Fallback: no links yet */}
+          {buyLinks.length === 0 && (
+            <div className="py-8 text-center">
+              <p className="text-[13px] font-light text-[#aaa] mb-5">
+                Stockist information coming soon.
+              </p>
+              <Link
+                href={`/shop/${product.slug.current}`}
+                onClick={onClose}
+                className="inline-flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase text-[#112942] font-light border border-[#112942]/20 px-5 py-2.5 hover:bg-[#112942] hover:text-white transition-all duration-200"
+              >
+                View Product
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </div>
+          )}
+
+          {/* View full product details link */}
+          {buyLinks.length > 0 && (
+            <>
+              <div className="h-px bg-[#ebebeb] mt-2 mb-4" />
+              <Link
+                href={`/shop/${product.slug.current}`}
+                onClick={onClose}
+                className="inline-flex items-center gap-1.5 text-[10px] tracking-[0.15em] uppercase text-[#112942]/40 font-light hover:text-[#112942] hover:gap-2.5 transition-all duration-200"
+              >
+                View full product details
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Product Card ─────────────────────────────────────────────────────────────
+
+function ProductCard({ product }: { product: Product }) {
+  const [modalOpen, setModalOpen] = useState(false);
+
+  return (
+    <>
+      <div className="group flex flex-col">
+
+        {/* Image block */}
+        <Link
+          href={`/shop/${product.slug.current}`}
+          className="relative block w-full aspect-square bg-[#f7f7f7] overflow-hidden mb-3"
+        >
+          <Image
+            src={urlFor(product.mainImage).width(600).height(600).url()}
+            alt={product.name}
+            fill
+            className="object-contain p-4 transition-transform duration-300 group-hover:scale-105"
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          />
+
+          {/* Badge */}
+          {product.badge ? (
+            <span className="absolute top-3 left-3 px-2.5 py-1 bg-[#112942] text-[9px] tracking-[0.2em] uppercase text-white font-light">
+              {product.badge}
+            </span>
+          ) : product.isBestseller ? (
+            <span className="absolute top-3 left-3 px-2.5 py-1 bg-white border border-[#112942]/20 text-[9px] tracking-[0.2em] uppercase text-[#112942] font-light">
+              Bestseller
+            </span>
+          ) : null}
+
+          {/* Cart icon — opens shop modal */}
+          <button
+            aria-label={`Shop ${product.name}`}
+            className="
+              absolute bottom-3 right-3
+              w-9 h-9 rounded-full bg-[#112942] text-white
+              flex items-center justify-center
+              opacity-0 group-hover:opacity-100
+              translate-y-2 group-hover:translate-y-0
+              transition-all duration-200
+              shadow-md cursor-pointer border-0 z-10
+            "
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setModalOpen(true);
+            }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="9" cy="21" r="1" />
+              <circle cx="20" cy="21" r="1" />
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+            </svg>
+          </button>
+        </Link>
+
+        {/* Text */}
+        <div className="flex flex-col">
+          <p className="text-[12px] font-light tracking-wide text-[#112942] mb-1">
+            {typeLabels[product.productType] ?? product.productType}
+          </p>
+          <Link
+            href={`/shop/${product.slug.current}`}
+            className="text-[15px] font-normal text-[#112942] leading-snug no-underline hover:underline"
+          >
+            {product.name}
+          </Link>
+          <StarRating
+            rating={(product as { rating?: number }).rating ?? 0}
+            count={(product as { reviewCount?: number }).reviewCount ?? 0}
+          />
+        </div>
+
+      </div>
+
+      {/* Shop modal */}
+      {modalOpen && (
+        <ShopModal product={product} onClose={() => setModalOpen(false)} />
+      )}
+    </>
+  );
+}
+
+// ─── Filter Group ─────────────────────────────────────────────────────────────
 
 function FilterGroup({
   title,
@@ -121,9 +357,9 @@ function FilterGroup({
               <label
                 key={opt.value}
                 className="flex items-center gap-2.5 cursor-pointer group/check"
+                onClick={() => onToggle(opt.value)}
               >
                 <span
-                  onClick={() => onToggle(opt.value)}
                   className={`w-4 h-4 border flex items-center justify-center shrink-0 transition-colors duration-150 ${
                     active
                       ? "bg-[#112942] border-[#112942]"
@@ -137,7 +373,6 @@ function FilterGroup({
                   )}
                 </span>
                 <span
-                  onClick={() => onToggle(opt.value)}
                   className={`text-[12px] font-light transition-colors duration-150 ${
                     active ? "text-[#112942]" : "text-[#666] group-hover/check:text-[#112942]"
                   }`}
@@ -153,169 +388,216 @@ function FilterGroup({
   );
 }
 
-// ─── Main component ───────────────────────────────────────────────────────────
+// ─── Active Filter Pills ──────────────────────────────────────────────────────
 
-export default function ShopFilters({ ranges, types, skins, products, mobile = false }: Props) {
+function ActiveFilters({
+  ranges, types, skins,
+  selectedRanges, selectedTypes, selectedSkins,
+  onRemoveRange, onRemoveType, onRemoveSkin, onClearAll,
+}: {
+  ranges: FilterOption[]; types: FilterOption[]; skins: FilterOption[];
+  selectedRanges: string[]; selectedTypes: string[]; selectedSkins: string[];
+  onRemoveRange: (v: string) => void; onRemoveType: (v: string) => void;
+  onRemoveSkin: (v: string) => void; onClearAll: () => void;
+}) {
+  const all = [
+    ...selectedRanges.map((v) => ({ v, label: ranges.find((r) => r.value === v)?.label ?? v, remove: onRemoveRange })),
+    ...selectedTypes.map((v) => ({ v, label: types.find((t) => t.value === v)?.label ?? v, remove: onRemoveType })),
+    ...selectedSkins.map((v) => ({ v, label: skins.find((s) => s.value === v)?.label ?? v, remove: onRemoveSkin })),
+  ];
+  if (all.length === 0) return null;
+  return (
+    <div className="flex flex-wrap items-center gap-2 mb-6">
+      {all.map(({ v, label, remove }) => (
+        <button key={v} onClick={() => remove(v)}
+          className="inline-flex items-center gap-1.5 px-3 py-1 border border-[#112942]/20 text-[10px] tracking-widest uppercase text-[#112942] font-light hover:bg-[#112942] hover:text-white hover:border-[#112942] transition-all duration-150 group">
+          {label}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="w-2.5 h-2.5 opacity-50 group-hover:opacity-100">
+            <path d="M18 6L6 18M6 6l12 12" />
+          </svg>
+        </button>
+      ))}
+      <button onClick={onClearAll} className="text-[10px] tracking-widest uppercase text-[#999] font-light hover:text-[#112942] transition-colors ml-1">
+        Clear all
+      </button>
+    </div>
+  );
+}
+
+// ─── Sort ─────────────────────────────────────────────────────────────────────
+
+type SortKey = "default" | "name-asc" | "name-desc";
+
+function sortProducts(products: Product[], sort: SortKey): Product[] {
+  if (sort === "name-asc") return [...products].sort((a, b) => a.name.localeCompare(b.name));
+  if (sort === "name-desc") return [...products].sort((a, b) => b.name.localeCompare(a.name));
+  return products;
+}
+
+// ─── Main ─────────────────────────────────────────────────────────────────────
+
+export default function ShopFilters({ ranges, types, skins, products }: Props) {
   const [selectedRanges, setSelectedRanges] = useState<string[]>([]);
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [selectedSkins, setSelectedSkins] = useState<string[]>([]);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [sort, setSort] = useState<SortKey>("default");
 
-  const toggle = (
-    setter: React.Dispatch<React.SetStateAction<string[]>>,
-    value: string
-  ) => {
-    setter((prev) =>
-      prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]
-    );
-  };
+  const toggle = (setter: React.Dispatch<React.SetStateAction<string[]>>, value: string) =>
+    setter((prev) => prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]);
 
   const filtered = useMemo(() => {
-    return products.filter((p) => {
+    const base = products.filter((p) => {
       const rangeMatch = selectedRanges.length === 0 || selectedRanges.includes(p.range);
       const typeMatch = selectedTypes.length === 0 || selectedTypes.includes(p.productType);
-      const skinMatch =
-        selectedSkins.length === 0 ||
-        (p.skinType ?? []).some((s) => selectedSkins.includes(s));
+      const skinMatch = selectedSkins.length === 0 || (p.skinType ?? []).some((s) => selectedSkins.includes(s));
       return rangeMatch && typeMatch && skinMatch;
     });
-  }, [products, selectedRanges, selectedTypes, selectedSkins]);
+    return sortProducts(base, sort);
+  }, [products, selectedRanges, selectedTypes, selectedSkins, sort]);
 
   const activeCount = selectedRanges.length + selectedTypes.length + selectedSkins.length;
+  const clearAll = () => { setSelectedRanges([]); setSelectedTypes([]); setSelectedSkins([]); };
 
-  const clearAll = () => {
-    setSelectedRanges([]);
-    setSelectedTypes([]);
-    setSelectedSkins([]);
-  };
+  const chevronSvg = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23112942' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`;
 
-  const sidebarContent = (
+  const sidebar = (
     <>
-      {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <p className="text-[10px] tracking-[0.2em] uppercase text-[#112942] font-light">
-          Filter By
-        </p>
+        <p className="text-[10px] tracking-[0.2em] uppercase text-[#112942] font-light">Filter By</p>
         {activeCount > 0 && (
-          <button
-            onClick={clearAll}
-            className="text-[10px] tracking-widest uppercase text-[#999] font-light hover:text-[#112942] transition-colors"
-          >
-            Clear all ({activeCount})
+          <button onClick={clearAll} className="text-[10px] tracking-widest uppercase text-[#999] font-light hover:text-[#112942] transition-colors">
+            Clear ({activeCount})
           </button>
         )}
       </div>
-
-      <FilterGroup
-        title="Range"
-        options={ranges}
-        selected={selectedRanges}
-        onToggle={(v) => toggle(setSelectedRanges, v)}
-      />
-      <FilterGroup
-        title="Product Type"
-        options={types}
-        selected={selectedTypes}
-        onToggle={(v) => toggle(setSelectedTypes, v)}
-      />
-      <FilterGroup
-        title="Skin Type"
-        options={skins}
-        selected={selectedSkins}
-        onToggle={(v) => toggle(setSelectedSkins, v)}
-      />
+      <FilterGroup title="Range" options={ranges} selected={selectedRanges} onToggle={(v) => toggle(setSelectedRanges, v)} />
+      <FilterGroup title="Product Type" options={types} selected={selectedTypes} onToggle={(v) => toggle(setSelectedTypes, v)} />
+      <FilterGroup title="Skin Type" options={skins} selected={selectedSkins} onToggle={(v) => toggle(setSelectedSkins, v)} />
     </>
   );
 
-  // ── Mobile layout ─────────────────────────────────────────────────────────
+  const sortSelect = (mobile = false) => (
+    <select
+      value={sort}
+      onChange={(e) => setSort(e.target.value as SortKey)}
+      className={`text-[11px] font-light text-[#112942] border border-[#e0e0e0] bg-white focus:outline-none focus:border-[#112942] transition-colors appearance-none cursor-pointer ${
+        mobile ? "px-2.5 py-1.5 pr-6" : "px-3 py-1.5 pr-7"
+      }`}
+      style={{ backgroundImage: chevronSvg, backgroundRepeat: "no-repeat", backgroundPosition: `right ${mobile ? "6px" : "8px"} center`, backgroundSize: `${mobile ? "12px" : "14px"}` }}
+    >
+      <option value="default">Featured</option>
+      <option value="name-asc">{mobile ? "A–Z" : "Name A–Z"}</option>
+      <option value="name-desc">{mobile ? "Z–A" : "Name Z–A"}</option>
+    </select>
+  );
 
-  if (mobile) {
-    return (
-      <div className="w-full mb-8">
-        {/* Filter toggle button */}
-        <div className="flex items-center justify-between mb-6">
+  const gridHeader = (
+    <div className="mb-8">
+      <div className="flex items-center justify-between mb-4">
+        <p className="text-[12px] font-light text-[#666]">
+          {filtered.length} product{filtered.length !== 1 ? "s" : ""}
+        </p>
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] tracking-[0.15em] uppercase text-[#999] font-light hidden sm:block">Sort</span>
+          {sortSelect()}
+        </div>
+      </div>
+      <ActiveFilters
+        ranges={ranges} types={types} skins={skins}
+        selectedRanges={selectedRanges} selectedTypes={selectedTypes} selectedSkins={selectedSkins}
+        onRemoveRange={(v) => toggle(setSelectedRanges, v)}
+        onRemoveType={(v) => toggle(setSelectedTypes, v)}
+        onRemoveSkin={(v) => toggle(setSelectedSkins, v)}
+        onClearAll={clearAll}
+      />
+      <div className="h-px bg-[#e8e8e8]" />
+    </div>
+  );
+
+  const emptyState = (
+    <div className="py-20 text-center">
+      <p className="font-display text-[22px] text-[#112942]/30 font-normal mb-3">No products found</p>
+      <p className="text-[13px] font-light text-[#999] mb-6">Try adjusting or clearing your filters.</p>
+      <button onClick={clearAll} className="text-[10px] tracking-[0.2em] uppercase text-[#112942] font-light border border-[#112942]/20 px-5 py-2 hover:bg-[#112942] hover:text-white transition-all duration-200">
+        Clear filters
+      </button>
+    </div>
+  );
+
+  return (
+    <>
+      {/* ── Desktop ── */}
+      <div className="hidden md:flex gap-10 lg:gap-16 items-start">
+        <aside className="w-52 lg:w-60 shrink-0 sticky top-24 self-start">
+          {sidebar}
+        </aside>
+        <div className="flex-1 min-w-0">
+          {gridHeader}
+          {filtered.length === 0 ? emptyState : (
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12">
+              {filtered.map((p) => <ProductCard key={p._id} product={p} />)}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* ── Mobile ── */}
+      <div className="md:hidden">
+        <div className="flex items-center justify-between mb-4">
           <p className="text-[12px] font-light text-[#666]">
             {filtered.length} product{filtered.length !== 1 ? "s" : ""}
           </p>
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="flex items-center gap-2 border border-[#112942]/20 px-4 py-2 text-[10px] tracking-[0.15em] uppercase text-[#112942] font-light"
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
-              <line x1="4" y1="6" x2="20" y2="6" />
-              <line x1="4" y1="12" x2="14" y2="12" />
-              <line x1="4" y1="18" x2="10" y2="18" />
-            </svg>
-            Filter
-            {activeCount > 0 && (
-              <span className="w-4 h-4 rounded-full bg-[#112942] text-white text-[9px] flex items-center justify-center">
-                {activeCount}
-              </span>
-            )}
-          </button>
+          <div className="flex items-center gap-3">
+            {sortSelect(true)}
+            <button
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className="flex items-center gap-2 border border-[#112942]/20 px-4 py-1.5 text-[10px] tracking-[0.15em] uppercase text-[#112942] font-light"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+                <line x1="4" y1="6" x2="20" y2="6" /><line x1="4" y1="12" x2="14" y2="12" /><line x1="4" y1="18" x2="10" y2="18" />
+              </svg>
+              Filter
+              {activeCount > 0 && (
+                <span className="w-4 h-4 rounded-full bg-[#112942] text-white text-[9px] flex items-center justify-center">{activeCount}</span>
+              )}
+            </button>
+          </div>
         </div>
 
-        {/* Mobile drawer */}
+        <ActiveFilters
+          ranges={ranges} types={types} skins={skins}
+          selectedRanges={selectedRanges} selectedTypes={selectedTypes} selectedSkins={selectedSkins}
+          onRemoveRange={(v) => toggle(setSelectedRanges, v)}
+          onRemoveType={(v) => toggle(setSelectedTypes, v)}
+          onRemoveSkin={(v) => toggle(setSelectedSkins, v)}
+          onClearAll={clearAll}
+        />
+
         {mobileOpen && (
-          <div className="border border-[#e8e8e8] p-5 mb-6">
-            {sidebarContent}
+          <div className="border border-[#e8e8e8] p-5 mb-6 bg-white">
+            {sidebar}
             <button
               onClick={() => setMobileOpen(false)}
-              className="w-full mt-2 py-2.5 bg-[#112942] text-white text-[10px] tracking-[0.15em] uppercase font-light"
+              className="w-full mt-2 py-2.5 bg-[#112942] text-white text-[10px] tracking-[0.15em] uppercase font-light hover:bg-[#1a3a5c] transition-colors duration-200"
             >
-              Show {filtered.length} results
+              Show {filtered.length} result{filtered.length !== 1 ? "s" : ""}
             </button>
           </div>
         )}
 
-        {/* Mobile grid */}
-        <div className="grid grid-cols-2 gap-x-4 gap-y-10">
-          {filtered.map((product) => (
-            <ProductCard key={product._id} product={product} />
-          ))}
-        </div>
-        {filtered.length === 0 && (
-          <p className="text-[13px] font-light text-[#999] py-10 text-center">
-            No products match your filters.{" "}
-            <button onClick={clearAll} className="underline text-[#112942]">
+        {filtered.length === 0 ? (
+          <div className="py-16 text-center">
+            <p className="font-display text-[20px] text-[#112942]/30 font-normal mb-3">No products found</p>
+            <p className="text-[13px] font-light text-[#999] mb-5">Try adjusting your filters.</p>
+            <button onClick={clearAll} className="text-[10px] tracking-[0.2em] uppercase text-[#112942] font-light border border-[#112942]/20 px-5 py-2">
               Clear filters
             </button>
-          </p>
-        )}
-      </div>
-    );
-  }
-
-  // ── Desktop layout — sidebar only, grid rendered separately ─────────────
-
-  return (
-    <>
-      {/* Sidebar */}
-      <div>{sidebarContent}</div>
-
-      {/* Desktop grid — rendered outside via portal-style sibling */}
-      {/* NOTE: We use a global event approach — sidebar sets state, grid reads it via prop drilling.
-          Since sidebar and grid share this component via mobile/desktop split in the server page,
-          on desktop we render the grid HERE inside the client component. */}
-      <style>{`#shop-grid { display: none !important; }`}</style>
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center justify-between mb-8">
-          <p className="text-[12px] font-light text-[#666]">
-            {filtered.length} product{filtered.length !== 1 ? "s" : ""}
-          </p>
-        </div>
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12">
-          {filtered.map((product) => (
-            <ProductCard key={product._id} product={product} />
-          ))}
-        </div>
-        {filtered.length === 0 && (
-          <p className="text-[13px] font-light text-[#999] py-16">
-            No products match your filters.{" "}
-            <button onClick={clearAll} className="underline text-[#112942]">
-              Clear filters
-            </button>
-          </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 gap-x-4 gap-y-10">
+            {filtered.map((p) => <ProductCard key={p._id} product={p} />)}
+          </div>
         )}
       </div>
     </>
