@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import FAQAccordion, { type FAQItem } from "@/components/FAQAccordion";
 
 const FacebookIcon = () => (
   <svg viewBox="0 0 512 512" fill="currentColor" className="w-3.5 h-3.5">
@@ -78,7 +79,7 @@ function ContactForm() {
     setErrors(errs);
     if (Object.keys(errs).length > 0) return;
     setStatus("submitting");
-    setTimeout(() => setStatus("sent"), 1200); // TODO: replace with Supabase insert
+    setTimeout(() => setStatus("sent"), 1200);
   };
 
   if (status === "sent") {
@@ -116,21 +117,6 @@ function ContactForm() {
   );
 }
 
-function FaqItem({ q, a }: { q: string; a: string }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className="border-b border-[#e8e8e8] group">
-      <button onClick={() => setOpen(!open)} className="w-full flex items-start justify-between py-5 text-left cursor-pointer bg-transparent border-0 gap-6">
-        <span className="text-[13px] font-normal text-[#112942] leading-relaxed">{q}</span>
-        <span className={`mt-0.5 w-5 h-5 shrink-0 rounded-full border flex items-center justify-center text-sm leading-none transition-all duration-300 ${open ? "bg-[#112942] border-[#112942] text-white rotate-45" : "border-[#112942]/25 text-[#112942] group-hover:border-[#112942]"}`}>+</span>
-      </button>
-      <div className={`overflow-hidden transition-all duration-300 ${open ? "max-h-96 pb-5" : "max-h-0"}`}>
-        <p className="text-[13px] font-light text-[#666] leading-relaxed">{a}</p>
-      </div>
-    </div>
-  );
-}
-
 const socialLinks = [
   { href: "https://www.facebook.com/bodidoc/", icon: <FacebookIcon />, label: "Facebook" },
   { href: "https://www.instagram.com/bodidoc/", icon: <InstagramIcon />, label: "Instagram" },
@@ -138,7 +124,7 @@ const socialLinks = [
   { href: "https://www.youtube.com/channel/UCiY8H3AZObpv4RqKhGQJy3Q/featured", icon: <YouTubeIcon />, label: "YouTube" },
 ];
 
-const faqs = [
+const faqs: FAQItem[] = [
   { q: "Where can I buy Bodidoc products?", a: "Bodidoc products are available through a network of trusted retailers and distributors. To find a stockist near you or online, simply check the stockist information listed on each product page in our \"All Products\" section." },
   { q: "How can I become a stockist or distributor of Bodidoc products?", a: "We welcome inquiries from businesses interested in becoming a stockist or distributor of Bodidoc products. Please visit Amka.co.za or email info@amka.co.za for more information." },
   { q: "How can I work for Bodidoc?", a: "We are always on the lookout for local talent for our upcoming campaigns. Please send an email to hello@bodidoc.co.za and we will be in touch. Thank you for your interest in working with us!" },
@@ -178,7 +164,7 @@ export default function ContactPage() {
         {/* ── Row 1: Contact details | Form ── */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 lg:gap-24 mb-20 pb-20 border-b border-[#e8e8e8]">
 
-          {/* Left — Contact details */}
+          {/* Left — contact details */}
           <div className="flex flex-col gap-8">
             <div>
               <p className="text-[10px] tracking-[0.25em] uppercase text-[#112942]/40 font-light mb-2">Customer Care</p>
@@ -208,11 +194,11 @@ export default function ContactPage() {
             </div>
           </div>
 
-          {/* Right — Form */}
+          {/* Right — form */}
           <ContactForm />
         </div>
 
-        {/* ── Row 2: Map (OpenStreetMap — no API key required) ── */}
+        {/* ── Row 2: Map ── */}
         <div className="w-full mb-20 border border-[#e8e8e8] overflow-hidden" style={{ height: "380px" }}>
           <iframe
             src="https://www.openstreetmap.org/export/embed.html?bbox=28.1720%2C-25.7150%2C28.1920%2C-25.7000&layer=mapnik&marker=-25.7075%2C28.1820"
@@ -228,11 +214,11 @@ export default function ContactPage() {
         <div>
           <div className="mb-10">
             <p className="text-[10px] tracking-[0.25em] uppercase text-[#112942]/40 font-light mb-2">Got Questions?</p>
-            <h2 className="font-display text-[28px] md:text-[36px] font-normal text-[#112942]">Frequently Asked Questions</h2>
+            <h2 className="font-display text-[28px] md:text-[36px] font-normal text-[#112942]">
+              Frequently Asked Questions
+            </h2>
           </div>
-          <div className="border-t border-[#e8e8e8]">
-            {faqs.map((faq) => <FaqItem key={faq.q} q={faq.q} a={faq.a} />)}
-          </div>
+          <FAQAccordion faqs={faqs} />
         </div>
 
       </div>

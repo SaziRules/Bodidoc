@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 
-type FAQ = { q: string; a: string };
-
 const ingredients = [
   {
     name: "Evening Primrose Oil",
@@ -83,21 +81,20 @@ export function TissueOilIngredients() {
     <section className="max-w-4xl mx-auto px-10 py-16 md:py-20">
       <div className="flex flex-col md:flex-row items-start gap-10 md:gap-0">
 
-        {/* Left */}
         <div className="md:w-56 shrink-0 flex flex-col gap-0 md:pr-8">
-          <span className="font-display italic text-[#112942] leading-none" style={{ fontSize: "clamp(52px, 5.5vw, 72px)" }}>Key</span>
+          <span className="font-display italic text-[#112942] leading-none" style={{ fontSize: "clamp(52px, 5.5vw, 72px)" }}>
+            Key
+          </span>
           <span className="text-[14px] font-light text-[#112942] tracking-wide mt-1">ingredients</span>
           <div className="mt-4 flex flex-col gap-0">
-            {["formulated", "with 5", "beneficial", "oils!"].map((w) => (
-              <span key={w} className="font-display font-normal text-[#112942] text-[17px] leading-snug">{w}</span>
+            {["formulated", "with 5", "beneficial", "oils!"].map((line) => (
+              <span key={line} className="font-display font-normal text-[#112942] text-[17px] leading-snug">{line}</span>
             ))}
           </div>
         </div>
 
-        {/* Vertical divider */}
         <div className="hidden md:block w-px bg-[#c8d4dc] self-stretch mx-2" />
 
-        {/* Right */}
         <div className="flex-1 md:pl-12 flex flex-col gap-6">
           <div>
             <h3 className="font-display font-normal text-[#112942] leading-snug mb-3" style={{ fontSize: "clamp(18px, 1.8vw, 24px)" }}>
@@ -105,8 +102,6 @@ export function TissueOilIngredients() {
             </h3>
             <p className="text-[13px] font-light text-[#555] leading-relaxed">{current.description}</p>
           </div>
-
-          {/* Icon tabs */}
           <div className="flex items-center gap-6 md:gap-8 mt-2">
             {ingredients.map((ing, i) => (
               <button key={i} onClick={() => setActive(i)} aria-label={ing.name} title={ing.name} className="p-0 bg-transparent border-0 cursor-pointer text-[#112942] shrink-0">
@@ -118,34 +113,5 @@ export function TissueOilIngredients() {
 
       </div>
     </section>
-  );
-}
-
-export function TissueOilFAQs({ faqs }: { faqs: FAQ[] }) {
-  const [open, setOpen] = useState<number | null>(null);
-
-  return (
-    <div className="flex flex-col divide-y divide-[#e8e8e8] border-t border-[#e8e8e8]">
-      {faqs.map((faq, i) => {
-        const isOpen = open === i;
-        return (
-          <div key={i}>
-            <button onClick={() => setOpen(isOpen ? null : i)} className="w-full flex items-center justify-between py-5 text-left group cursor-pointer bg-transparent border-0">
-              <span className={`text-[14px] font-normal leading-snug pr-6 transition-colors duration-150 ${isOpen ? "text-[#112942]" : "text-[#112942]/70 group-hover:text-[#112942]"}`}>
-                {faq.q}
-              </span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={`w-4 h-4 shrink-0 transition-all duration-200 ${isOpen ? "rotate-180 text-[#112942]" : "text-[#112942]/30"}`}>
-                <path d="M6 9l6 6 6-6" />
-              </svg>
-            </button>
-            {isOpen && (
-              <div className="pb-5">
-                <p className="text-[13.5px] font-light text-[#555] leading-relaxed">{faq.a}</p>
-              </div>
-            )}
-          </div>
-        );
-      })}
-    </div>
   );
 }

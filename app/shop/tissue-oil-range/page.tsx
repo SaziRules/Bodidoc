@@ -3,18 +3,23 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { getAllProducts, getRangePage, urlFor } from "@/sanity/lib/sanity";
 import FullWidthBanner from "@/components/FullWidthBanner";
-import { TissueOilIngredients, TissueOilFAQs } from "@/components/TissueOilRangeClient";
+import FAQAccordion, { type FAQItem } from "@/components/FAQAccordion";
+import ProductCarousel, { type CarouselProduct } from "@/components/ProductCarousel";
+import { TissueOilIngredients } from "@/components/TissueOilRangeClient";
 
 export const metadata: Metadata = {
   title: "Tissue Oil Range | Bodidoc",
-  description: "Discover Bodidoc's Tissue Oil range — enriched with avocado oil, vitamin E, and evening primrose oil to reduce stretch marks, scarring, and uneven skin tone.",
+  description:
+    "Discover Bodidoc's Tissue Oil range — enriched with avocado oil, vitamin E, and evening primrose oil to reduce stretch marks, scarring, and uneven skin tone.",
   openGraph: {
     title: "Tissue Oil Range | Bodidoc",
     description: "Dermatologically tested. Clinically proven. Enriched with 5 beneficial oils.",
   },
 };
 
-const faqs = [
+// ─── FAQs ─────────────────────────────────────────────────────────────────────
+
+const faqs: FAQItem[] = [
   { q: "Does this remove stretch marks?", a: "While there is no definitive product that can completely 'remove' stretch marks, 9/10 women agree that Bodidoc Tissue Oil, Cream, & Lotion helps reduce the appearance of stretch marks. Our Tissue Oil is also clinically proven to reduce the appearance of stretch marks in 28 days." },
   { q: "Does this help uneven skin tone?", a: "While there is no definitive product that can completely even skin tone, 9/10 women agree that Bodidoc Tissue Oil, Cream, & Lotion helps reduce the appearance of uneven skin tone." },
   { q: "Does this help dry skin?", a: "9/10 women agree that Bodidoc Tissue Oil, Cream, & Lotion helps reduce the appearance of dry skin. Should you require a little extra moisture our Urea range is specifically formulated with added Urea & Glycerine for dry skin." },
@@ -27,38 +32,6 @@ const faqs = [
   { q: "Does Bodidoc tissue oil cream have UV protection?", a: "Bodidoc does not contain any SPF or UV protection. Our products are designed to be light, so any UV protection must be applied in addition to your Bodidoc products." },
 ];
 
-function StarRating({ rating, count }: { rating: number; count: number }) {
-  return (
-    <div className="flex items-center gap-1 mt-1.5">
-      <div className="flex items-center gap-0.5">
-        {[1, 2, 3, 4, 5].map((star) => {
-          const filled = rating >= star;
-          const half = !filled && rating >= star - 0.5;
-          return (
-            <span key={star} className={`text-[13px] leading-none ${filled ? "text-[#112942]" : half ? "text-[#112942]/50" : "text-[#ddd]"}`}>★</span>
-          );
-        })}
-      </div>
-      <span className="text-[11px] text-[#999] leading-none">({count})</span>
-    </div>
-  );
-}
-
-function RangeProductCard({ slug, image, category, name, rating, reviewCount }: {
-  slug: string; image: string; category: string; name: string; rating: number; reviewCount: number;
-}) {
-  return (
-    <Link href={`/shop/${slug}`} className="group flex flex-col no-underline">
-      <div className="relative w-full aspect-square bg-[#f7f7f7] overflow-hidden mb-3">
-        <Image src={image} alt={name} fill className="object-contain p-4 transition-transform duration-300 group-hover:scale-105" sizes="(max-width: 640px) 50vw, 25vw" />
-      </div>
-      <p className="text-[11px] font-light tracking-widest uppercase text-[#112942]/50 mb-1">{category}</p>
-      <p className="text-[14px] font-normal text-[#112942] leading-snug group-hover:underline">{name}</p>
-      <StarRating rating={rating} count={reviewCount} />
-    </Link>
-  );
-}
-
 const typeLabel: Record<string, string> = {
   "body-cream": "BODY CREAM",
   "body-oil": "BODY OIL",
@@ -66,110 +39,165 @@ const typeLabel: Record<string, string> = {
   "body-lotion": "BODY LOTION",
 };
 
+// ─── Page ─────────────────────────────────────────────────────────────────────
+
 export default async function TissueOilRangePage() {
   const [allProducts, rangePage] = await Promise.all([
     getAllProducts(),
     getRangePage("tissue-oil"),
   ]);
+
   const products = allProducts.filter((p) => p.range === "tissue-oil");
 
-  return (
-    <div className="w-full bg-white -mt-22.5">
+  // Serialise for the client carousel component
+  const carouselProducts: CarouselProduct[] = products.map((p) => ({
+    id: p._id,
+    slug: p.slug.current,
+    image: urlFor(p.mainImage).width(600).height(600).url(),
+    category: typeLabel[p.productType] ?? p.productType,
+    name: p.name,
+    rating: p.rating ?? 0,
+    reviewCount: p.reviewCount ?? 0,
+  }));
 
-      {/* Hero */}
+  return (
+    <div className="w-full bg-white -mt-16 md:-mt-22.5 lg:-mt-32.5">
+
+      {/* ── 1. Hero banner ──
+           The wrapper has a responsive negative top margin so the page slides
+           behind the navbar. This spacer div mirrors that value exactly so the
+           actual image starts right below the nav on every breakpoint.
+           Spacer: mobile 64px | md 90px | lg 130px (nav + topbar)          */}
       {rangePage?.heroImage && (
-        <section aria-label="Tissue Oil Range hero" className="relative w-full h-screen bg-white">
-          <div className={rangePage.heroMobileImage ? "hidden md:block" : "block"} style={{ position: "absolute", inset: 0 }}>
-            <Image src={urlFor(rangePage.heroImage).width(2560).url()} alt="Bodidoc Tissue Oil Range — enriched with 5 beneficial oils" fill className="object-contain object-center" priority draggable={false} />
+        <section aria-label="Tissue Oil Range hero" className="w-full bg-white">
+
+          {/* Nav-height spacer — white background blends seamlessly behind nav */}
+          <div className="h-16 md:h-22.5 lg:h-32.5" />
+
+          {/* Desktop — natural dimensions, never cropped */}
+          <div className={`w-full ${rangePage.heroMobileImage ? "hidden md:block" : "block"}`}>
+            <Image
+              src={urlFor(rangePage.heroImage).width(2560).url()}
+              alt="Say goodbye to stretch marks, uneven skin tone & dry skin — 9 out of 10 women agree"
+              width={2560}
+              height={893}
+              className="w-full h-auto"
+              priority
+              draggable={false}
+            />
           </div>
+
+          {/* Mobile — portrait fill cropped to 3:4 */}
           {rangePage.heroMobileImage && (
-            <div className="block md:hidden" style={{ position: "absolute", inset: 0 }}>
-              <Image src={urlFor(rangePage.heroMobileImage).width(768).url()} alt="Bodidoc Tissue Oil Range — enriched with 5 beneficial oils" fill className="object-contain object-center" priority draggable={false} />
+            <div className="relative w-full aspect-3/4 block md:hidden">
+              <Image
+                src={urlFor(rangePage.heroMobileImage).width(768).url()}
+                alt="Say goodbye to stretch marks, uneven skin tone & dry skin — 9 out of 10 women agree"
+                fill
+                className="object-cover object-center"
+                priority
+                draggable={false}
+              />
             </div>
           )}
+
         </section>
       )}
 
-      {/* Lifestyle banner 1 */}
+      {/* ── 2. Intro + Product Carousel ── */}
+      <section className="py-16 md:py-20">
+
+        {/* Centered intro copy — constrained */}
+        <div className="max-w-360 mx-auto px-6 md:px-10 lg:px-16 mb-12">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2
+              className="font-display font-medium text-[#112942] leading-tight mb-4 uppercase"
+              style={{ fontSize: "clamp(17px, 1.4vw, 27px)", letterSpacing: "0.1em" }}
+            >
+              Enriched with Tissue Oil.
+            </h2>
+            <p className="text-[14px] font-normal text-[#444] leading-relaxed">
+              Enriched with a specialised formulation of ingredients, including avocado oil, vitamin E, and evening
+              primrose oil, each product is designed with a light, easily absorbed texture to give the skin a natural
+              glow. Bodidoc's dermatologically tested Tissue Oil range is formulated to help moisturise the skin,
+              reduce the appearance of stretch marks and scarring, and improve skin tone. The sensational signature
+              scent has made Bodidoc a cult favourite for both men and women!
+            </p>
+          </div>
+        </div>
+
+        {/* Carousel — full ProductGrid width */}
+        {carouselProducts.length > 0 && (
+          <div className="max-w-360 mx-auto px-6 md:px-10 lg:px-16">
+            <ProductCarousel products={carouselProducts} />
+          </div>
+        )}
+      </section>
+
+      {/* ── 3. Lifestyle banner — "9 out of 10 women agree" lotion ── */}
       {rangePage?.heroBannerImage && (
         <FullWidthBanner
           src={urlFor(rangePage.heroBannerImage).width(1536).height(536).url()}
-          mobileSrc={rangePage.heroBannerMobileImage ? urlFor(rangePage.heroBannerMobileImage).width(768).height(768).url() : undefined}
-          alt="Bodidoc Tissue Oil — enriched with tissue oil"
+          mobileSrc={
+            rangePage.heroBannerMobileImage
+              ? urlFor(rangePage.heroBannerMobileImage).width(768).height(768).url()
+              : undefined
+          }
+          alt="9 out of 10 women agree — Bodidoc Tissue Oil Lotion reduces the appearance of stretch marks, uneven skin tone and dry skin"
         />
       )}
 
-      {/* Intro + Product Grid */}
-      <section>
-        <div className="max-w-4xl mx-auto px-10 py-16 md:py-20">
-          <div className="max-w-2xl mb-12">
-            <h2 className="font-display font-normal text-[#112942] leading-tight mb-4" style={{ fontSize: "clamp(17px, 1.4vw, 20px)", textTransform: "uppercase", letterSpacing: "0.1em" }}>
-              Enriched with Tissue Oil.
-            </h2>
-            <p className="text-[13px] font-light text-[#444] leading-relaxed" style={{ textAlign: "justify" }}>
-              Enriched with a specialised formulation of ingredients, including avocado oil, vitamin E, and evening primrose oil, each product is designed with a light, easily absorbed texture to give the skin a natural glow. Bodidoc's dermatologically tested Tissue Oil range is formulated to help moisturise the skin, reduce the appearance of stretch marks and scarring, and improve skin tone. The sensational signature scent has made Bodidoc a cult favourite for both men and women!
-            </p>
-          </div>
-          {products.length > 0 && (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-              {products.map((product) => (
-                <RangeProductCard
-                  key={product._id}
-                  slug={product.slug.current}
-                  image={urlFor(product.mainImage).width(600).height(600).url()}
-                  category={typeLabel[product.productType] ?? product.productType}
-                  name={product.name}
-                  rating={product.rating ?? 0}
-                  reviewCount={product.reviewCount ?? 0}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
+      {/* ── 4. Key ingredients (icon tabs) ── */}
+      <TissueOilIngredients />
 
-      {/* Derm-tested banner */}
+      {/* ── 5. Clinically proven banner ── */}
       {rangePage?.dermBannerImage && (
         <FullWidthBanner
           src={urlFor(rangePage.dermBannerImage).width(1536).url()}
-          mobileSrc={rangePage.dermBannerMobileImage ? urlFor(rangePage.dermBannerMobileImage).width(768).height(500).url() : undefined}
-          alt="Bodidoc Tissue Oil Lotion — for all skin types"
+          mobileSrc={
+            rangePage.dermBannerMobileImage
+              ? urlFor(rangePage.dermBannerMobileImage).width(768).height(500).url()
+              : undefined
+          }
+          alt="Bodidoc Tissue Oil — clinically proven to reduce stretch marks and scars in 28 days"
         />
       )}
 
-      {/* Key ingredients */}
-      <TissueOilIngredients />
-
-      {/* Clinically proven banner */}
-      {rangePage?.heroBannerImage && (
-        <FullWidthBanner
-          src={urlFor(rangePage.heroBannerImage).width(1536).height(536).url()}
-          mobileSrc={rangePage.heroBannerMobileImage ? urlFor(rangePage.heroBannerMobileImage).width(768).height(768).url() : undefined}
-          alt="Clinically proven to reduce the appearance of stretch marks and scars in 28 days"
-        />
-      )}
-
-      {/* FAQ */}
+      {/* ── 6. FAQ ── */}
       <section>
         <div className="max-w-4xl mx-auto px-10 py-16 md:py-20">
           <div className="mb-10">
-            <h2 className="font-display font-normal text-[#112942] leading-snug mb-1" style={{ fontSize: "clamp(24px, 3vw, 32px)" }}>
-              Frequently Asked <em className="italic">Questions</em>
+            <h2
+              className="font-display font-medium text-[#112942] leading-snug mb-1"
+              style={{ fontSize: "clamp(24px, 3vw, 32px)" }}
+            >
+              Frequently Asked{" "}
+              <em className="italic">Questions</em>
             </h2>
-            <p className="text-[13px] font-light text-[#888]">Find out more about Bodidoc Tissue Oil Range</p>
+            <p className="text-[14px] font-normal text-[#888]">
+              Find out more about Bodidoc Tissue Oil Range
+            </p>
           </div>
-          <TissueOilFAQs faqs={faqs} />
+          <FAQAccordion faqs={faqs} />
         </div>
       </section>
 
-      {/* Bottom nav */}
+      {/* ── 7. Bottom nav ── */}
       <div className="border-t border-[#e8e8e8]">
         <div className="max-w-360 mx-auto px-6 md:px-10 lg:px-16 py-8 flex items-center justify-between">
-          <Link href="/shop" className="inline-flex items-center gap-2 text-[11px] tracking-[0.15em] uppercase text-[#112942] font-light hover:gap-3 transition-all duration-200">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>
+          <Link
+            href="/shop"
+            className="inline-flex items-center gap-2 text-[11px] tracking-[0.15em] uppercase text-[#112942] font-light hover:gap-3 transition-all duration-200"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+              <path d="M19 12H5M12 19l-7-7 7-7" />
+            </svg>
             All Products
           </Link>
-          <Link href="/shop/aqueous-range" className="text-[11px] font-light text-[#999] tracking-wide hover:text-[#112942] transition-colors">
+          <Link
+            href="/shop/aqueous-range"
+            className="text-[11px] font-light text-[#999] tracking-wide hover:text-[#112942] transition-colors"
+          >
             Aqueous Range →
           </Link>
         </div>

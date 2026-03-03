@@ -167,8 +167,8 @@ function ProductsMegaMenu() {
         <ul className="flex flex-col gap-2.5 list-none p-0 m-0">
           {[
             { label: "All Products", href: "/shop" },
-            { label: "Aqueous Range", href: "/products/aqueous-range" },
-            { label: "Tissue Oil Range", href: "/products/tissue-oil-range" },
+            { label: "Aqueous Range", href: "/shop/aqueous-range" },
+            { label: "Tissue Oil Range", href: "/shop/tissue-oil-range" },
           ].map(({ label, href }) => (
             <li key={label}>
               <Link href={href} className="text-[13px] text-bd-muted hover:text-bd-dark transition-colors duration-200 no-underline">
@@ -203,7 +203,7 @@ function ProductsMegaMenu() {
         <p className="text-[11px] font-bold tracking-widest text-bd-dark uppercase mb-3.5">
           OUR #1 BESTSELLER
         </p>
-        <Link href="/product/bodidoc-tissue-oil-cream-2" className="block no-underline">
+        <Link href="/shop/bodidoc-tissue-oil-cream-for-normal-skin" className="block no-underline">
           <div className="relative w-full h-43.75 overflow-hidden rounded-sm bg-gray-100">
             <Image src="/images/mega-menu-bestseller.webp" alt="Bodidoc Tissue Oil Cream" fill className="object-cover" />
           </div>
@@ -220,7 +220,7 @@ function MomentsMegaMenu() {
     <div className="max-w-360 mx-auto px-10 py-7 grid grid-cols-[1fr_1px_1.4fr_1px_1.4fr] min-h-50">
       {/* Col 1: Featured article 1 */}
       <div className="px-2">
-        <Link href="/award-winning-products" className="block no-underline group">
+        <Link href="/moments/transform-dry-uneven-skin-with-the-award-winning-bodidoc-tissue-oil-cream-with-urea" className="block no-underline group">
           <div className="relative w-full h-40 overflow-hidden rounded-sm bg-gray-100 mb-2.5">
             <Image src="/images/moments-award.png" alt="Voted the #1 smoothing cream with urea" fill className="object-cover" />
           </div>
@@ -238,7 +238,7 @@ function MomentsMegaMenu() {
 
       {/* Col 2: Featured article 2 */}
       <div className="px-2">
-        <Link href="/our-commitment-to-sustainable-packaging" className="block no-underline group">
+        <Link href="/moments/our-commitment-to-sustainable-packaging" className="block no-underline group">
           <div className="relative w-full h-40 overflow-hidden rounded-sm bg-gray-100 mb-2.5">
             <Image src="/images/moments-sustainability.png" alt="Our Commitment to Sustainable Packaging" fill className="object-cover" />
           </div>
@@ -260,8 +260,8 @@ function MomentsMegaMenu() {
         <ul className="flex flex-col gap-2.5 list-none p-0 m-0">
           {[
             { label: "See All", href: "/moments" },
-            { label: "Embracing Your Bodi: A Journey of Self-Love and Acceptance", href: "/embracing-your-bodi-a-journey-of-self-love-and-acceptance" },
-            { label: "Beyond The Bin: Give Your Bodidoc Packaging A Second Life", href: "/beyond-the-bin-give-your-bodidoc-packaging-a-second-life" },
+            { label: "Embracing Your Bodi: A Journey of Self-Love and Acceptance", href: "/moments/embracing-your-bodi-a-journey-of-self-love-and-acceptance" },
+            { label: "Beyond The Bin: Give Your Bodidoc Packaging A Second Life", href: "/moments/beyond-the-bin-give-your-bodidoc-packaging-a-second-life" },
           ].map(({ label, href }) => (
             <li key={href}>
               <Link href={href} className="text-[13px] text-bd-muted hover:text-bd-dark transition-colors duration-200 no-underline leading-snug block">

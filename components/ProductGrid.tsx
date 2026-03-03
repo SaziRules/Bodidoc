@@ -21,7 +21,7 @@ type Product = {
 const newArrivals: Product[] = [
   {
     id: 612,
-    slug: "bodidoc-tissue-oil-jelly-with-aloe-vera",
+    slug: "bodidoc-tissue-oil-jelly-with-aloe-vera-for-all-skin-types",
     image: "https://bodidoc1.optimizedit.co.za/wp-content/uploads/2024/12/7-1-600x600.png",
     category: "PETROLEUM JELLY",
     name: "Bodidoc Tissue Oil Jelly with Aloe Vera for All Skin Types",
@@ -30,7 +30,7 @@ const newArrivals: Product[] = [
   },
   {
     id: 613,
-    slug: "bodidoc-tissue-oil",
+    slug: "bodidoc-tissue-oil-for-all-skin-types",
     image: "https://bodidoc1.optimizedit.co.za/wp-content/uploads/2024/12/8-600x600.png",
     category: "BODY OIL",
     name: "Bodidoc Tissue Oil for All Skin Types",
@@ -39,7 +39,7 @@ const newArrivals: Product[] = [
   },
   {
     id: 614,
-    slug: "bodidoc-aqueous-cream-2",
+    slug: "bodidoc-aqueous-cream-for-all-skin-types",
     image: "https://bodidoc1.optimizedit.co.za/wp-content/uploads/2024/12/9-600x600.png",
     category: "BODY CREAM",
     name: "Bodidoc Aqueous Cream for All Skin Types",
@@ -48,7 +48,7 @@ const newArrivals: Product[] = [
   },
   {
     id: 611,
-    slug: "bodidoc-tissue-oil-jelly",
+    slug: "bodidoc-tissue-oil-jelly-for-all-skin-types",
     image: "https://bodidoc1.optimizedit.co.za/wp-content/uploads/2024/12/6-600x600.png",
     category: "PETROLEUM JELLY",
     name: "Bodidoc Tissue Oil Jelly for All Skin Types",
@@ -60,7 +60,7 @@ const newArrivals: Product[] = [
 const bestSelling: Product[] = [
   {
     id: 608,
-    slug: "bodidoc-tissue-oil-cream-with-urea",
+    slug: "bodidoc-tissue-oil-cream-with-urea-for-dry-skin",
     image: "https://bodidoc1.optimizedit.co.za/wp-content/uploads/2024/12/2-600x600.png",
     category: "BODY CREAM",
     name: "Bodidoc Tissue Oil Cream with Urea for Dry Skin",
@@ -69,7 +69,7 @@ const bestSelling: Product[] = [
   },
   {
     id: 598,
-    slug: "bodidoc-tissue-oil-cream-2",
+    slug: "bodidoc-tissue-oil-cream-for-normal-skin",
     image: "https://bodidoc1.optimizedit.co.za/wp-content/uploads/2024/12/3-600x600.png",
     category: "BODY CREAM",
     name: "Bodidoc Tissue Oil Cream for Normal Skin",
@@ -78,7 +78,7 @@ const bestSelling: Product[] = [
   },
   {
     id: 610,
-    slug: "bodidoc-tissue-oil-lotion",
+    slug: "bodidoc-tissue-oil-lotion-for-normal-skin",
     image: "https://bodidoc1.optimizedit.co.za/wp-content/uploads/2024/12/4-600x600.png",
     category: "BODY LOTION",
     name: "Bodidoc Tissue Oil Lotion for Normal Skin",
@@ -87,7 +87,7 @@ const bestSelling: Product[] = [
   },
   {
     id: 609,
-    slug: "bodidoc-tissue-oil-lotion-with-urea",
+    slug: "bodidoc-tissue-oil-lotion-with-urea-for-dry-skin",
     image: "https://bodidoc1.optimizedit.co.za/wp-content/uploads/2024/12/5-600x600.png",
     category: "BODY LOTION",
     name: "Bodidoc Tissue Oil Lotion with Urea for Dry Skin",
@@ -130,7 +130,7 @@ function ProductCard({ product }: { product: Product }) {
 
       {/* Image container with cart badge */}
       <Link
-        href={`/product/${product.slug}`}
+        href={`/shop/${product.slug}`}
         className="relative block w-full aspect-square bg-[#f7f7f7] overflow-hidden mb-3"
       >
         <Image
