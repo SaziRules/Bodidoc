@@ -6,7 +6,7 @@ export const client = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET ?? "production",
   apiVersion: "2024-01-01",
-  useCdn: true,
+  useCdn: false,
 });
 
 const builder = imageUrlBuilder(client);
@@ -113,7 +113,9 @@ export async function getAllProducts(): Promise<Product[]> {
       _id, name, slug, range, productType, skinType, size, badge,
       shortDescription, mainImage, isBestseller, isFeatured, order,
       rating, reviewCount
-    }`
+    }`,
+    {},
+    { next: { revalidate: 60 } }
   );
 }
 
@@ -135,5 +137,33 @@ export async function getFeaturedProducts(): Promise<Product[]> {
       _id, name, slug, range, productType, skinType, size, badge,
       shortDescription, mainImage, isBestseller, rating, reviewCount
     }`
+  );
+}
+
+// ─── Range Page Types ─────────────────────────────────────────────────────────
+
+export type RangePage = {
+  // Banner 1 — hero splash
+  heroImage?: SanityImageSource;
+  heroMobileImage?: SanityImageSource;
+  // Banner 2 — lifestyle (mother + baby)
+  heroBannerImage?: SanityImageSource;
+  heroBannerMobileImage?: SanityImageSource;
+  // Banner 3 — derm-tested
+  dermBannerImage?: SanityImageSource;
+  dermBannerMobileImage?: SanityImageSource;
+};
+
+// ─── Range Page Queries ───────────────────────────────────────────────────────
+
+export async function getRangePage(range: string): Promise<RangePage | null> {
+  return client.fetch(
+    `*[_type == "rangePage" && range == $range][0]{
+      heroImage, heroMobileImage,
+      heroBannerImage, heroBannerMobileImage,
+      dermBannerImage, dermBannerMobileImage
+    }`,
+    { range },
+    { next: { revalidate: 60 } }
   );
 }

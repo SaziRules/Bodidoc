@@ -38,8 +38,8 @@ const rangeLabels: Record<string, string> = {
   "aqueous": "Aqueous Range",
 };
 const rangePageMap: Record<string, string> = {
-  "tissue-oil": "/products/tissue-oil-range",
-  "aqueous": "/products/aqueous-range",
+  "tissue-oil": "/shop/tissue-oil-range",
+  "aqueous": "/shop/aqueous-range",
 };
 const typeLabels: Record<string, string> = {
   "body-cream": "Body Cream",
