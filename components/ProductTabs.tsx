@@ -4,76 +4,127 @@ import { useState } from "react";
 import type { Product } from "@/sanity/lib/sanity";
 
 const tabs = [
-  { id: "benefits", label: "Benefits" },
-  { id: "for-me", label: "Is It For Me?" },
-  { id: "proven", label: "Proven Results" },
-  { id: "ingredients", label: "Ingredients" },
+  { id: "benefits",     label: "Benefits" },
+  { id: "for-me",       label: "Is It For Me?" },
+  { id: "proven",       label: "Proven Results" },
+  { id: "ingredients",  label: "Ingredients" },
 ];
+
+function TabContent({ product, id }: { product: Product; id: string }) {
+  return (
+    <>
+      {id === "benefits" && product.benefits && (
+        <ul className="flex flex-col gap-5 max-w-2xl">
+          {product.benefits.map((b, i) => (
+            <li key={i} className="flex items-start gap-4">
+              <span className="w-5 h-5 rounded-full bg-[#112942] flex items-center justify-center shrink-0 mt-0.5">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </span>
+              <div>
+                <p className="text-[14px] font-semibold text-[#112942] mb-0.5">{b.heading}</p>
+                {b.detail && (
+                  <p className="text-[13px] font-normal text-[#2f2f2f] leading-5.25">{b.detail}</p>
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {id === "for-me" && (
+        <p className="text-[13px] font-normal text-[#2f2f2f] leading-5.25 whitespace-pre-line max-w-2xl">
+          {product.isItForMe ?? "Information coming soon."}
+        </p>
+      )}
+
+      {id === "proven" && (
+        <p className="text-[13px] font-normal text-[#2f2f2f] leading-5 whitespace-pre-line max-w-2xl">
+          {product.provenResults ?? "Information coming soon."}
+        </p>
+      )}
+
+      {id === "ingredients" && (
+        <p className="text-[13px] font-normal text-[#2f2f2f] leading-loose max-w-2xl">
+          {product.ingredients ?? "Information coming soon."}
+        </p>
+      )}
+    </>
+  );
+}
 
 export default function ProductTabs({ product }: { product: Product }) {
   const [active, setActive] = useState("benefits");
+  const [openAccordion, setOpenAccordion] = useState<string | null>(null);
+
+  const toggleAccordion = (id: string) =>
+    setOpenAccordion((prev) => (prev === id ? null : id));
 
   return (
-    <div>
-      {/* Tab nav */}
-      <div className="flex gap-0 border-b border-[#e8e8e8] mb-8 overflow-x-auto">
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActive(tab.id)}
-            className={`px-5 py-3 text-[11px] tracking-[0.15em] uppercase font-light whitespace-nowrap border-b-2 transition-all duration-150 ${
-              active === tab.id
-                ? "border-[#112942] text-[#112942]"
-                : "border-transparent text-[#999] hover:text-[#112942]"
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Tab content */}
-      <div className="max-w-2xl">
-
-        {active === "benefits" && product.benefits && (
-          <ul className="flex flex-col gap-5">
-            {product.benefits.map((b, i) => (
-              <li key={i} className="flex items-start gap-4">
-                <span className="w-5 h-5 rounded-full bg-[#112942] flex items-center justify-center shrink-0 mt-0.5">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3">
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
+    <>
+      {/* ── Mobile: accordion ── */}
+      <div className="block md:hidden border-t border-[#121212]/30">
+        {tabs.map((tab) => {
+          const isOpen = openAccordion === tab.id;
+          return (
+            <div key={tab.id} className="border-b border-[#121212]/30">
+              <button
+                onClick={() => toggleAccordion(tab.id)}
+                className="w-full flex items-center justify-between py-6 text-[22px] tracking-widest uppercase bg-transparent border-0 cursor-pointer text-left"
+              >
+                <span className={isOpen ? "font-bold text-[#112942]" : "font-medium text-[#aaa]"}>
+                  {tab.label}
                 </span>
-                <div>
-                  <p className="text-[14px] font-normal text-[#112942] mb-0.5">{b.heading}</p>
-                  {b.detail && (
-                    <p className="text-[13px] font-light text-[#666] leading-relaxed">{b.detail}</p>
-                  )}
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className={`w-6 h-6 text-[#aaa] shrink-0 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+                >
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </button>
+
+              {isOpen && (
+                <div className="pb-5">
+                  <TabContent product={product} id={tab.id} />
                 </div>
-              </li>
-            ))}
-          </ul>
-        )}
+              )}
+            </div>
+          );
+        })}
+      </div>
 
-        {active === "for-me" && (
-          <p className="text-[14px] font-light text-[#555] leading-relaxed whitespace-pre-line">
-            {product.isItForMe ?? "Information coming soon."}
-          </p>
-        )}
+      {/* ── Desktop: sidebar layout — unchanged ── */}
+      <div className="hidden md:flex gap-0">
 
-        {active === "proven" && (
-          <p className="text-[14px] font-light text-[#555] leading-relaxed whitespace-pre-line">
-            {product.provenResults ?? "Information coming soon."}
-          </p>
-        )}
+        {/* Left: vertical tab labels */}
+        <div className="flex flex-col shrink-0 w-48 border-r border-[#e8e8e8] pt-6 pr-6">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActive(tab.id)}
+              className={`text-left py-3 text-[12px] tracking-[0.12em] uppercase transition-colors duration-150 bg-transparent border-0 cursor-pointer ${
+                active === tab.id
+                  ? "font-bold text-[#112942]"
+                  : "font-medium text-[#aaa] hover:text-[#112942]"
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
 
-        {active === "ingredients" && (
-          <p className="text-[13px] font-light text-[#777] leading-loose">
-            {product.ingredients ?? "Information coming soon."}
-          </p>
-        )}
+        {/* Right: content */}
+        <div className="flex-1 min-w-0 pt-6 pl-12">
+          <TabContent product={product} id={active} />
+        </div>
 
       </div>
-    </div>
+    </>
   );
 }

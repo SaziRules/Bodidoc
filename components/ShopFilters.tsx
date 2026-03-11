@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { urlFor } from "@/sanity/lib/sanity";
 import type { Product } from "@/sanity/lib/sanity";
+import BuyOnlineModal from "@/components/BuyOnlineModal";
 
 type FilterOption = { value: string; label: string };
 
@@ -48,184 +49,6 @@ function StarRating({ rating, count }: { rating: number; count: number }) {
   );
 }
 
-// ─── Shop Modal ───────────────────────────────────────────────────────────────
-
-function ShopModal({
-  product,
-  onClose,
-}: {
-  product: Product;
-  onClose: () => void;
-}) {
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", handler);
-    document.body.style.overflow = "hidden";
-    return () => {
-      window.removeEventListener("keydown", handler);
-      document.body.style.overflow = "";
-    };
-  }, [onClose]);
-
-  const buyLinks = product.buyLinks ?? [];
-
-  // Heuristic split: in-store retailers by name keyword
-  const inStoreKeywords = ["checkers", "shoprite", "spar", "clicks store", "dischem store", "pnp store", "pick n pay store"];
-  const onlineRetailers = buyLinks.filter(
-    (b) => !inStoreKeywords.some((k) => b.retailer?.toLowerCase().includes(k))
-  );
-  const inStoreRetailers = buyLinks.filter(
-    (b) => inStoreKeywords.some((k) => b.retailer?.toLowerCase().includes(k))
-  );
-
-  // If we can't split, show all under online
-  const showOnline = onlineRetailers.length > 0 ? onlineRetailers : buyLinks;
-  const showInStore = onlineRetailers.length > 0 ? inStoreRetailers : [];
-
-  const RetailerRow = ({
-    link,
-    label,
-  }: {
-    link: { retailer: string; url: string; logo?: any };
-    label: string;
-  }) => (
-    <a
-      href={link.url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="flex items-center justify-between px-4 py-3.5 bg-[#f5f5f5] hover:bg-[#112942] group transition-colors duration-200"
-    >
-      <span className="text-[9px] tracking-[0.2em] uppercase font-light text-[#aaa] group-hover:text-white/50 transition-colors whitespace-nowrap">
-        {label}
-      </span>
-      {link.logo ? (
-        <div className="relative h-7 w-32 flex items-center justify-end shrink-0">
-          <Image
-            src={urlFor(link.logo).width(256).height(56).url()}
-            alt={link.retailer}
-            fill
-            className="object-contain object-right group-hover:brightness-0 group-hover:invert transition-all duration-200"
-          />
-        </div>
-      ) : (
-        <span className="text-[13px] font-normal text-[#112942] group-hover:text-white transition-colors font-display">
-          {link.retailer}
-        </span>
-      )}
-    </a>
-  );
-
-  return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      onClick={onClose}
-    >
-      {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
-
-      {/* Modal */}
-      <div
-        className="relative z-10 bg-white w-full max-w-105 shadow-2xl max-h-[90vh] overflow-y-auto"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Close button */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 w-7 h-7 flex items-center justify-center text-[#112942]/30 hover:text-[#112942] transition-colors z-10"
-          aria-label="Close"
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="w-4 h-4">
-            <path d="M18 6L6 18M6 6l12 12" />
-          </svg>
-        </button>
-
-        <div className="p-7">
-          {/* Product identity */}
-          <p className="text-[10px] tracking-[0.2em] uppercase text-[#112942]/40 font-light mb-1">
-            {typeLabels[product.productType] ?? product.productType}
-          </p>
-          <h2 className="font-display text-[19px] font-normal text-[#112942] leading-snug mb-5 pr-8">
-            {product.name}
-          </h2>
-          <div className="h-px bg-[#ebebeb] mb-6" />
-
-          {/* Shop Online */}
-          {showOnline.length > 0 && (
-            <div className="mb-6">
-              <p className="font-display text-[17px] font-normal text-[#112942] leading-none mb-1">
-                Shop <em className="italic">Online</em>
-              </p>
-              <p className="text-[12px] font-light text-[#aaa] mb-3.5">
-                Get your Bodidoc fix delivered to your door
-              </p>
-              <div className="flex flex-col gap-2">
-                {showOnline.map((link, i) => (
-                  <RetailerRow key={i} link={link} label="Shop online at" />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Find In-store */}
-          {showInStore.length > 0 && (
-            <div className="mb-6">
-              <p className="font-display text-[17px] font-normal text-[#112942] leading-none mb-1">
-                Find <em className="italic">In-store</em>
-              </p>
-              <p className="text-[12px] font-light text-[#aaa] mb-3.5">
-                Get your Bodidoc fix from your nearest store
-              </p>
-              <div className="flex flex-col gap-2">
-                {showInStore.map((link, i) => (
-                  <RetailerRow key={i} link={link} label="Shop in-store" />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Fallback: no links yet */}
-          {buyLinks.length === 0 && (
-            <div className="py-8 text-center">
-              <p className="text-[13px] font-light text-[#aaa] mb-5">
-                Stockist information coming soon.
-              </p>
-              <Link
-                href={`/shop/${product.slug.current}`}
-                onClick={onClose}
-                className="inline-flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase text-[#112942] font-light border border-[#112942]/20 px-5 py-2.5 hover:bg-[#112942] hover:text-white transition-all duration-200"
-              >
-                View Product
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3">
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-              </Link>
-            </div>
-          )}
-
-          {/* View full product details link */}
-          {buyLinks.length > 0 && (
-            <>
-              <div className="h-px bg-[#ebebeb] mt-2 mb-4" />
-              <Link
-                href={`/shop/${product.slug.current}`}
-                onClick={onClose}
-                className="inline-flex items-center gap-1.5 text-[10px] tracking-[0.15em] uppercase text-[#112942]/40 font-light hover:text-[#112942] hover:gap-2.5 transition-all duration-200"
-              >
-                View full product details
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3">
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-              </Link>
-            </>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 // ─── Product Card ─────────────────────────────────────────────────────────────
 
 function ProductCard({ product }: { product: Product }) {
@@ -235,7 +58,6 @@ function ProductCard({ product }: { product: Product }) {
     <>
       <div className="group flex flex-col">
 
-        {/* Image block */}
         <Link
           href={`/shop/${product.slug.current}`}
           className="relative block w-full aspect-square bg-[#f7f7f7] overflow-hidden mb-3"
@@ -248,7 +70,6 @@ function ProductCard({ product }: { product: Product }) {
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           />
 
-          {/* Badge */}
           {product.badge ? (
             <span className="absolute top-3 left-3 px-2.5 py-1 bg-[#112942] text-[9px] tracking-[0.2em] uppercase text-white font-light">
               {product.badge}
@@ -259,54 +80,51 @@ function ProductCard({ product }: { product: Product }) {
             </span>
           ) : null}
 
-          {/* Cart icon — opens shop modal */}
           <button
             aria-label={`Shop ${product.name}`}
-            className="
-              absolute bottom-3 right-3
-              w-9 h-9 rounded-full bg-[#112942] text-white
-              flex items-center justify-center
-              opacity-0 group-hover:opacity-100
-              translate-y-2 group-hover:translate-y-0
-              transition-all duration-200
-              shadow-md cursor-pointer border-0 z-10
-            "
+            className="absolute top-3 left-3 translate-y-0 group-hover:translate-y-1 translate-x-0 group-hover:translate-x-1 transition-all duration-200 cursor-pointer border-0 z-10"
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
               setModalOpen(true);
             }}
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="9" cy="21" r="1" />
-              <circle cx="20" cy="21" r="1" />
-              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-            </svg>
+            <Image
+              src="/icons/shopping-cart.png"
+              alt="Shopping Bag"
+              width={32}
+              height={32}
+            />
           </button>
         </Link>
 
-        {/* Text */}
         <div className="flex flex-col">
-          <p className="text-[12px] font-light tracking-wide text-[#112942] mb-1">
+          <p className="text-[12px] font-normal uppercase tracking-wide text-[#112942] mb-1">
             {typeLabels[product.productType] ?? product.productType}
           </p>
           <Link
             href={`/shop/${product.slug.current}`}
-            className="text-[15px] font-normal text-[#112942] leading-snug no-underline hover:underline"
+            className="text-[15px] font-medium text-[#112942] leading-snug no-underline hover:underline"
           >
             {product.name}
           </Link>
           <StarRating
-            rating={(product as { rating?: number }).rating ?? 0}
-            count={(product as { reviewCount?: number }).reviewCount ?? 0}
+            rating={(product as any).rating ?? 0}
+            count={(product as any).reviewCount ?? 0}
           />
         </div>
 
       </div>
 
-      {/* Shop modal */}
       {modalOpen && (
-        <ShopModal product={product} onClose={() => setModalOpen(false)} />
+        <BuyOnlineModal
+          productName={product.name}
+          productType={product.productType}
+          productSlug={product.slug.current}
+          buyLinks={product.buyLinks ?? []}
+          inStoreLinks={product.inStoreLinks ?? []}
+          onClose={() => setModalOpen(false)}
+        />
       )}
     </>
   );
@@ -328,25 +146,11 @@ function FilterGroup({
   const [open, setOpen] = useState(true);
 
   return (
-    <div className="border-b border-[#e8e8e8] pb-5 mb-5">
-      <button
-        onClick={() => setOpen(!open)}
-        className="flex items-center justify-between w-full mb-4"
-      >
-        <span className="text-[10px] tracking-[0.2em] uppercase text-[#112942] font-light">
+    <div className="border-b border-[#333333]/40 pb-5 mb-5">
+      <button className="flex items-center justify-between w-full mb-4">
+        <span className="text-[13px] tracking-[0.2em] uppercase text-[#112942] font-semibold">
           {title}
         </span>
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="#112942"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className={`w-3.5 h-3.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
-        >
-          <path d="M6 9l6 6 6-6" />
-        </svg>
       </button>
 
       {open && (
@@ -360,21 +164,15 @@ function FilterGroup({
                 onClick={() => onToggle(opt.value)}
               >
                 <span
-                  className={`w-4 h-4 border flex items-center justify-center shrink-0 transition-colors duration-150 ${
+                  className={`w-4 h-4 border rounded-full flex items-center justify-center shrink-0 transition-colors duration-150 ${
                     active
                       ? "bg-[#112942] border-[#112942]"
-                      : "border-[#d0d0d0] group-hover/check:border-[#112942]"
+                      : "border-[#112942] group-hover/check:border-[#112942]"
                   }`}
-                >
-                  {active && (
-                    <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-2.5 h-2.5">
-                      <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                  )}
-                </span>
+                />
                 <span
-                  className={`text-[12px] font-light transition-colors duration-150 ${
-                    active ? "text-[#112942]" : "text-[#666] group-hover/check:text-[#112942]"
+                  className={`text-[13px] font-normal transition-colors duration-150 ${
+                    active ? "text-[#666]" : "text-[#112942] group-hover/check:text-[#112942]"
                   }`}
                 >
                   {opt.label}
@@ -438,10 +236,10 @@ function sortProducts(products: Product[], sort: SortKey): Product[] {
 
 export default function ShopFilters({ ranges, types, skins, products }: Props) {
   const [selectedRanges, setSelectedRanges] = useState<string[]>([]);
-  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
-  const [selectedSkins, setSelectedSkins] = useState<string[]>([]);
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [sort, setSort] = useState<SortKey>("default");
+  const [selectedTypes, setSelectedTypes]   = useState<string[]>([]);
+  const [selectedSkins, setSelectedSkins]   = useState<string[]>([]);
+  const [mobileOpen, setMobileOpen]         = useState(false);
+  const [sort, setSort]                     = useState<SortKey>("default");
 
   const toggle = (setter: React.Dispatch<React.SetStateAction<string[]>>, value: string) =>
     setter((prev) => prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]);
@@ -449,8 +247,8 @@ export default function ShopFilters({ ranges, types, skins, products }: Props) {
   const filtered = useMemo(() => {
     const base = products.filter((p) => {
       const rangeMatch = selectedRanges.length === 0 || selectedRanges.includes(p.range);
-      const typeMatch = selectedTypes.length === 0 || selectedTypes.includes(p.productType);
-      const skinMatch = selectedSkins.length === 0 || (p.skinType ?? []).some((s) => selectedSkins.includes(s));
+      const typeMatch  = selectedTypes.length  === 0 || selectedTypes.includes(p.productType);
+      const skinMatch  = selectedSkins.length  === 0 || (p.skinType ?? []).some((s) => selectedSkins.includes(s));
       return rangeMatch && typeMatch && skinMatch;
     });
     return sortProducts(base, sort);
@@ -464,16 +262,16 @@ export default function ShopFilters({ ranges, types, skins, products }: Props) {
   const sidebar = (
     <>
       <div className="flex items-center justify-between mb-6">
-        <p className="text-[10px] tracking-[0.2em] uppercase text-[#112942] font-light">Filter By</p>
+        <p className="text-[11px] tracking-[0.2em] uppercase text-[#112942] font-medium">Filter By</p>
         {activeCount > 0 && (
           <button onClick={clearAll} className="text-[10px] tracking-widest uppercase text-[#999] font-light hover:text-[#112942] transition-colors">
             Clear ({activeCount})
           </button>
         )}
       </div>
-      <FilterGroup title="Range" options={ranges} selected={selectedRanges} onToggle={(v) => toggle(setSelectedRanges, v)} />
-      <FilterGroup title="Product Type" options={types} selected={selectedTypes} onToggle={(v) => toggle(setSelectedTypes, v)} />
-      <FilterGroup title="Skin Type" options={skins} selected={selectedSkins} onToggle={(v) => toggle(setSelectedSkins, v)} />
+      <FilterGroup title="Range"        options={ranges} selected={selectedRanges} onToggle={(v) => toggle(setSelectedRanges, v)} />
+      <FilterGroup title="Product Type" options={types}  selected={selectedTypes}  onToggle={(v) => toggle(setSelectedTypes, v)} />
+      <FilterGroup title="Skin Type"    options={skins}  selected={selectedSkins}  onToggle={(v) => toggle(setSelectedSkins, v)} />
     </>
   );
 
@@ -490,29 +288,6 @@ export default function ShopFilters({ ranges, types, skins, products }: Props) {
       <option value="name-asc">{mobile ? "A–Z" : "Name A–Z"}</option>
       <option value="name-desc">{mobile ? "Z–A" : "Name Z–A"}</option>
     </select>
-  );
-
-  const gridHeader = (
-    <div className="mb-8">
-      <div className="flex items-center justify-between mb-4">
-        <p className="text-[12px] font-light text-[#666]">
-          {filtered.length} product{filtered.length !== 1 ? "s" : ""}
-        </p>
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] tracking-[0.15em] uppercase text-[#999] font-light hidden sm:block">Sort</span>
-          {sortSelect()}
-        </div>
-      </div>
-      <ActiveFilters
-        ranges={ranges} types={types} skins={skins}
-        selectedRanges={selectedRanges} selectedTypes={selectedTypes} selectedSkins={selectedSkins}
-        onRemoveRange={(v) => toggle(setSelectedRanges, v)}
-        onRemoveType={(v) => toggle(setSelectedTypes, v)}
-        onRemoveSkin={(v) => toggle(setSelectedSkins, v)}
-        onClearAll={clearAll}
-      />
-      <div className="h-px bg-[#e8e8e8]" />
-    </div>
   );
 
   const emptyState = (
@@ -533,7 +308,6 @@ export default function ShopFilters({ ranges, types, skins, products }: Props) {
           {sidebar}
         </aside>
         <div className="flex-1 min-w-0">
-          {gridHeader}
           {filtered.length === 0 ? emptyState : (
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12">
               {filtered.map((p) => <ProductCard key={p._id} product={p} />)}

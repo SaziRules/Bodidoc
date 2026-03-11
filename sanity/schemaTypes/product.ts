@@ -189,6 +189,29 @@ export const productType = defineType({
         },
       ],
     }),
+
+defineField({
+  name: "inStoreLinks",
+  title: "Find In-store Links",
+  description: "Physical retail locations where this product can be found",
+  type: "array",
+  of: [
+    {
+      type: "object",
+      fields: [
+        { name: "retailer", type: "string", title: "Retailer / Store Name" },
+        { name: "url",      type: "url",    title: "URL (store locator or info page)" },
+        {
+          name: "logo",
+          type: "image",
+          title: "Retailer Logo (optional)",
+          options: { hotspot: true },
+        },
+      ],
+      preview: { select: { title: "retailer", subtitle: "url" } },
+    },
+  ],
+}),
     defineField({
       name: "isBestseller",
       title: "Bestseller?",

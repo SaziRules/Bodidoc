@@ -20,11 +20,6 @@ const slides = [
     body: "Many skin sensitivities are irritated by fragrances, which is why our Aqueous Cream is completely fragrance-free. We believe that your skin deserves the gentlest care, and avoiding fragrance helps reduce the risk of irritation or allergic reactions. It's always better to keep things simple, especially for those with sensitive skin.",
   },
   {
-    heading: "Hypoallergenic",
-    headingPrefix: "Hypoallergenic",
-    body: "Our Aqueous Cream is hypoallergenic, meaning it's specially formulated to minimise the chances of causing allergic reactions. This makes it a great choice for those with sensitive skin or allergies, providing soothing relief without the worry of irritation.",
-  },
-  {
     heading: "Dermatologically Tested",
     headingPrefix: "Dermatologically Tested",
     body: "Every product is dermatologically tested, meaning it's been carefully evaluated by skin experts to ensure it's safe for all skin types. Whether you have dry, oily, or sensitive skin, you can trust that our product is gentle, effective, and safe for daily use.",

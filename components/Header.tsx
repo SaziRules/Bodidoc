@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import SubscriptionModal from "@/components/SubscriptionModal";
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
 
@@ -76,16 +77,39 @@ const ChevronDownIcon = ({ open }: { open: boolean }) => (
 
 type ActiveMenu = "products" | "moments" | null;
 
+// ─── Scroll direction hook ────────────────────────────────────────────────────
+
+function useScrollDirection() {
+  const [visible, setVisible] = useState(true);
+  const lastY = useRef(0);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY;
+      // Always show when near the top
+      if (y < 10) { setVisible(true); lastY.current = y; return; }
+      if (y < lastY.current) {
+        setVisible(true);   // scrolling up
+      } else if (y > lastY.current + 4) {
+        setVisible(false);  // scrolling down (4px threshold to avoid jitter)
+      }
+      lastY.current = y;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return visible;
+}
+
 // ─── Announcement Bar ─────────────────────────────────────────────────────────
 
-function AnnouncementBar() {
+function AnnouncementBar({ onSubscribeClick }: { onSubscribeClick: () => void }) {
   return (
     <div className="bg-[#112942] h-11 py-5 w-full z-50 relative">
       <div className="max-w-full mx-auto px-15 h-full flex items-center justify-between gap-4">
 
-        {/* LEFT — circled icons + promo text */}
         <div className="flex items-center gap-3.5 shrink-0">
-          {/* Social icons with circle borders */}
           <div className="flex items-center gap-1.5">
             {[
               { href: "https://www.facebook.com/bodidoc/", label: "Facebook", icon: <FacebookIcon /> },
@@ -106,7 +130,6 @@ function AnnouncementBar() {
             ))}
           </div>
 
-          {/* Promo text immediately after icons */}
           <Link
             href="/shop/?product_cat=petroleum-jelly"
             className="text-white text-[13px] font-light tracking-wide whitespace-nowrap hover:opacity-80 transition-opacity duration-200"
@@ -115,23 +138,20 @@ function AnnouncementBar() {
           </Link>
         </div>
 
-        {/* RIGHT — mailing list + search */}
         <div className="flex items-center gap-4 shrink-0">
-
-          {/* "Join our Mailing List" + icon button */}
           <div className="flex items-center gap-2">
             <span className="text-white text-[13px] font-light tracking-wide whitespace-nowrap">
               Join our Mailing List
             </span>
             <button
               aria-label="Join mailing list"
+              onClick={onSubscribeClick}
               className="flex items-center justify-center w-6 h-6 rounded-full bg-white/15 hover:bg-white/25 text-white transition-colors duration-200 cursor-pointer border-0 shrink-0"
             >
               <MailIcon />
             </button>
           </div>
 
-          {/* Search input with inset icon button */}
           <div className="flex items-center bg-white/10 rounded-full overflow-hidden w-65">
             <input
               type="text"
@@ -146,7 +166,6 @@ function AnnouncementBar() {
               <SearchIcon />
             </button>
           </div>
-
         </div>
 
       </div>
@@ -159,7 +178,6 @@ function AnnouncementBar() {
 function ProductsMegaMenu() {
   return (
     <div className="max-w-360 mx-auto px-10 py-7 grid grid-cols-[1fr_1px_1.4fr_1px_1.4fr] min-h-50">
-      {/* Col 1: Browse */}
       <div className="px-2">
         <p className="text-[11px] font-bold tracking-widest text-bd-dark uppercase mb-3.5">
           BROWSE OUR PRODUCTS
@@ -179,10 +197,8 @@ function ProductsMegaMenu() {
         </ul>
       </div>
 
-      {/* Divider */}
       <div className="bg-[#e8e8e8] mx-8 self-stretch" />
 
-      {/* Col 2: New */}
       <div className="px-2">
         <p className="text-[11px] font-bold tracking-widest text-bd-dark uppercase mb-3.5">NEW!</p>
         <Link href="/shop/?product_cat=petroleum-jelly" className="block no-underline">
@@ -195,10 +211,8 @@ function ProductsMegaMenu() {
         </Link>
       </div>
 
-      {/* Divider */}
       <div className="bg-[#e8e8e8] mx-8 self-stretch" />
 
-      {/* Col 3: Bestseller */}
       <div className="px-2">
         <p className="text-[11px] font-bold tracking-widest text-bd-dark uppercase mb-3.5">
           OUR #1 BESTSELLER
@@ -218,7 +232,6 @@ function ProductsMegaMenu() {
 function MomentsMegaMenu() {
   return (
     <div className="max-w-360 mx-auto px-10 py-7 grid grid-cols-[1fr_1px_1.4fr_1px_1.4fr] min-h-50">
-      {/* Col 1: Featured article 1 */}
       <div className="px-2">
         <Link href="/moments/transform-dry-uneven-skin-with-the-award-winning-bodidoc-tissue-oil-cream-with-urea" className="block no-underline group">
           <div className="relative w-full h-40 overflow-hidden rounded-sm bg-gray-100 mb-2.5">
@@ -233,10 +246,8 @@ function MomentsMegaMenu() {
         </Link>
       </div>
 
-      {/* Divider */}
       <div className="bg-[#e8e8e8] mx-8 self-stretch" />
 
-      {/* Col 2: Featured article 2 */}
       <div className="px-2">
         <Link href="/moments/our-commitment-to-sustainable-packaging" className="block no-underline group">
           <div className="relative w-full h-40 overflow-hidden rounded-sm bg-gray-100 mb-2.5">
@@ -251,10 +262,8 @@ function MomentsMegaMenu() {
         </Link>
       </div>
 
-      {/* Divider */}
       <div className="bg-[#e8e8e8] mx-8 self-stretch" />
 
-      {/* Col 3: Learn More links */}
       <div className="px-2">
         <p className="text-[11px] font-bold tracking-widest text-bd-dark uppercase mb-3.5">LEARN MORE</p>
         <ul className="flex flex-col gap-2.5 list-none p-0 m-0">
@@ -302,35 +311,29 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
 
   return (
     <>
-      {/* Overlay */}
       <div
         onClick={onClose}
         aria-hidden="true"
         className={`fixed inset-0 bg-black/35 z-200 transition-opacity duration-300 ${open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
       />
 
-      {/* Drawer */}
       <nav
         aria-label="Mobile navigation"
         className={`fixed top-0 right-0 w-80 max-w-full h-dvh bg-white z-201 overflow-y-auto shadow-[-4px_0_24px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-in-out ${open ? "translate-x-0" : "translate-x-full"}`}
       >
-        {/* Close */}
         <button onClick={onClose} aria-label="Close menu" className="absolute top-3.5 right-3.5 p-1.5 text-bd-dark bg-transparent border-0 cursor-pointer flex items-center">
           <CloseIcon />
         </button>
 
         <div className="pt-13 pb-8">
-          {/* Main nav list */}
           <ul className="list-none p-0 m-0 border-t border-[#e8e8e8]">
 
-            {/* HOME */}
             <li className="border-b border-[#e8e8e8]">
               <Link href="/" onClick={onClose} className="flex items-center justify-between w-full px-6 py-4.25 text-[12.5px] font-medium tracking-[0.08em] text-bd-dark uppercase no-underline hover:bg-gray-50 transition-colors duration-150">
                 HOME
               </Link>
             </li>
 
-            {/* PRODUCTS accordion */}
             <li className="border-b border-[#e8e8e8]">
               <button
                 onClick={() => setProductsOpen(!productsOpen)}
@@ -352,7 +355,6 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
               </div>
             </li>
 
-            {/* MOMENTS accordion */}
             <li className="border-b border-[#e8e8e8]">
               <button
                 onClick={() => setMomentsOpen(!momentsOpen)}
@@ -374,7 +376,6 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
               </div>
             </li>
 
-            {/* CONTACT US */}
             <li className="border-b border-[#e8e8e8]">
               <Link href="/contact-us" onClick={onClose} className="flex items-center justify-between w-full px-6 py-4.25 text-[12.5px] font-medium tracking-[0.08em] text-bd-dark uppercase no-underline hover:bg-gray-50 transition-colors duration-150">
                 CONTACT US
@@ -382,7 +383,6 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
             </li>
           </ul>
 
-          {/* Bestseller feature card */}
           <div className="px-6 pt-6">
             <p className="text-[11px] font-bold tracking-widest text-bd-dark uppercase mb-3">
               OUR #1 BESTSELLER
@@ -392,7 +392,6 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
             </Link>
           </div>
 
-          {/* Secondary links */}
           <ul className="list-none p-0 m-0 mt-6 pt-5 border-t border-[#e8e8e8]">
             {[
               { label: "ABOUT US", href: "/about-us" },
@@ -417,7 +416,9 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
 export default function Header() {
   const [activeMenu, setActiveMenu] = useState<ActiveMenu>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [subscribeOpen, setSubscribeOpen] = useState(false);
   const leaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const navVisible = useScrollDirection();
 
   const handleEnter = useCallback((menu: ActiveMenu) => {
     if (leaveTimer.current) clearTimeout(leaveTimer.current);
@@ -434,7 +435,6 @@ export default function Header() {
 
   useEffect(() => () => { if (leaveTimer.current) clearTimeout(leaveTimer.current); }, []);
 
-  // Shared nav link classes
   const navLinkBase =
     "font-sans text-[14px] font-bold tracking-[0.06em] uppercase bg-transparent border-0 cursor-pointer whitespace-nowrap flex items-center h-14 relative transition-colors duration-200";
   const navLinkIdle = "text-bd-muted hover:text-bd-dark hover:font-bold";
@@ -445,16 +445,18 @@ export default function Header() {
     <>
       {/* ══════════════════ DESKTOP ══════════════════ */}
       <header className="hidden lg:block">
-        <AnnouncementBar />
+        {/* Announcement bar — always static, never sticky */}
+        <AnnouncementBar onSubscribeClick={() => setSubscribeOpen(true)} />
 
-        {/* Main nav */}
+        {/* White nav bar — sticky, hides on scroll down, reveals on scroll up */}
         <div
-          className="bg-white h-20 w-full border-b border-[#e8e8e8] relative z-99"
+          className={`sticky top-0 z-99 bg-white border-b border-[#e8e8e8] transition-transform duration-300 ease-in-out ${
+            navVisible ? "translate-y-0" : "-translate-y-full"
+          }`}
           onMouseLeave={handleLeave}
         >
-          <div className="w-full px-10 h-full flex items-center justify-center gap-50">
+          <div className="w-full px-10 h-20 flex items-center justify-center gap-50">
 
-            {/* Left links */}
             <nav className="flex items-center gap-7" aria-label="Primary navigation">
               <Link href="/" className={`${navLinkBase} ${navLinkActive}`}>
                 HOME
@@ -469,18 +471,10 @@ export default function Header() {
               </button>
             </nav>
 
-            {/* Centre logo */}
             <Link href="/" aria-label="Bodidoc home" className="relative w-30 h-9 flex items-center">
-              <Image
-                src="/images/logo.webp"
-                alt="Bodidoc"
-                fill
-                className="object-contain"
-                priority
-              />
+              <Image src="/images/logo.webp" alt="Bodidoc" fill className="object-contain" priority />
             </Link>
 
-            {/* Right links */}
             <nav className="flex items-center gap-7" aria-label="Secondary navigation">
               <button
                 className={`${navLinkBase} ${activeMenu === "moments" ? navLinkActive : navLinkIdle}`}
@@ -496,7 +490,6 @@ export default function Header() {
             </nav>
           </div>
 
-          {/* Mega menu dropdown */}
           {activeMenu && (
             <div
               className="absolute top-full left-0 right-0 z-98 bg-white border-t border-b border-[#e8e8e8] shadow-[0_4px_20px_rgba(0,0,0,0.08)] animate-[megaIn_0.18s_ease_forwards]"
@@ -513,7 +506,6 @@ export default function Header() {
 
       {/* ══════════════════ MOBILE ══════════════════ */}
       <header className="lg:hidden">
-        {/* Announcement bar */}
         <div className="bg-[#1a2b3c] h-8.5 flex items-center justify-center w-full">
           <Link
             href="/shop/?product_cat=petroleum-jelly"
@@ -523,8 +515,12 @@ export default function Header() {
           </Link>
         </div>
 
-        {/* Nav bar */}
-        <div className="bg-white h-14.5 border-b border-[#e8e8e8] flex items-center justify-between px-4 relative z-99">
+        {/* Mobile nav bar — same hide/show behaviour */}
+        <div
+          className={`sticky top-0 z-99 bg-white h-14.5 border-b border-[#e8e8e8] flex items-center justify-between px-4 transition-transform duration-300 ease-in-out ${
+            navVisible ? "translate-y-0" : "-translate-y-full"
+          }`}
+        >
           <button
             onClick={() => setMobileOpen(true)}
             aria-label="Open menu"
@@ -535,13 +531,7 @@ export default function Header() {
           </button>
 
           <Link href="/" aria-label="Bodidoc home" className="absolute left-1/2 -translate-x-1/2 w-25 h-8 flex items-center">
-            <Image
-              src="/images/logo.webp"
-              alt="Bodidoc"
-              fill
-              className="object-contain"
-              priority
-            />
+            <Image src="/images/logo.webp" alt="Bodidoc" fill className="object-contain" priority />
           </Link>
 
           <button aria-label="Search" className="p-1.5 text-bd-dark bg-transparent border-0 cursor-pointer flex items-center">
@@ -551,6 +541,10 @@ export default function Header() {
 
         <MobileDrawer open={mobileOpen} onClose={() => setMobileOpen(false)} />
       </header>
+
+      {subscribeOpen && (
+        <SubscriptionModal onClose={() => setSubscribeOpen(false)} />
+      )}
     </>
   );
 }

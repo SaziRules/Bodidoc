@@ -166,7 +166,7 @@ export default async function AqueousRangePage() {
                 Gentle Care for the Whole Family
               </h2>
               <p className="text-[14px] font-normal text-[#444] leading-relaxed" style={{ textAlign: "justify" }}>
-                Discover the ultimate solution for your skin's everyday needs with Bodidoc Aqueous Cream. Perfectly formulated for all skin types, this gentle, hypoallergenic cream is safe for the whole family, including babies. It offers 24-hour moisture and soothing care for sensitive skin. Dermatologically tested and free from harsh chemicals, it's the versatile, go-to product your skin deserves.
+                Discover the ultimate solution for your skin's everyday needs with Bodidoc Aqueous Cream. Perfectly formulated for all skin types, this gentle cream is safe for the whole family, including babies. It offers 24-hour moisture and soothing care for sensitive skin. Dermatologically tested and free from harsh chemicals, it's the versatile, go-to product your skin deserves.
               </p>
               <div className="pt-2">
                 <Link

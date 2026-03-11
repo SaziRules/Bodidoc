@@ -7,6 +7,7 @@ import { getProductBySlug, getAllProducts, urlFor } from "@/sanity/lib/sanity";
 import ProductGallery from "@/components/ProductGallery";
 import ProductTabs from "@/components/ProductTabs";
 import ProductPageClient from "@/components/ProductPageClient";
+import ReviewButton from "@/components/ReviewButton";
 
 // ─── SEO ──────────────────────────────────────────────────────────────────────
 
@@ -96,7 +97,7 @@ function StarRating({ rating = 0, count = 0 }: { rating?: number; count?: number
           return (
             <span
               key={star}
-              className={`text-[14px] leading-none ${
+              className={`text-[15px] leading-none ${
                 filled ? "text-[#112942]" : half ? "text-[#112942]/60" : "text-[#ccc]"
               }`}
             >
@@ -131,24 +132,6 @@ export default async function ProductPage({
       <ProductSchema product={product} />
 
       <div className="w-full">
-
-        {/* ── Breadcrumb ── */}
-        <div className="border-b border-[#e8e8e8]">
-          <div className="max-w-360 mx-auto px-6 md:px-10 lg:px-16 py-4 flex items-center gap-2 flex-wrap">
-            <Link href="/shop" className="text-[11px] tracking-widest uppercase font-light text-[#999] hover:text-[#112942] transition-colors">
-              Products
-            </Link>
-            <span className="text-[#ddd]">/</span>
-            <Link href={rangePage} className="text-[11px] tracking-widest uppercase font-light text-[#999] hover:text-[#112942] transition-colors">
-              {rangeName}
-            </Link>
-            <span className="text-[#ddd]">/</span>
-            <span className="text-[11px] font-light text-[#112942]/60 truncate max-w-48">
-              {product.name}
-            </span>
-          </div>
-        </div>
-
         {/* ── Product Hero ── */}
         <div className="max-w-360 mx-auto px-6 md:px-10 lg:px-16 py-10 md:py-14">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 items-start">
@@ -159,7 +142,7 @@ export default async function ProductPage({
             {/* Right — Details + interactive buttons (client island) */}
             <div className="flex flex-col gap-4 md:sticky md:top-24 md:self-start">
 
-              <p className="text-[11px] tracking-[0.2em] uppercase text-[#112942]/50 font-light">
+              <p className="text-[12px] tracking-[0.2em] uppercase text-[#112942] font-light">
                 {typeName}
               </p>
 
@@ -171,7 +154,7 @@ export default async function ProductPage({
               </h1>
 
               {product.size && (
-                <p className="text-[13px] font-light text-[#999] tracking-wide -mt-1">
+                <p className="text-[13px] font-light text-[#112942] tracking-wide -mt-1">
                   {product.size}
                 </p>
               )}
@@ -180,21 +163,21 @@ export default async function ProductPage({
 
               {/* Short description — one-liner teaser */}
               {product.shortDescription && (
-                <p className="text-[13px] md:text-[14px] font-light text-[#555] leading-relaxed">
+                <p className="text-[13px] md:text-[14px] font-normal text-[#333] leading-relaxed">
                   {product.shortDescription}
                 </p>
               )}
 
               {/* Full description — Portable Text */}
               {product.description && product.description.length > 0 && (
-                <div className="prose-product text-[13px] md:text-[14px] font-light text-[#555] leading-relaxed [&_strong]:font-normal [&_strong]:text-[#112942] [&_em]:italic [&_a]:underline [&_a]:text-[#112942] [&_p+p]:mt-3">
+                <div className="prose-product text-[13px] md:text-[14px] font-normal text-[#333] leading-relaxed [&_strong]:font-normal [&_strong]:text-[#112942] [&_em]:italic [&_a]:underline [&_a]:text-[#112942] [&_p+p]:mt-3">
                   <PortableText value={product.description} />
                 </div>
               )}
 
               {/* Ingredient strip image (icons row) — sits above Buy Online */}
               {product.ingredientStripImage && (
-                <div className="relative w-full mb-4" style={{ aspectRatio: "5/1" }}>
+                <div className="relative w-120 mb-4" style={{ aspectRatio: "5/1" }}>
                   <Image
                     src={urlFor(product.ingredientStripImage).width(900).url()}
                     alt="Key ingredients"
@@ -219,12 +202,13 @@ export default async function ProductPage({
                 </div>
               )}
 
-              {/* Client island: Buy Online + share + skin type + how-to-use */}
+              {/* Client island: Buy Online button → opens BuyOnlineModal */}
               <ProductPageClient
                 productName={product.name}
                 productType={product.productType}
                 productSlug={product.slug.current}
                 buyLinks={product.buyLinks ?? []}
+                inStoreLinks={product.inStoreLinks ?? []}
                 skinType={product.skinType}
                 isItForMe={product.isItForMe}
               />
@@ -234,19 +218,19 @@ export default async function ProductPage({
         </div>
 
         {/* ── 3-Tab nav ── */}
-        <div className="border-t border-b border-[#e8e8e8]">
-          <div className="max-w-360 mx-auto px-6 md:px-10 lg:px-16">
-            <div className="flex items-center justify-center">
-              <a href="#description" className="flex-1 text-center py-4 text-[11px] tracking-[0.15em] uppercase font-light text-[#888] hover:text-[#112942] transition-colors border-r border-[#e8e8e8]">
-                Description
-              </a>
-              <a href="#customer-review" className="flex-1 text-center py-4 text-[11px] tracking-[0.15em] uppercase font-light text-[#888] hover:text-[#112942] transition-colors border-r border-[#e8e8e8]">
-                Customer Review
-              </a>
-              <a href="#learn-more" className="flex-1 text-center py-4 text-[11px] tracking-[0.15em] uppercase font-light text-[#888] hover:text-[#112942] transition-colors">
-                Learn More
-              </a>
-            </div>
+        <div className="max-w-360 mx-auto px-6 md:px-10 md:py-6 lg:px-16 hidden md:block">
+          <div className="border-b border-[#e8e8e8] flex items-center justify-left md:pl-42">
+            <a href="#description" className="px-8 py-4 text-[14px] tracking-[0.15em] uppercase font-medium text-[#aaa] hover:text-[#112942] transition-colors">
+              Description
+            </a>
+            <span className="text-[#ccc] select-none leading-none">|</span>
+            <a href="#customer-review" className="px-8 py-4 text-[14px] tracking-[0.15em] uppercase font-medium text-[#aaa] hover:text-[#112942] transition-colors">
+              Customer Review
+            </a>
+            <span className="text-[#ccc] select-none leading-none">|</span>
+            <a href="#learn-more" className="px-8 py-4 text-[14px] tracking-[0.15em] uppercase font-medium text-[#aaa] hover:text-[#112942] transition-colors">
+              Learn More
+            </a>
           </div>
         </div>
 
@@ -258,18 +242,18 @@ export default async function ProductPage({
         </div>
 
         {/* ── Customer Review ── */}
-        <div id="customer-review" className="border-t border-[#e8e8e8]">
+        <div id="customer-review" className="border-none">
           <div className="max-w-360 mx-auto px-6 md:px-10 lg:px-16 py-14">
 
             <div className="flex items-center gap-6 mb-10">
               <div className="h-px flex-1 bg-[#e8e8e8]" />
-              <h2 className="text-[11px] tracking-[0.3em] uppercase text-[#999] font-light whitespace-nowrap">
+              <h2 className="text-[20px] tracking-widest uppercase text-[#112942] font-medium whitespace-nowrap">
                 Customer Review
               </h2>
               <div className="h-px flex-1 bg-[#e8e8e8]" />
             </div>
 
-            {/* Two-panel grid — "Give Your Opinion" button is client */}
+            {/* Two-panel grid */}
             <div className="grid grid-cols-1 md:grid-cols-[250px_1fr] border border-[#e8e8e8]">
               <div className="border-b md:border-b-0 md:border-r border-[#e8e8e8] p-8 flex flex-col gap-4">
                 <div>
@@ -285,7 +269,6 @@ export default async function ProductPage({
                 </div>
                 <div className="h-px bg-[#e8e8e8]" />
                 <StarRating rating={product.rating ?? 0} count={product.reviewCount ?? 0} />
-                {/* Client island: Give Your Opinion → ReviewModal */}
                 <ReviewButton productName={product.name} />
               </div>
 
@@ -300,11 +283,11 @@ export default async function ProductPage({
         </div>
 
         {/* ── Learn More ── */}
-        <div id="learn-more" className="border-t border-[#e8e8e8]">
+        <div id="learn-more" className="border-none">
           <div className="max-w-360 mx-auto px-6 md:px-10 lg:px-16 py-16 flex flex-col items-center text-center">
             <div className="flex items-center gap-6 w-full mb-8">
               <div className="h-px flex-1 bg-[#e8e8e8]" />
-              <h2 className="text-[11px] tracking-[0.3em] uppercase text-[#999] font-light whitespace-nowrap">
+              <h2 className="text-[20px] tracking-widest uppercase text-[#112942] font-medium whitespace-nowrap">
                 Learn More
               </h2>
               <div className="h-px flex-1 bg-[#e8e8e8]" />
@@ -344,8 +327,3 @@ export default async function ProductPage({
     </>
   );
 }
-
-// ─── Inline server-passable client stub ───────────────────────────────────────
-// (actual implementation lives in ProductPageClient.tsx)
-// This import is just for TS — Next.js handles the boundary automatically.
-import ReviewButton from "@/components/ReviewButton";

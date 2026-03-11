@@ -89,7 +89,7 @@ export type Product = {
   size?: string;
   badge?: string;
   shortDescription?: string;
-  description?: any[];  // Portable Text blocks
+  description?: any[];          // Portable Text blocks
   mainImage: SanityImageSource;
   galleryImages?: SanityImageSource[];
   ingredientStripImage?: SanityImageSource;
@@ -97,12 +97,13 @@ export type Product = {
   isItForMe?: string;
   provenResults?: string;
   ingredients?: string;
-  buyLinks?: BuyLink[];
+  buyLinks?: BuyLink[];         // Online retailers
+  inStoreLinks?: BuyLink[];     // Physical stores
   isBestseller?: boolean;
   isFeatured?: boolean;
   order?: number;
-  rating?: number;       // 0–5, supports 0.5 increments
-  reviewCount?: number;  // total number of reviews
+  rating?: number;              // 0–5, supports 0.5 increments
+  reviewCount?: number;         // total number of reviews
 };
 
 // ─── Product Queries ──────────────────────────────────────────────────────────
@@ -112,7 +113,9 @@ export async function getAllProducts(): Promise<Product[]> {
     `*[_type == "product"] | order(order asc) {
       _id, name, slug, range, productType, skinType, size, badge,
       shortDescription, mainImage, isBestseller, isFeatured, order,
-      rating, reviewCount
+      rating, reviewCount,
+      buyLinks[] { retailer, url, logo { asset-> } },
+      inStoreLinks[] { retailer, url, logo { asset-> } }
     }`,
     {},
     { next: { revalidate: 60 } }
@@ -124,7 +127,9 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
     `*[_type == "product" && slug.current == $slug][0] {
       _id, name, slug, range, productType, skinType, size, badge,
       shortDescription, description, mainImage, galleryImages, ingredientStripImage,
-      benefits, isItForMe, provenResults, ingredients, buyLinks,
+      benefits, isItForMe, provenResults, ingredients,
+      buyLinks[] { retailer, url, logo { asset-> } },
+      inStoreLinks[] { retailer, url, logo { asset-> } },
       isBestseller, isFeatured, rating, reviewCount
     }`,
     { slug }
