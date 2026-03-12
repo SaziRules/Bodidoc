@@ -309,8 +309,8 @@ function FooterSubscribeSection() {
 
   return (
     <div className="flex flex-col gap-3">
-      <h3 className="font-display text-[18px] font-normal text-white">Down For More? We got You</h3>
-      <p className="text-[13px] font-light text-white/70 leading-relaxed">
+      <h3 className="font-display text-[20px] font-bold text-white">Down For More? We got You</h3>
+      <p className="text-[13px] font-normal text-white leading-relaxed">
         Subscribe to our mailing list for all the latest product drops, limited offers and in-store event info.
       </p>
 
@@ -401,9 +401,9 @@ function FooterSubscribeSection() {
         }
       `}</style>
 
-      <p className="text-[11px] font-light text-white/50 leading-relaxed">
+      <p className="text-[12px] font-normal text-white leading-relaxed">
         {disclaimer}{" "}
-        <Link href="/terms-conditions-privacy-policy" className="underline text-white/50 hover:text-white">
+        <Link href="/terms-conditions-privacy-policy" className=" text-[#db73b6] hover:text-white">
           Terms of Use and Privacy Policy.
         </Link>
       </p>
@@ -471,7 +471,7 @@ export default function Footer() {
               <Link
                 key={label}
                 href={href}
-                className="text-[12px] font-light tracking-wide text-white hover:font-normal transition-all duration-150 no-underline"
+                className="text-[14px] font-bold tracking-wide text-white hover:font-normal transition-all duration-150 no-underline"
               >
                 {label}
               </Link>
@@ -480,21 +480,21 @@ export default function Footer() {
 
           {/* Col 3 — Contact info */}
           <div className="flex flex-col gap-3 pt-1">
-            <h4 className="text-[13px] font-semibold text-white">Customer Care</h4>
-            <div className="text-[12px] font-light text-white/70 leading-relaxed">
+            <h4 className="text-[16px] font-medium text-white">Customer Care</h4>
+            <div className="text-[13px] font-normal text-white/70 leading-relaxed">
               <p>08:00 – 17:00</p>
               <p>Monday – Friday</p>
               <p>0860 002 652</p>
             </div>
-            <h4 className="text-[13px] font-semibold text-white mt-1">Whatsapp</h4>
-            <p className="text-[12px] font-light text-white/70">+27 (0)60 996 6087</p>
-            <h4 className="text-[13px] font-semibold text-white mt-1">Find us at</h4>
-            <div className="text-[12px] font-light text-white/70 leading-relaxed">
+            <h4 className="text-[16px] font-semibold text-white mt-1">Whatsapp</h4>
+            <p className="text-[13px] font-normal text-white/70">+27 (0)60 996 6087</p>
+            <h4 className="text-[16px] font-semibold text-white mt-1">Find us at</h4>
+            <div className="text-[13px] font-normal text-white/70 leading-relaxed">
               <p>14 Ellman Street</p>
               <p>Sunderland Ridge</p>
               <p>0157</p>
             </div>
-            <h4 className="text-[13px] font-semibold text-white mt-1 tracking-wide uppercase">Follow Us On</h4>
+            <h4 className="text-[16px] font-semibold text-white mt-1 tracking-wide uppercase">Follow Us On</h4>
             <SocialIcons />
           </div>
 

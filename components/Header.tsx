@@ -28,9 +28,9 @@ const TikTokIcon = () => (
 );
 
 const YouTubeIcon = () => (
-  <svg width="14" height="10" viewBox="0 0 24 17" fill="currentColor">
+  <svg width="13" height="9" viewBox="0 0 24 17" fill="currentColor">
     <path d="M23.5 2.5a3 3 0 0 0-2.1-2.1C19.5 0 12 0 12 0S4.5 0 2.6.4A3 3 0 0 0 .5 2.5 31 31 0 0 0 0 8.5a31 31 0 0 0 .5 6 3 3 0 0 0 2.1 2.1C4.5 17 12 17 12 17s7.5 0 9.4-.4a3 3 0 0 0 2.1-2.1 31 31 0 0 0 .5-6 31 31 0 0 0-.5-6z" />
-    <polygon points="9.75 12.5 15.5 8.5 9.75 4.5" fill="white" />
+    <polygon points="9.75 12.5 15.5 8.5 9.75 4.5" fill="#112942" />
   </svg>
 );
 
