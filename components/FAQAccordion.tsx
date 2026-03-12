@@ -19,12 +19,12 @@ function FaqItem({ q, a }: FAQItem) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="border-b border-[#e8e8e8] group">
+    <div className="border-b border-[#112942]/25 group">
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-start justify-between py-5 text-left cursor-pointer bg-transparent border-0 gap-6"
+        className="w-full flex items-start justify-between py-8 px-8 text-left cursor-pointer bg-transparent border-0 gap-6"
       >
-        <span className="text-[13px] font-normal text-[#112942] leading-relaxed">
+        <span className="text-[15px] font-normal text-[#112942] leading-relaxed">
           {q}
         </span>
         <span
@@ -52,7 +52,7 @@ function FaqItem({ q, a }: FAQItem) {
 
 export default function FAQAccordion({ faqs }: Props) {
   return (
-    <div className="border-t border-[#e8e8e8]">
+    <div className="border-t border-[#112942]/25">
       {faqs.map((faq) => (
         <FaqItem key={faq.q} q={faq.q} a={faq.a} />
       ))}
