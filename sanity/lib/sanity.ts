@@ -100,6 +100,7 @@ export type Product = {
   buyLinks?: BuyLink[];         // Online retailers
   inStoreLinks?: BuyLink[];     // Physical stores
   isBestseller?: boolean;
+  isNewArrival?: boolean;
   isFeatured?: boolean;
   order?: number;
   rating?: number;              // 0–5, supports 0.5 increments
@@ -112,7 +113,7 @@ export async function getAllProducts(): Promise<Product[]> {
   return client.fetch(
     `*[_type == "product"] | order(order asc) {
       _id, name, slug, range, productType, skinType, size, badge,
-      shortDescription, mainImage, isBestseller, isFeatured, order,
+      shortDescription, mainImage, isBestseller, isNewArrival, isFeatured, order,
       rating, reviewCount,
       buyLinks[] { retailer, url, logo { asset-> } },
       inStoreLinks[] { retailer, url, logo { asset-> } }
@@ -130,7 +131,7 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
       benefits, isItForMe, provenResults, ingredients,
       buyLinks[] { retailer, url, logo { asset-> } },
       inStoreLinks[] { retailer, url, logo { asset-> } },
-      isBestseller, isFeatured, rating, reviewCount
+      isBestseller, isNewArrival, isFeatured, rating, reviewCount
     }`,
     { slug }
   );

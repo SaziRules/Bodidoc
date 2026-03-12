@@ -3,7 +3,7 @@
 import { useState } from "react";
 import ReviewModal from "@/components/ReviewModal";
 
-export default function ReviewButton({ productName }: { productName: string }) {
+export default function ReviewButton({ productName, productSlug }: { productName: string; productSlug: string }) {
   const [modalOpen, setModalOpen] = useState(false);
 
   return (
@@ -18,6 +18,7 @@ export default function ReviewButton({ productName }: { productName: string }) {
       {modalOpen && (
         <ReviewModal
           productName={productName}
+          productSlug={productSlug}
           onClose={() => setModalOpen(false)}
         />
       )}

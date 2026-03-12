@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { supabase } from "@/lib/supabase";
 
 // ─── SVG Icons ────────────────────────────────────────────────────────────────
 
@@ -57,6 +58,359 @@ const navLinks = [
 
 const disclaimer = "If you subscribe to Bodidoc, please note that you are agreeing to receive recurring promotional and marketing messages from us. These messages are automated, including email and text. Consent is not a condition of any purchase. Please view our";
 
+// ─── Dial codes ───────────────────────────────────────────────────────────────
+// min/max = digits AFTER the country code, NOT including a leading 0.
+// e.g. South Africa: 082 123 4567 → user types 821234567 (9 digits)
+
+const DIAL_CODES = [
+  { code: "+27",  iso: "za", name: "South Africa", min: 9,  max: 9  }, // 8x/7x/6x + 7 = 9
+  { code: "+267", iso: "bw", name: "Botswana",     min: 7,  max: 8  }, // landline 7, mobile 8
+  { code: "+268", iso: "sz", name: "Eswatini",     min: 8,  max: 8  }, // all numbers 8 digits
+  { code: "+266", iso: "ls", name: "Lesotho",      min: 8,  max: 8  }, // all numbers 8 digits
+  { code: "+265", iso: "mw", name: "Malawi",       min: 7,  max: 9  }, // landline 7, mobile 9
+  { code: "+258", iso: "mz", name: "Mozambique",   min: 8,  max: 9  }, // landline 8, mobile 9
+  { code: "+264", iso: "na", name: "Namibia",      min: 7,  max: 8  }, // landline 7, mobile 8
+  { code: "+255", iso: "tz", name: "Tanzania",     min: 9,  max: 9  }, // all 9 digits
+  { code: "+260", iso: "zm", name: "Zambia",       min: 9,  max: 9  }, // all 9 digits
+  { code: "+263", iso: "zw", name: "Zimbabwe",     min: 9,  max: 9  }, // all 9 digits
+];
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function isValidEmail(val: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(val);
+}
+
+// Strip leading zero (user shouldn't include it) then check digit count
+// against the exact spec for the selected country.
+function isValidPhone(val: string, dialCode: string): { valid: boolean; message: string } {
+  const entry = DIAL_CODES.find((d) => d.code === dialCode) ?? DIAL_CODES[0];
+  const digits = val.replace(/\D/g, "").replace(/^0+/, ""); // strip non-digits + leading zeros
+  if (digits.length < entry.min || digits.length > entry.max) {
+    const range = entry.min === entry.max
+      ? `${entry.min} digits`
+      : `${entry.min}–${entry.max} digits`;
+    return {
+      valid: false,
+      message: `${entry.name} numbers require exactly ${range} after the country code — no leading zero.`,
+    };
+  }
+  return { valid: true, message: "" };
+}
+
+// ─── Flag image ───────────────────────────────────────────────────────────────
+
+const FlagImg = ({ iso, size = 20 }: { iso: string; size?: number }) => (
+  // eslint-disable-next-line @next/next/no-img-element
+  <img
+    src={`https://flagcdn.com/w40/${iso}.png`}
+    srcSet={`https://flagcdn.com/w80/${iso}.png 2x`}
+    alt=""
+    className="rounded-[1px] shrink-0 block"
+    style={{ width: size, height: "auto" }}
+  />
+);
+
+// ─── Dial dropdown ────────────────────────────────────────────────────────────
+
+function DialDropdown({
+  dialCode,
+  onChange,
+}: {
+  dialCode: string;
+  onChange: (code: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const selected = DIAL_CODES.find((d) => d.code === dialCode) ?? DIAL_CODES[0];
+
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: MouseEvent) => {
+      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [open]);
+
+  return (
+    <div ref={wrapRef} className="relative shrink-0">
+      {/* Trigger */}
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-label="Select country code"
+        aria-expanded={open}
+        className="flex items-center gap-1.5 px-2.5 h-full bg-transparent border-0 cursor-pointer group"
+      >
+        <FlagImg iso={selected.iso} size={16} />
+        <span className="text-[11px] font-light text-white/60 group-hover:text-white transition-colors tracking-wide">
+          {selected.code}
+        </span>
+        <svg
+          width="7" height="7" viewBox="0 0 24 24" fill="none"
+          stroke="rgba(255,255,255,0.4)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+          className={`transition-transform duration-200 ${open ? "rotate-180" : "rotate-0"}`}
+        >
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </button>
+
+      {/* Dropdown */}
+      <div
+        className={`absolute left-0 top-[calc(100%+4px)] w-52 z-50 overflow-hidden
+          transition-all duration-200 ease-out origin-top
+          ${open
+            ? "opacity-100 scale-y-100 translate-y-0 pointer-events-auto"
+            : "opacity-0 scale-y-95 -translate-y-1 pointer-events-none"
+          }`}
+        style={{ boxShadow: "0 16px 48px rgba(0,0,0,0.35), 0 2px 8px rgba(0,0,0,0.2)" }}
+      >
+        {/* Top accent */}
+        <div className="h-0.5 bg-linear-to-r from-[#112942] via-[#2a6096] to-[#112942]" />
+
+        {/* Header */}
+        <div className="bg-[#0a1e30] px-3.5 py-2">
+          <span className="text-[9px] font-bold tracking-[0.18em] text-white/40 uppercase">Select region</span>
+        </div>
+
+        {/* List */}
+        <div className="bg-white overflow-y-auto" style={{ maxHeight: "180px" }}>
+          {DIAL_CODES.map((d, i) => {
+            const isActive = d.code === dialCode;
+            return (
+              <button
+                key={d.code}
+                type="button"
+                onClick={() => { onChange(d.code); setOpen(false); }}
+                className={`
+                  group/row flex items-center gap-2.5 w-full px-3.5 py-2.5
+                  bg-transparent border-0 cursor-pointer text-left
+                  transition-colors duration-150
+                  ${i !== DIAL_CODES.length - 1 ? "border-b border-[#f0f0f0]" : ""}
+                  ${isActive ? "bg-[#f0f4f8]" : "hover:bg-[#f9f9f9]"}
+                `}
+              >
+                <FlagImg iso={d.iso} size={16} />
+                <span className={`flex-1 text-[11.5px] font-light transition-colors
+                  ${isActive ? "text-[#112942] font-medium" : "text-[#444] group-hover/row:text-[#112942]"}`}>
+                  {d.name}
+                </span>
+                <span className={`text-[10.5px] font-light tabular-nums shrink-0 transition-colors
+                  ${isActive ? "text-[#112942]/60" : "text-[#bbb] group-hover/row:text-[#888]"}`}>
+                  {d.code}
+                </span>
+                {isActive && (
+                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#112942" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 opacity-50">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                )}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Bottom accent */}
+        <div className="h-0.5 bg-linear-to-r from-[#112942] via-[#1e4a73] to-[#112942] opacity-60" />
+      </div>
+    </div>
+  );
+}
+
+// ─── Spinner ──────────────────────────────────────────────────────────────────
+
+function Spinner() {
+  return (
+    <svg
+      className="animate-spin"
+      width="13" height="13" viewBox="0 0 24 24"
+      fill="none" stroke="#112942" strokeWidth="2.5" strokeLinecap="round"
+    >
+      <circle cx="12" cy="12" r="10" stroke="#112942" strokeOpacity="0.2" strokeWidth="2.5" fill="none" />
+      <path d="M12 2a10 10 0 0 1 10 10" stroke="#112942" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+    </svg>
+  );
+}
+
+// ─── Subscribe section ────────────────────────────────────────────────────────
+
+type FormState = "idle" | "loading" | "success" | "error";
+
+function FooterSubscribeSection() {
+  const [email, setEmail]       = useState("");
+  const [phone, setPhone]       = useState("");
+  const [dialCode, setDialCode] = useState("+27");
+  const [state, setState]       = useState<FormState>("idle");
+  const [message, setMessage]   = useState("");
+
+  const loading = state === "loading";
+
+  const setMsg = (msg: string, s: FormState = "error") => {
+    setMessage(msg); setState(s);
+  };
+
+  const handleSubmit = async (field: "phone" | "email") => {
+    setMessage(""); setState("idle");
+
+    const trimEmail = field === "email" ? email.trim() : "";
+    const trimPhone = field === "phone" ? phone.trim() : "";
+
+    if (!trimEmail && !trimPhone) {
+      setMsg(field === "email"
+        ? "Pop in your email address."
+        : "Pop in your phone number.");
+      return;
+    }
+    if (trimEmail && !isValidEmail(trimEmail)) {
+      setMsg("That email doesn't look quite right — please double-check it.");
+      return;
+    }
+    if (trimPhone) {
+      const phoneCheck = isValidPhone(trimPhone, dialCode);
+      if (!phoneCheck.valid) {
+        setMsg(phoneCheck.message);
+        return;
+      }
+    }
+
+    // Strip leading zero before storing — we prepend the dial code
+    const cleanPhone = trimPhone.replace(/\D/g, "").replace(/^0+/, "");
+    const fullPhone = trimPhone ? `${dialCode}${cleanPhone}` : null;
+    setState("loading");
+
+    if (trimEmail) {
+      const { data } = await supabase.from("subscriptions").select("id")
+        .eq("brand", "bodidoc").eq("email", trimEmail).maybeSingle();
+      if (data) { setMsg("Looks like that email is already on the list — you're all good! 🎉"); return; }
+    }
+    if (fullPhone) {
+      const { data } = await supabase.from("subscriptions").select("id")
+        .eq("brand", "bodidoc").eq("phone", fullPhone).maybeSingle();
+      if (data) { setMsg("That number's already with us — you're covered! 🎉"); return; }
+    }
+
+    const { error: sbError } = await supabase.from("subscriptions").insert({
+      brand: "bodidoc",
+      email: trimEmail || null,
+      phone: fullPhone,
+    });
+
+    if (sbError) { setMsg("Something went wrong. Please try again."); return; }
+
+    setMsg("You're in! Thanks for subscribing. ", "success");
+  };
+
+  const inputBase = "flex-1 px-3 py-2 text-[12px] tracking-widest text-white placeholder:text-white/50 bg-transparent outline-none font-light min-w-0";
+  const fieldWrap = "flex w-full border border-white/20 focus-within:border-white/40 transition-colors duration-200";
+  const submitBtn = `px-3 py-2 flex items-center justify-center transition-colors duration-200 cursor-pointer border-0 shrink-0
+    ${loading ? "bg-white/70 pointer-events-none" : "bg-white hover:bg-white/90 text-[#112942]"}`;
+
+  const isDone = state === "success";
+
+  return (
+    <div className="flex flex-col gap-3">
+      <h3 className="font-display text-[18px] font-normal text-white">Down For More? We got You</h3>
+      <p className="text-[13px] font-light text-white/70 leading-relaxed">
+        Subscribe to our mailing list for all the latest product drops, limited offers and in-store event info.
+      </p>
+
+      {!isDone ? (
+        <>
+          {/* Phone field */}
+          <div className={fieldWrap}>
+            <DialDropdown dialCode={dialCode} onChange={(code) => { setDialCode(code); setMessage(""); setState("idle"); }} />
+            <div className="w-px bg-white/20 self-stretch shrink-0" />
+            <input
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSubmit("phone")}
+              disabled={loading}
+              className={inputBase}
+            />
+            <button
+              type="button"
+              onClick={() => handleSubmit("phone")}
+              disabled={loading}
+              aria-label="Submit phone"
+              className={submitBtn}
+            >
+              {loading ? <Spinner /> : <ChevronRight />}
+            </button>
+          </div>
+
+          {/* Email field */}
+          <div className={fieldWrap}>
+            <input
+              type="email"
+              placeholder="EMAIL"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSubmit("email")}
+              disabled={loading}
+              className={inputBase}
+            />
+            <button
+              type="button"
+              onClick={() => handleSubmit("email")}
+              disabled={loading}
+              aria-label="Submit email"
+              className={submitBtn}
+            >
+              {loading ? <Spinner /> : <ChevronRight />}
+            </button>
+          </div>
+
+          {/* Loading bar */}
+          {loading && (
+            <div className="w-full h-px bg-white/10 overflow-hidden">
+              <div
+                className="h-full bg-white/40"
+                style={{
+                  animation: "footerProgress 1.4s ease-in-out infinite",
+                  width: "40%",
+                }}
+              />
+            </div>
+          )}
+
+          {/* Message */}
+          {message && (
+            <p className={`text-[11px] font-light leading-relaxed ${state === "error" ? "text-red-300" : "text-white/70"}`}>
+              {message}
+            </p>
+          )}
+        </>
+      ) : (
+        /* Done state */
+        <div className="flex items-start gap-3 py-1">
+          <div className="w-4 h-4 rounded-full border border-white/30 flex items-center justify-center shrink-0 mt-0.5">
+            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          </div>
+          <p className="text-[13px] font-light text-white/70 leading-relaxed">{message}</p>
+        </div>
+      )}
+
+      <style>{`
+        @keyframes footerProgress {
+          0%   { transform: translateX(-100%); }
+          50%  { transform: translateX(150%); }
+          100% { transform: translateX(350%); }
+        }
+      `}</style>
+
+      <p className="text-[11px] font-light text-white/50 leading-relaxed">
+        {disclaimer}{" "}
+        <Link href="/terms-conditions-privacy-policy" className="underline text-white/50 hover:text-white">
+          Terms of Use and Privacy Policy.
+        </Link>
+      </p>
+    </div>
+  );
+}
+
 // ─── Social Icons Row ─────────────────────────────────────────────────────────
 
 function SocialIcons() {
@@ -74,30 +428,6 @@ function SocialIcons() {
           {icon}
         </a>
       ))}
-    </div>
-  );
-}
-
-// ─── Subscription Forms ───────────────────────────────────────────────────────
-
-function SubscribeForm({ placeholder }: { placeholder: string }) {
-  const [value, setValue] = useState("");
-  return (
-    <div className="flex w-full border border-white/20">
-      <input
-        type={placeholder === "EMAIL" ? "email" : "tel"}
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        placeholder={placeholder}
-        className="flex-1 px-3 py-2 text-[12px] tracking-widest text-white placeholder:text-white/50 bg-transparent outline-none font-light"
-      />
-      <button
-        type="submit"
-        aria-label="Submit"
-        className="px-3 py-2 bg-white text-[#112942] flex items-center justify-center hover:bg-white/90 transition-colors duration-200 cursor-pointer border-0"
-      >
-        <ChevronRight />
-      </button>
     </div>
   );
 }
@@ -125,24 +455,13 @@ export default function Footer() {
   return (
     <footer className="w-full bg-[#112942]">
 
-      {/* ── DESKTOP (hidden on mobile) ── */}
+      {/* ── DESKTOP ── */}
       <div className="hidden md:block w-full px-10 lg:px-16 py-14">
         <div className="max-w-360 mx-auto grid grid-cols-3 gap-12">
 
           {/* Col 1 — Subscribe */}
           <div className="flex flex-col gap-4">
-            <h3 className="font-display text-[18px] font-normal text-white">Down For More? We got You</h3>
-            <p className="text-[13px] font-light text-white/70 leading-relaxed">
-              Subscribe to our mailing list for all the latest product drops, limited offers and in-store event info.
-            </p>
-            <SubscribeForm placeholder="PHONE" />
-            <SubscribeForm placeholder="EMAIL" />
-            <p className="text-[11px] font-light text-white/50 leading-relaxed">
-              {disclaimer}{" "}
-              <Link href="/terms-conditions-privacy-policy" className="underline text-white/50 hover:text-white">
-                Terms of Use and Privacy Policy.
-              </Link>
-            </p>
+            <FooterSubscribeSection />
             <LogoAndCopyright />
           </div>
 
@@ -182,24 +501,10 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* ── MOBILE (hidden on desktop/tablet) ── */}
-      <div className=" md:hidden w-full px-6 py-10 flex flex-col gap-8">
+      {/* ── MOBILE ── */}
+      <div className="md:hidden w-full px-6 py-10 flex flex-col gap-8">
 
-        {/* Subscribe */}
-        <div className="flex flex-col gap-3">
-          <h3 className="font-display text-[18px] font-normal text-white">Down For More? We got You</h3>
-          <p className="text-[13px] font-light text-white/70 leading-relaxed">
-            Subscribe to our mailing list for all the latest product drops, limited offers and in-store event info.
-          </p>
-          <SubscribeForm placeholder="PHONE" />
-          <SubscribeForm placeholder="EMAIL" />
-          <p className="text-[11px] font-light text-white/50 leading-relaxed">
-            {disclaimer}{" "}
-            <Link href="/terms-conditions-privacy-policy" className="underline text-white/50 hover:text-white">
-              Terms of Use and Privacy Policy.
-            </Link>
-          </p>
-        </div>
+        <FooterSubscribeSection />
 
         {/* Nav — 2 columns */}
         <div className="grid grid-cols-2 gap-4 pt-2">

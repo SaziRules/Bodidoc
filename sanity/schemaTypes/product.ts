@@ -80,7 +80,6 @@ export const productType = defineType({
       type: "text",
       rows: 2,
     }),
-    // ── NEW: full product description ──────────────────────────────────────────
     defineField({
       name: "description",
       title: "Product Description",
@@ -189,35 +188,42 @@ export const productType = defineType({
         },
       ],
     }),
-
-defineField({
-  name: "inStoreLinks",
-  title: "Find In-store Links",
-  description: "Physical retail locations where this product can be found",
-  type: "array",
-  of: [
-    {
-      type: "object",
-      fields: [
-        { name: "retailer", type: "string", title: "Retailer / Store Name" },
-        { name: "url",      type: "url",    title: "URL (store locator or info page)" },
+    defineField({
+      name: "inStoreLinks",
+      title: "Find In-store Links",
+      description: "Physical retail locations where this product can be found",
+      type: "array",
+      of: [
         {
-          name: "logo",
-          type: "image",
-          title: "Retailer Logo (optional)",
-          options: { hotspot: true },
+          type: "object",
+          fields: [
+            { name: "retailer", type: "string", title: "Retailer / Store Name" },
+            { name: "url",      type: "url",    title: "URL (store locator or info page)" },
+            {
+              name: "logo",
+              type: "image",
+              title: "Retailer Logo (optional)",
+              options: { hotspot: true },
+            },
+          ],
+          preview: { select: { title: "retailer", subtitle: "url" } },
         },
       ],
-      preview: { select: { title: "retailer", subtitle: "url" } },
-    },
-  ],
-}),
+    }),
     defineField({
       name: "isBestseller",
       title: "Bestseller?",
       type: "boolean",
       initialValue: false,
     }),
+    // ── NEW ──────────────────────────────────────────────────────────────────
+    defineField({
+      name: "isNewArrival",
+      title: "New Arrival?",
+      type: "boolean",
+      initialValue: false,
+    }),
+    // ─────────────────────────────────────────────────────────────────────────
     defineField({
       name: "isFeatured",
       title: "Featured on homepage?",
@@ -230,7 +236,6 @@ defineField({
       type: "number",
       description: "Lower number = shown first",
     }),
-    // ── NEW: ratings ──────────────────────────────────────────────────────────
     defineField({
       name: "rating",
       title: "Average Rating",

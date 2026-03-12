@@ -70,16 +70,6 @@ function ProductCard({ product }: { product: Product }) {
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           />
 
-          {product.badge ? (
-            <span className="absolute top-3 left-3 px-2.5 py-1 bg-[#112942] text-[9px] tracking-[0.2em] uppercase text-white font-light">
-              {product.badge}
-            </span>
-          ) : product.isBestseller ? (
-            <span className="absolute top-3 left-3 px-2.5 py-1 bg-white border border-[#112942]/20 text-[9px] tracking-[0.2em] uppercase text-[#112942] font-light">
-              Bestseller
-            </span>
-          ) : null}
-
           <button
             aria-label={`Shop ${product.name}`}
             className="absolute top-3 left-3 translate-y-0 group-hover:translate-y-1 translate-x-0 group-hover:translate-x-1 transition-all duration-200 cursor-pointer border-0 z-10"
@@ -109,8 +99,8 @@ function ProductCard({ product }: { product: Product }) {
             {product.name}
           </Link>
           <StarRating
-            rating={(product as any).rating ?? 0}
-            count={(product as any).reviewCount ?? 0}
+            rating={product.rating ?? 0}
+            count={product.reviewCount ?? 0}
           />
         </div>
 

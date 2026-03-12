@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import FAQAccordion, { type FAQItem } from "@/components/FAQAccordion";
+import { supabase } from "@/lib/supabase";
 
 const FacebookIcon = () => (
   <svg viewBox="0 0 512 512" fill="currentColor" className="w-3.5 h-3.5">
@@ -60,10 +61,10 @@ function FloatingField({ label, type = "text", value, error, touched, onChange, 
 }
 
 function ContactForm() {
-  const [form, setForm] = useState<FormFields>({ name: "", email: "", message: "" });
-  const [errors, setErrors] = useState<FormErrors>({});
+  const [form, setForm]       = useState<FormFields>({ name: "", email: "", message: "" });
+  const [errors, setErrors]   = useState<FormErrors>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
-  const [status, setStatus] = useState<"idle" | "submitting" | "sent">("idle");
+  const [status, setStatus]   = useState<"idle" | "submitting" | "sent" | "error">("idle");
 
   const setField = (field: keyof FormFields) => (value: string) => {
     setForm(f => ({ ...f, [field]: value }));
@@ -73,13 +74,31 @@ function ContactForm() {
     setTouched(t => ({ ...t, [field]: true }));
     setErrors(e => ({ ...e, [field]: validate(form)[field] }));
   };
-  const handleSubmit = () => {
+
+  const handleSubmit = async () => {
     setTouched({ name: true, email: true, message: true });
     const errs = validate(form);
     setErrors(errs);
     if (Object.keys(errs).length > 0) return;
+
     setStatus("submitting");
-    setTimeout(() => setStatus("sent"), 1200);
+
+    const { error: sbError } = await supabase
+      .from("contact_submissions")
+      .insert({
+        brand: "bodidoc",
+        name: form.name.trim(),
+        email: form.email.trim(),
+        message: form.message.trim(),
+      });
+
+    if (sbError) {
+      console.error("Contact submit error:", sbError.message, sbError.code, sbError.details);
+      setStatus("error");
+      return;
+    }
+
+    setStatus("sent");
   };
 
   if (status === "sent") {
@@ -105,6 +124,13 @@ function ContactForm() {
       <FloatingField label="Your name" value={form.name} error={errors.name} touched={touched.name} onChange={setField("name")} onBlur={touchField("name")} />
       <FloatingField label="Email address" type="email" value={form.email} error={errors.email} touched={touched.email} onChange={setField("email")} onBlur={touchField("email")} />
       <FloatingField label="How can we help?" value={form.message} error={errors.message} touched={touched.message} onChange={setField("message")} onBlur={touchField("message")} multiline />
+
+      {status === "error" && (
+        <p className="text-[11.5px] text-red-400 font-light -mt-4">
+          Something went wrong. Please try again.
+        </p>
+      )}
+
       <button
         onClick={handleSubmit}
         disabled={status === "submitting"}

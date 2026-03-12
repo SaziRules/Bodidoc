@@ -1,7 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { createClient } from "@supabase/supabase-js";
 import { getAllProducts, getRangePage, urlFor } from "@/sanity/lib/sanity";
+
+const supabaseServer = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 import FullWidthBanner from "@/components/FullWidthBanner";
 import FAQAccordion, { type FAQItem } from "@/components/FAQAccordion";
 import ProductCarousel, { type CarouselProduct } from "@/components/ProductCarousel";
@@ -42,23 +48,38 @@ const typeLabel: Record<string, string> = {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default async function TissueOilRangePage() {
-  const [allProducts, rangePage] = await Promise.all([
+  const [allProducts, rangePage, { data: reviews }] = await Promise.all([
     getAllProducts(),
     getRangePage("tissue-oil"),
+    supabaseServer
+      .from("product_reviews")
+      .select("productSlug, rating")
+      .eq("brand", "bodidoc")
+      .eq("approved", true),
   ]);
+
+  const ratingsMap: Record<string, { sum: number; count: number }> = {};
+  for (const r of reviews ?? []) {
+    if (!ratingsMap[r.productSlug]) ratingsMap[r.productSlug] = { sum: 0, count: 0 };
+    ratingsMap[r.productSlug].sum   += r.rating;
+    ratingsMap[r.productSlug].count += 1;
+  }
 
   const products = allProducts.filter((p) => p.range === "tissue-oil");
 
   // Serialise for the client carousel component
-  const carouselProducts: CarouselProduct[] = products.map((p) => ({
-    id: p._id,
-    slug: p.slug.current,
-    image: urlFor(p.mainImage).width(600).height(600).url(),
-    category: typeLabel[p.productType] ?? p.productType,
-    name: p.name,
-    rating: p.rating ?? 0,
-    reviewCount: p.reviewCount ?? 0,
-  }));
+  const carouselProducts: CarouselProduct[] = products.map((p) => {
+    const stats = ratingsMap[p.slug.current];
+    return {
+      id: p._id,
+      slug: p.slug.current,
+      image: urlFor(p.mainImage).width(600).height(600).url(),
+      category: typeLabel[p.productType] ?? p.productType,
+      name: p.name,
+      rating:      stats ? Math.round((stats.sum / stats.count) * 2) / 2 : 0,
+      reviewCount: stats?.count ?? 0,
+    };
+  });
 
   return (
     <div className="w-full bg-white -mt-16 md:-mt-22.5 lg:-mt-32.5">
@@ -109,14 +130,14 @@ export default async function TissueOilRangePage() {
 
         {/* Centered intro copy — constrained */}
         <div className="max-w-360 mx-auto px-6 md:px-10 lg:px-16 mb-12">
-          <div className="max-w-4xl mx-auto text-center">
+          <div className="max-w-2xl mx-auto text-center">
             <h2
               className="font-display font-medium text-[#112942] leading-tight mb-4 uppercase"
               style={{ fontSize: "clamp(17px, 1.4vw, 27px)", letterSpacing: "0.1em" }}
             >
               Enriched with Tissue Oil.
             </h2>
-            <p className="text-[14px] font-normal text-[#444] leading-relaxed">
+            <p className="text-[13px] font-normal text-[#444] leading-relaxed">
               Enriched with a specialised formulation of ingredients, including avocado oil, vitamin E, and evening
               primrose oil, each product is designed with a light, easily absorbed texture to give the skin a natural
               glow. Bodidoc's dermatologically tested Tissue Oil range is formulated to help moisturise the skin,

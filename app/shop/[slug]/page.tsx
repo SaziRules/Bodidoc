@@ -8,6 +8,7 @@ import ProductGallery from "@/components/ProductGallery";
 import ProductTabs from "@/components/ProductTabs";
 import ProductPageClient from "@/components/ProductPageClient";
 import ReviewButton from "@/components/ReviewButton";
+import { getProductReviews, ReviewStats, ReviewCards } from "@/components/ReviewList";
 
 // ─── SEO ──────────────────────────────────────────────────────────────────────
 
@@ -122,7 +123,15 @@ export default async function ProductPage({
   const product = await getProductBySlug(slug);
   if (!product) notFound();
 
-  const allImages = [product.mainImage, ...(product.galleryImages ?? [])].filter(Boolean);
+  const [allImages, reviews] = await Promise.all([
+    Promise.resolve([product.mainImage, ...(product.galleryImages ?? [])].filter(Boolean)),
+    getProductReviews(product.slug.current),
+  ]);
+
+  const reviewCount = reviews.length;
+  const reviewRating = reviewCount > 0
+    ? Math.round((reviews.reduce((s, r) => s + r.rating, 0) / reviewCount) * 2) / 2
+    : 0;
   const rangeName = rangeLabels[product.range] ?? product.range;
   const rangePage = rangePageMap[product.range] ?? "/shop";
   const typeName = typeLabels[product.productType] ?? product.productType;
@@ -159,7 +168,7 @@ export default async function ProductPage({
                 </p>
               )}
 
-              <StarRating rating={product.rating ?? 0} count={product.reviewCount ?? 0} />
+              <StarRating rating={reviewRating} count={reviewCount} />
 
               {/* Short description — one-liner teaser */}
               {product.shortDescription && (
@@ -184,21 +193,6 @@ export default async function ProductPage({
                     fill
                     className="object-contain object-left"
                   />
-                </div>
-              )}
-
-              {(product.badge || product.isBestseller) && (
-                <div className="flex items-center gap-2 flex-wrap">
-                  {product.badge && (
-                    <span className="bg-[#112942] px-3 py-1 text-[9px] tracking-[0.2em] uppercase text-white font-light">
-                      {product.badge}
-                    </span>
-                  )}
-                  {product.isBestseller && !product.badge && (
-                    <span className="border border-[#112942]/20 px-3 py-1 text-[9px] tracking-[0.2em] uppercase text-[#112942] font-light">
-                      Bestseller
-                    </span>
-                  )}
                 </div>
               )}
 
@@ -254,29 +248,31 @@ export default async function ProductPage({
             </div>
 
             {/* Two-panel grid */}
-            <div className="grid grid-cols-1 md:grid-cols-[250px_1fr] border border-[#e8e8e8]">
-              <div className="border-b md:border-b-0 md:border-r border-[#e8e8e8] p-8 flex flex-col gap-4">
-                <div>
-                  <p
-                    className="font-display font-normal text-[#112942] leading-none mb-2"
-                    style={{ fontSize: "clamp(36px, 5vw, 48px)" }}
-                  >
-                    100%
-                  </p>
-                  <p className="text-[13px] font-light text-[#666] leading-relaxed">
-                    Customers would recommend this product to a friend.
-                  </p>
-                </div>
-                <div className="h-px bg-[#e8e8e8]" />
-                <StarRating rating={product.rating ?? 0} count={product.reviewCount ?? 0} />
-                <ReviewButton productName={product.name} />
+            <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] border border-[#e8e8e8]">
+              <div className="border-b md:border-b-0 md:border-r border-[#e8e8e8] p-8 flex flex-col gap-5">
+                {reviews.length > 0 ? (
+                  <ReviewStats reviews={reviews} />
+                ) : (
+                  <div className="flex flex-col gap-4">
+                    <div>
+                      <p
+                        className="font-display font-normal text-[#112942] leading-none mb-2"
+                        style={{ fontSize: "clamp(36px, 5vw, 48px)" }}
+                      >
+                        0
+                      </p>
+                      <p className="text-[13px] font-light text-[#666] leading-relaxed">
+                        No reviews yet. Be the first!
+                      </p>
+                    </div>
+                    <div className="h-px bg-[#e8e8e8]" />
+                    <StarRating rating={0} count={0} />
+                  </div>
+                )}
+                <ReviewButton productName={product.name} productSlug={product.slug.current} />
               </div>
 
-              <div className="p-8 flex items-center justify-start">
-                <p className="text-[13px] font-light text-[#999]">
-                  No reviews yet. Be the first to review this product!
-                </p>
-              </div>
+              <ReviewCards reviews={reviews} />
             </div>
 
           </div>
