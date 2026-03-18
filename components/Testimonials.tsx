@@ -88,7 +88,7 @@ export default function Testimonials() {
         <h2 className="font-display text-[26px] md:text-[32px] font-semibold text-[#112942] mb-4">
           Taking Care of You, And Your Skin
         </h2>
-        <p className="text-[14px] md:text-[15px] font-normal text-[#2f2f2f] leading-relaxed mb-12 max-w-xl mx-auto">
+        <p className="text-[14px] md:text-[14px] font-normal text-[#2f2f2f] leading-5.25 mb-12 max-w-xl mx-auto">
           Bodidoc has become a cult favourite by doing what we do best – taking care of you. Read real reviews from customers who&apos;ve made us part of their routine.
         </p>
 
@@ -102,13 +102,13 @@ export default function Testimonials() {
           <button
             onClick={prev}
             aria-label="Previous testimonial"
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-8 md:-translate-x-12 text-[#112942]/40 hover:text-[#112942] transition-colors duration-200 cursor-pointer bg-transparent border-0 p-1 z-10"
+            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-8 md:-translate-x-12 text-[#112942] hover:text-[#112942] transition-colors duration-200 cursor-pointer bg-transparent border-0 p-1 z-10"
           >
             <ChevronLeft />
           </button>
 
           {/* Slide rail */}
-          <div className="overflow-hidden px-4">
+          <div className="overflow-hidden ">
             <div
               className="flex transition-transform duration-500 ease-in-out"
               style={{ transform: `translateX(-${current * 100}%)` }}
@@ -116,14 +116,14 @@ export default function Testimonials() {
               {testimonials.map((t) => (
                 <div key={t.id} className="w-full shrink-0">
                   <blockquote>
-                    <p className="text-[15px] md:text-[16px] font-light text-[#333] leading-relaxed mb-8 italic">
+                    <p className="text-[15px] md:text-[15px] font-light text-[#112942] leading-5.75 mb-3 italic">
                       &ldquo;{t.text}&rdquo;
                     </p>
                     <footer>
-                      <p className="text-[12px] font-normal text-[#112942]/60 tracking-wide uppercase mb-1">
+                      <p className="text-[14px] font-display font-semibold text-[#112942] tracking-normal uppercase mb-1">
                         {t.product}
                       </p>
-                      <p className="text-[14px] font-semibold text-[#112942] tracking-wide">
+                      <p className="text-[14px] font-display font-normal text-[#333] tracking-wide">
                         {t.name}
                       </p>
                     </footer>
@@ -137,7 +137,7 @@ export default function Testimonials() {
           <button
             onClick={next}
             aria-label="Next testimonial"
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-8 md:translate-x-12 text-[#112942]/40 hover:text-[#112942] transition-colors duration-200 cursor-pointer bg-transparent border-0 p-1 z-10"
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-8 md:translate-x-12 text-[#112942] hover:text-[#112942] transition-colors duration-200 cursor-pointer bg-transparent border-0 p-1 z-10"
           >
             <ChevronRight />
           </button>

@@ -69,7 +69,7 @@ export default async function ShopPage() {
           >
             Shop All Products
           </h1>
-          <p className="text-[14px] md:text-[15px] font-medium text-[#2f2f2f] max-w-full leading-relaxed">
+          <p className="text-[14px] md:text-[14px] font-medium text-[#2f2f2f] max-w-full leading-relaxed">
             Check out everything Bodidoc has to offer, or use the filters to help you find exactly what you need!
           </p>
         </div>

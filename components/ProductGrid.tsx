@@ -66,12 +66,12 @@ function ProductCard({ product }: { product: GridProduct }) {
       </Link>
 
       <div className="flex flex-col">
-        <p className="text-[12px] font-light tracking-wide text-[#112942] mb-1">
+        <p className="text-[12px] font-normal tracking-normal text-[#112942] mb-0">
           {product.category}
         </p>
         <Link
           href={`/shop/${product.slug}`}
-          className="text-[15px] font-normal text-[#112942] leading-snug no-underline hover:underline"
+          className="text-[15px] font-medium text-[#112942] leading-snug no-underline hover:underline"
         >
           {product.name}
         </Link>
@@ -90,7 +90,7 @@ export default function ProductGrid({ newArrivals, bestSelling }: Props) {
 
   return (
     <section className="w-full py-12 px-6 md:px-10 lg:px-16">
-      <h2 className="font-display text-center text-[28px] md:text-[42px] font-normal tracking-wide text-[#112942] mb-8">
+      <h2 className="font-display text-center text-[28px] md:text-[42px] font-normal tracking-normal text-[#112942] mb-8">
         YOUR SKIN&apos;S NEW BEST FRIEND.
       </h2>
 
@@ -102,7 +102,7 @@ export default function ProductGrid({ newArrivals, bestSelling }: Props) {
             aria-selected={activeTab === tab}
             onClick={() => setActiveTab(tab)}
             className={`
-              text-[15px] font-semibold tracking-wide uppercase pb-1
+              text-[15px] font-semibold tracking-normal capitalize pb-1
               border-b-2 transition-colors duration-200 cursor-pointer
               bg-transparent border-x-0 border-t-0
               ${activeTab === tab

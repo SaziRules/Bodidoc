@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function HomePageImages() {
   return (
-    <div className="w-full max-w-3xl mx-auto px-8 py-15 md:py-32">
+    <div className="w-full max-w-xl mx-auto px-8 py-15 md:py-32">
 
       {/* Image — always visible on all breakpoints */}
       <div className="w-full mb-6">
@@ -17,7 +17,7 @@ export default function HomePageImages() {
       </div>
 
       {/* Brand text — hidden on mobile only */}
-      <p className=" md:block text-center text-[15px] font-light text-[#112942] leading-relaxed">
+      <p className=" md:block text-center text-[13px] font-normal text-[#2f2f2f] leading-relaxed">
         Bodidoc is a proudly South African skincare brand that prioritises accessibility and
         affordability because good skin shouldn&apos;t cost the earth. Our cruelty-free, functional daily
         skincare products are packed with natural ingredients to enhance skin health, highlight

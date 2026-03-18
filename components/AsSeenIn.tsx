@@ -49,13 +49,18 @@ const doubled = [...publications, ...publications];
 
 export default function AsSeenIn() {
   return (
-    <div className="w-full py-14 overflow-hidden">
-      <div className="max-w-360 mx-auto px-6 md:px-10 lg:px-16 mb-8">
-        <div className="flex items-center gap-4">
-          <div className="w-5 h-px bg-[#112942]/20" />
-          <p className="text-[10px] tracking-[0.3em] uppercase text-[#112942]/40 font-light whitespace-nowrap">
+    <div className="w-full py-14 overflow-hidden bg-white">
+      {/* Centered Heading with Lines */}
+      <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 mb-10">
+        <div className="flex items-center gap-6">
+          {/* Left Line */}
+          <div className="flex-1 h-px bg-[#112942]/10" />
+          
+          <p className="text-[12px] md:text-[27px] tracking-[0.4em] uppercase text-[#112942] font-display whitespace-nowrap">
             As Seen In
           </p>
+          
+          {/* Right Line */}
           <div className="flex-1 h-px bg-[#112942]/10" />
         </div>
       </div>
@@ -63,10 +68,10 @@ export default function AsSeenIn() {
       {/* Marquee track */}
       <div className="relative marquee-container">
         {/* Fade masks */}
-        <div className="absolute left-0 top-0 bottom-0 w-24 z-10 pointer-events-none bg-linear-to-r from-white to-transparent" />
-        <div className="absolute right-0 top-0 bottom-0 w-24 z-10 pointer-events-none bg-linear-to-l from-white to-transparent" />
+        <div className="absolute left-0 top-0 bottom-0 w-32 z-10 pointer-events-none bg-linear-to-r from-white to-transparent" />
+        <div className="absolute right-0 top-0 bottom-0 w-32 z-10 pointer-events-none bg-linear-to-l from-white to-transparent" />
 
-        <div className="marquee-track flex items-center" style={{ gap: "72px", width: "max-content" }}>
+        <div className="marquee-track flex items-center" style={{ gap: "80px", width: "max-content" }}>
           {doubled.map((pub, i) => (
             <a
               key={i}
@@ -74,7 +79,7 @@ export default function AsSeenIn() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`Read more on ${pub.name}`}
-              className="shrink-0 flex items-center opacity-40 hover:opacity-90 transition-opacity duration-300 grayscale hover:grayscale-0"
+              className="shrink-0 flex items-center opacity-40 hover:opacity-100 transition-all duration-500 grayscale hover:grayscale-0"
               style={{ minWidth: "160px" }}
             >
               <Image
@@ -82,8 +87,7 @@ export default function AsSeenIn() {
                 alt={pub.name}
                 width={180}
                 height={52}
-                className="object-contain w-auto"
-                style={{ height: "48px" }}
+                className="object-contain w-auto h-10 md:h-12"
               />
             </a>
           ))}
@@ -96,7 +100,7 @@ export default function AsSeenIn() {
           100% { transform: translateX(-50%); }
         }
         .marquee-track {
-          animation: marquee 30s linear infinite;
+          animation: marquee 40s linear infinite;
         }
         .marquee-container:hover .marquee-track {
           animation-play-state: paused;

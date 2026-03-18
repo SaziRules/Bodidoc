@@ -151,7 +151,7 @@ export default async function ProductPage({
             {/* Right — Details + interactive buttons (client island) */}
             <div className="flex flex-col gap-4 md:sticky md:top-24 md:self-start">
 
-              <p className="text-[12px] tracking-[0.2em] uppercase text-[#112942] font-light">
+              <p className="text-[12px] tracking-normal uppercase text-[#112942] font-light">
                 {typeName}
               </p>
 
@@ -163,19 +163,14 @@ export default async function ProductPage({
               </h1>
 
               {product.size && (
-                <p className="text-[13px] font-light text-[#112942] tracking-wide -mt-1">
+                <p className="text-[13px] font-light text-[#112942] tracking-normal -mt-1">
                   {product.size}
                 </p>
               )}
 
               <StarRating rating={reviewRating} count={reviewCount} />
 
-              {/* Short description — one-liner teaser */}
-              {product.shortDescription && (
-                <p className="text-[13px] md:text-[14px] font-normal text-[#333] leading-relaxed">
-                  {product.shortDescription}
-                </p>
-              )}
+              
 
               {/* Full description — Portable Text */}
               {product.description && product.description.length > 0 && (
@@ -213,16 +208,16 @@ export default async function ProductPage({
 
         {/* ── 3-Tab nav ── */}
         <div className="max-w-360 mx-auto px-6 md:px-10 md:py-6 lg:px-16 hidden md:block">
-          <div className="border-b border-[#e8e8e8] flex items-center justify-left md:pl-42">
-            <a href="#description" className="px-8 py-4 text-[14px] tracking-[0.15em] uppercase font-medium text-[#aaa] hover:text-[#112942] transition-colors">
+          <div className="border-b border-[#e8e8e8] flex items-center justify-center md:pl-42">
+            <a href="#description" className="px-8 py-4 text-[14px] tracking-normal uppercase font-medium text-[#aaa] hover:text-[#112942] transition-colors">
               Description
             </a>
             <span className="text-[#ccc] select-none leading-none">|</span>
-            <a href="#customer-review" className="px-8 py-4 text-[14px] tracking-[0.15em] uppercase font-medium text-[#aaa] hover:text-[#112942] transition-colors">
+            <a href="#customer-review" className="px-8 py-4 text-[14px] tracking-normal uppercase font-medium text-[#aaa] hover:text-[#112942] transition-colors">
               Customer Review
             </a>
             <span className="text-[#ccc] select-none leading-none">|</span>
-            <a href="#learn-more" className="px-8 py-4 text-[14px] tracking-[0.15em] uppercase font-medium text-[#aaa] hover:text-[#112942] transition-colors">
+            <a href="#learn-more" className="px-8 py-4 text-[14px] tracking-normal uppercase font-medium text-[#aaa] hover:text-[#112942] transition-colors">
               Learn More
             </a>
           </div>
@@ -241,14 +236,14 @@ export default async function ProductPage({
 
             <div className="flex items-center gap-6 mb-10">
               <div className="h-px flex-1 bg-[#e8e8e8]" />
-              <h2 className="text-[20px] tracking-widest uppercase text-[#112942] font-medium whitespace-nowrap">
+              <h2 className="text-[20px] tracking-normal uppercase text-[#112942] font-medium whitespace-nowrap">
                 Customer Review
               </h2>
               <div className="h-px flex-1 bg-[#e8e8e8]" />
             </div>
 
             {/* Two-panel grid */}
-            <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] border border-[#e8e8e8]">
+            <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] ">
               <div className="border-b md:border-b-0 md:border-r border-[#e8e8e8] p-8 flex flex-col gap-5">
                 {reviews.length > 0 ? (
                   <ReviewStats reviews={reviews} />
@@ -283,18 +278,18 @@ export default async function ProductPage({
           <div className="max-w-360 mx-auto px-6 md:px-10 lg:px-16 py-16 flex flex-col items-center text-center">
             <div className="flex items-center gap-6 w-full mb-8">
               <div className="h-px flex-1 bg-[#e8e8e8]" />
-              <h2 className="text-[20px] tracking-widest uppercase text-[#112942] font-medium whitespace-nowrap">
+              <h2 className="text-[20px] tracking-normal uppercase text-[#112942] font-medium whitespace-nowrap">
                 Learn More
               </h2>
               <div className="h-px flex-1 bg-[#e8e8e8]" />
             </div>
-            <p className="text-[14px] font-light text-[#666] leading-relaxed max-w-xl mb-8">
+            <p className="text-[14px] font-normal text-[#555] leading-relaxed max-w-xl mb-8">
               Discover the full Tissue Oil collection and find the perfect product for your skincare
               needs. Visit our {rangeName} for more details, FAQs, and expert tips.
             </p>
             <Link
               href={rangePage}
-              className="flex items-center justify-center rounded-full bg-[#112942] text-white text-[10px] tracking-[0.25em] uppercase font-light px-8 py-3.5 hover:bg-[#1a3a5c] transition-colors duration-200"
+              className="flex items-center justify-center rounded-full bg-[#112942] text-white text-[11px] tracking-[0.25em] uppercase font-semibold px-8 py-3.5 hover:bg-[#1a3a5c] transition-colors duration-200"
             >
               Visit Page
             </Link>

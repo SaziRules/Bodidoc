@@ -89,12 +89,12 @@ function ProductCard({ product }: { product: Product }) {
         </Link>
 
         <div className="flex flex-col">
-          <p className="text-[12px] font-normal uppercase tracking-wide text-[#112942] mb-1">
+          <p className="text-[12px] font-normal uppercase tracking-normal text-[#112942] mb-0">
             {typeLabels[product.productType] ?? product.productType}
           </p>
           <Link
             href={`/shop/${product.slug.current}`}
-            className="text-[15px] font-medium text-[#112942] leading-snug no-underline hover:underline"
+            className="text-[15px] font-medium text-[#112942] leading-4.5 tracking-normal no-underline"
           >
             {product.name}
           </Link>
@@ -138,7 +138,7 @@ function FilterGroup({
   return (
     <div className="border-b border-[#333333]/40 pb-5 mb-5">
       <button className="flex items-center justify-between w-full mb-4">
-        <span className="text-[13px] tracking-[0.2em] uppercase text-[#112942] font-semibold">
+        <span className="text-[13px] tracking-normal uppercase text-[#112942] font-semibold">
           {title}
         </span>
       </button>
@@ -252,7 +252,7 @@ export default function ShopFilters({ ranges, types, skins, products }: Props) {
   const sidebar = (
     <>
       <div className="flex items-center justify-between mb-6">
-        <p className="text-[11px] tracking-[0.2em] uppercase text-[#112942] font-medium">Filter By</p>
+        <p className="text-[11px] leading-2.75 tracking-normal uppercase text-[#112942] font-medium">Filter By:</p>
         {activeCount > 0 && (
           <button onClick={clearAll} className="text-[10px] tracking-widest uppercase text-[#999] font-light hover:text-[#112942] transition-colors">
             Clear ({activeCount})

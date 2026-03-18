@@ -108,7 +108,7 @@ export default function ProductTabs({ product }: { product: Product }) {
             <button
               key={tab.id}
               onClick={() => setActive(tab.id)}
-              className={`text-left py-3 text-[12px] tracking-[0.12em] uppercase transition-colors duration-150 bg-transparent border-0 cursor-pointer ${
+              className={`text-left py-3 text-[12px] tracking-normal uppercase transition-colors duration-150 bg-transparent border-0 cursor-pointer ${
                 active === tab.id
                   ? "font-bold text-[#112942]"
                   : "font-medium text-[#aaa] hover:text-[#112942]"

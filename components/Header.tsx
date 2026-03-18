@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import SubscriptionModal from "@/components/SubscriptionModal";
+import { usePathname } from "next/navigation";
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
 
@@ -86,12 +87,11 @@ function useScrollDirection() {
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY;
-      // Always show when near the top
       if (y < 10) { setVisible(true); lastY.current = y; return; }
       if (y < lastY.current) {
-        setVisible(true);   // scrolling up
+        setVisible(true);
       } else if (y > lastY.current + 4) {
-        setVisible(false);  // scrolling down (4px threshold to avoid jitter)
+        setVisible(false);
       }
       lastY.current = y;
     };
@@ -108,7 +108,6 @@ function AnnouncementBar({ onSubscribeClick }: { onSubscribeClick: () => void })
   return (
     <div className="bg-[#112942] h-11 py-5 w-full z-50 relative">
       <div className="max-w-full mx-auto px-15 h-full flex items-center justify-between gap-4">
-
         <div className="flex items-center gap-3.5 shrink-0">
           <div className="flex items-center gap-1.5">
             {[
@@ -129,7 +128,6 @@ function AnnouncementBar({ onSubscribeClick }: { onSubscribeClick: () => void })
               </a>
             ))}
           </div>
-
           <Link
             href="/shop/?product_cat=petroleum-jelly"
             className="text-white text-[13px] font-light tracking-wide whitespace-nowrap hover:opacity-80 transition-opacity duration-200"
@@ -151,45 +149,40 @@ function AnnouncementBar({ onSubscribeClick }: { onSubscribeClick: () => void })
               <MailIcon />
             </button>
           </div>
-
           <div className="flex items-center bg-white/10 rounded-full overflow-hidden w-65">
             <input
               type="text"
               placeholder="Search"
-              aria-label="Search"
               className="bg-transparent border-0 outline-none text-white text-[12px] font-light tracking-wide placeholder:text-white/50 w-full px-3 py-1.5"
             />
-            <button
-              aria-label="Submit search"
-              className="flex items-center justify-center w-7 h-full px-1.5 py-1.5 rounded-full mr-0.5 bg-white/15 hover:bg-white/25 text-white transition-colors duration-200 cursor-pointer border-0 shrink-0"
-            >
+            <button className="flex items-center justify-center w-7 h-full px-1.5 py-1.5 rounded-full mr-0.5 bg-white/15 hover:bg-white/25 text-white border-0 shrink-0">
               <SearchIcon />
             </button>
           </div>
         </div>
-
       </div>
     </div>
   );
 }
 
-// ─── Mega Menu — Products ─────────────────────────────────────────────────────
+// ─── Perfected Mega Menu Components ───────────────────────────────────────────
 
 function ProductsMegaMenu() {
   return (
-    <div className="max-w-360 mx-auto px-10 py-7 grid grid-cols-[1fr_1px_1.4fr_1px_1.4fr] min-h-50">
-      <div className="px-2">
-        <p className="text-[11px] font-bold tracking-widest text-bd-dark uppercase mb-3.5">
+    <div className="max-w-300 mx-auto px-10 py-10 grid grid-cols-[1.2fr_1px_1.5fr_1px_2fr] min-h-80">
+      {/* Column 1: Links */}
+      <div className="pr-12">
+        <p className="text-[15px] font-bold tracking-normal text-bd-dark uppercase mb-2">
           BROWSE OUR PRODUCTS
         </p>
-        <ul className="flex flex-col gap-2.5 list-none p-0 m-0">
+        <ul className="flex flex-col gap-2 list-none p-0 m-0">
           {[
             { label: "All Products", href: "/shop" },
             { label: "Aqueous Range", href: "/shop/aqueous-range" },
             { label: "Tissue Oil Range", href: "/shop/tissue-oil-range" },
           ].map(({ label, href }) => (
             <li key={label}>
-              <Link href={href} className="text-[13px] text-bd-muted hover:text-bd-dark transition-colors duration-200 no-underline">
+              <Link href={href} className="text-[14px] font-normal text-[#888] hover:text-bd-dark transition-colors duration-200 no-underline">
                 {label}
               </Link>
             </li>
@@ -197,29 +190,31 @@ function ProductsMegaMenu() {
         </ul>
       </div>
 
-      <div className="bg-[#e8e8e8] mx-8 self-stretch" />
+      <div className="bg-[#eee] self-stretch" />
 
-      <div className="px-2">
-        <p className="text-[11px] font-bold tracking-widest text-bd-dark uppercase mb-3.5">NEW!</p>
-        <Link href="/shop/?product_cat=petroleum-jelly" className="block no-underline">
-          <div className="relative w-full h-38.75 overflow-hidden rounded-sm bg-gray-100 mb-2.5">
-            <Image src="/images/mega-menu-new.webp" alt="Bodidoc Tissue Oil Jellies" fill className="object-cover" />
+      {/* Column 2: New Item */}
+      <div className="px-12">
+        <p className="text-[15px] font-bold tracking-normal text-bd-dark uppercase mb-2">NEW!</p>
+        <Link href="/shop/?product_cat=petroleum-jelly" className="block no-underline group">
+          <div className="relative w-full aspect-16/8.5 overflow-hidden rounded-sm bg-gray-50 mb-5">
+            <Image src="/images/mega-menu-new.webp" alt="Bodidoc Tissue Oil Jellies" fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
           </div>
-          <p className="text-[12.5px] text-[#555] leading-relaxed m-0">
+          <p className="text-[13px] text-[#2f2f2f] leading-5 m-0 font-semibold">
             Discover our newest edition to your daily body care must haves: Bodidoc Tissue Oil Jellies
           </p>
         </Link>
       </div>
 
-      <div className="bg-[#e8e8e8] mx-8 self-stretch" />
+      <div className="bg-[#eee] self-stretch" />
 
-      <div className="px-2">
-        <p className="text-[11px] font-bold tracking-widest text-bd-dark uppercase mb-3.5">
+      {/* Column 3: Bestseller */}
+      <div className="pl-12">
+        <p className="text-[15px] font-bold tracking-normal text-bd-dark uppercase mb-2">
           OUR #1 BESTSELLER
         </p>
-        <Link href="/shop/bodidoc-tissue-oil-cream-for-normal-skin" className="block no-underline">
-          <div className="relative w-full h-43.75 overflow-hidden rounded-sm bg-gray-100">
-            <Image src="/images/mega-menu-bestseller.webp" alt="Bodidoc Tissue Oil Cream" fill className="object-cover" />
+        <Link href="/shop/bodidoc-tissue-oil-cream-for-normal-skin" className="block no-underline group">
+          <div className="relative w-full aspect-16/9.5 overflow-hidden rounded-sm bg-gray-50">
+            <Image src="/images/mega-menu-bestseller.webp" alt="Bodidoc Tissue Oil Cream" fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
           </div>
         </Link>
       </div>
@@ -227,53 +222,51 @@ function ProductsMegaMenu() {
   );
 }
 
-// ─── Mega Menu — Moments ──────────────────────────────────────────────────────
-
 function MomentsMegaMenu() {
   return (
-    <div className="max-w-360 mx-auto px-10 py-7 grid grid-cols-[1fr_1px_1.4fr_1px_1.4fr] min-h-50">
-      <div className="px-2">
+    <div className="max-w-300 mx-auto px-10 py-10 grid grid-cols-[1.5fr_1px_1.5fr_1px_1.5fr] min-h-80">
+      <div className="pr-12">
         <Link href="/moments/transform-dry-uneven-skin-with-the-award-winning-bodidoc-tissue-oil-cream-with-urea" className="block no-underline group">
-          <div className="relative w-full h-40 overflow-hidden rounded-sm bg-gray-100 mb-2.5">
-            <Image src="/images/moments-award.png" alt="Voted the #1 smoothing cream with urea" fill className="object-cover" />
+          <div className="relative w-full aspect-16/10 overflow-hidden rounded-sm bg-gray-50 mb-5">
+            <Image src="/images/moments-award.png" alt="Award Winning" fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
           </div>
-          <p className="text-[13.5px] font-semibold text-bd-dark leading-snug mb-1.5 group-hover:underline">
+          <p className="text-[15px] font-medium text-bd-dark leading-3.75 mb-2.5 group-hover:text-bd-muted transition-colors">
             Voted The #1 Smoothing Cream With Urea
           </p>
-          <p className="text-[12px] text-[#777] leading-relaxed m-0">
-            It&apos;s easy to see why Bodidoc Tissue Oil Cream with Urea for Dry Skin won …
+          <p className="text-[13px] text-[#2f2f2f] leading-relaxed m-0">
+            It&apos;s easy to see why Bodidoc Tissue Oil Cream with Urea for Dry Skin won ...
           </p>
         </Link>
       </div>
 
-      <div className="bg-[#e8e8e8] mx-8 self-stretch" />
+      <div className="bg-[#eee] self-stretch" />
 
-      <div className="px-2">
+      <div className="px-12">
         <Link href="/moments/our-commitment-to-sustainable-packaging" className="block no-underline group">
-          <div className="relative w-full h-40 overflow-hidden rounded-sm bg-gray-100 mb-2.5">
-            <Image src="/images/moments-sustainability.png" alt="Our Commitment to Sustainable Packaging" fill className="object-cover" />
+          <div className="relative w-full aspect-16/10 overflow-hidden rounded-sm bg-gray-50 mb-5">
+            <Image src="/images/moments-sustainability.png" alt="Sustainability" fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
           </div>
-          <p className="text-[13.5px] font-semibold text-bd-dark leading-snug mb-1.5 group-hover:underline">
+          <p className="text-[15px] font-medium text-bd-dark leading-3.75 mb-2.5 group-hover:text-bd-muted transition-colors">
             Our Commitment to Sustainable Packaging
           </p>
-          <p className="text-[12px] text-[#777] leading-relaxed m-0">
+          <p className="text-[13px] text-[#2f2f2f] leading-relaxed m-0">
             At Bodidoc, we believe that taking care of your skin shouldn&apos;t cost the earth.
           </p>
         </Link>
       </div>
 
-      <div className="bg-[#e8e8e8] mx-8 self-stretch" />
+      <div className="bg-[#eee] self-stretch" />
 
-      <div className="px-2">
-        <p className="text-[11px] font-bold tracking-widest text-bd-dark uppercase mb-3.5">LEARN MORE</p>
-        <ul className="flex flex-col gap-2.5 list-none p-0 m-0">
+      <div className="pl-12">
+        <p className="text-[15px] font-bold tracking-normal text-bd-dark uppercase mb-2">LEARN MORE</p>
+        <ul className="flex flex-col gap-2 list-none p-0 m-0">
           {[
             { label: "See All", href: "/moments" },
             { label: "Embracing Your Bodi: A Journey of Self-Love and Acceptance", href: "/moments/embracing-your-bodi-a-journey-of-self-love-and-acceptance" },
             { label: "Beyond The Bin: Give Your Bodidoc Packaging A Second Life", href: "/moments/beyond-the-bin-give-your-bodidoc-packaging-a-second-life" },
           ].map(({ label, href }) => (
             <li key={href}>
-              <Link href={href} className="text-[13px] text-bd-muted hover:text-bd-dark transition-colors duration-200 no-underline leading-snug block">
+              <Link href={href} className="text-[14px] font-normal text-[#888] hover:text-bd-dark transition-colors duration-200 no-underline leading-normal block">
                 {label}
               </Link>
             </li>
@@ -284,7 +277,7 @@ function MomentsMegaMenu() {
   );
 }
 
-// ─── Mobile Drawer ────────────────────────────────────────────────────────────
+// ─── Mobile Drawer (Original) ───────────────────────────────────────────────────
 
 function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [productsOpen, setProductsOpen] = useState(false);
@@ -327,7 +320,6 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
 
         <div className="pt-13 pb-8">
           <ul className="list-none p-0 m-0 border-t border-[#e8e8e8]">
-
             <li className="border-b border-[#e8e8e8]">
               <Link href="/" onClick={onClose} className="flex items-center justify-between w-full px-6 py-4.25 text-[12.5px] font-medium tracking-[0.08em] text-bd-dark uppercase no-underline hover:bg-gray-50 transition-colors duration-150">
                 HOME
@@ -419,6 +411,7 @@ export default function Header() {
   const [subscribeOpen, setSubscribeOpen] = useState(false);
   const leaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const navVisible = useScrollDirection();
+  const pathname = usePathname();
 
   const handleEnter = useCallback((menu: ActiveMenu) => {
     if (leaveTimer.current) clearTimeout(leaveTimer.current);
@@ -437,74 +430,80 @@ export default function Header() {
 
   const navLinkBase =
     "font-sans text-[14px] font-bold tracking-[0.06em] uppercase bg-transparent border-0 cursor-pointer whitespace-nowrap flex items-center h-14 relative transition-colors duration-200";
-  const navLinkIdle = "text-bd-muted hover:text-bd-dark hover:font-bold";
+  const navLinkIdle = "text-bd-muted hover:text-bd-dark";
   const navLinkActive =
     "text-bd-dark font-bold after:content-[''] after:absolute after:bottom-[10px] after:left-0 after:right-0 after:h-[2px] after:bg-bd-dark";
 
   return (
     <>
-      {/* ══════════════════ DESKTOP ══════════════════ */}
       <header className="hidden lg:block">
-        {/* Announcement bar — always static, never sticky */}
-        <AnnouncementBar onSubscribeClick={() => setSubscribeOpen(true)} />
+  <AnnouncementBar onSubscribeClick={() => setSubscribeOpen(true)} />
 
-        {/* White nav bar — sticky, hides on scroll down, reveals on scroll up */}
-        <div
-          className={`sticky top-0 z-99 bg-white border-b border-[#e8e8e8] transition-transform duration-300 ease-in-out ${
-            navVisible ? "translate-y-0" : "-translate-y-full"
-          }`}
-          onMouseLeave={handleLeave}
+  <div
+    className={`sticky top-0 z-99 bg-white border-b border-[#e8e8e8] transition-transform duration-300 ease-in-out ${
+      navVisible ? "translate-y-0" : "-translate-y-full"
+    }`}
+    onMouseLeave={handleLeave}
+  >
+    <div className="w-full px-10 h-20 flex items-center justify-center gap-50">
+      <nav className="flex items-center gap-7" aria-label="Primary navigation">
+        {/* HOME: Active only if exactly on home path and no mega menu is hovered */}
+        <Link 
+          href="/" 
+          className={`${navLinkBase} ${pathname === "/" && !activeMenu ? "text-bd-dark" : "text-bd-muted hover:text-bd-dark"}`}
         >
-          <div className="w-full px-10 h-20 flex items-center justify-center gap-50">
+          HOME
+        </Link>
+        
+        {/* PRODUCTS: Active if on a shop page OR if the mega menu is open */}
+        <button
+          className={`${navLinkBase} ${(pathname.startsWith("/shop") || activeMenu === "products") ? "text-bd-dark" : "text-bd-muted hover:text-bd-dark"}`}
+          onMouseEnter={() => handleEnter("products")}
+          aria-haspopup="true"
+          aria-expanded={activeMenu === "products"}
+        >
+          PRODUCTS
+        </button>
+      </nav>
 
-            <nav className="flex items-center gap-7" aria-label="Primary navigation">
-              <Link href="/" className={`${navLinkBase} ${navLinkActive}`}>
-                HOME
-              </Link>
-              <button
-                className={`${navLinkBase} ${activeMenu === "products" ? navLinkActive : navLinkIdle}`}
-                onMouseEnter={() => handleEnter("products")}
-                aria-haspopup="true"
-                aria-expanded={activeMenu === "products"}
-              >
-                PRODUCTS
-              </button>
-            </nav>
+      <Link href="/" aria-label="Bodidoc home" className="relative w-30 h-9 flex items-center">
+        <Image src="/images/logo.webp" alt="Bodidoc" fill className="object-contain" priority />
+      </Link>
 
-            <Link href="/" aria-label="Bodidoc home" className="relative w-30 h-9 flex items-center">
-              <Image src="/images/logo.webp" alt="Bodidoc" fill className="object-contain" priority />
-            </Link>
+      <nav className="flex items-center gap-7" aria-label="Secondary navigation">
+        {/* MOMENTS: Active if on a moments page OR if the mega menu is open */}
+        <button
+          className={`${navLinkBase} ${(pathname.startsWith("/moments") || activeMenu === "moments") ? "text-bd-dark" : "text-bd-muted hover:text-bd-dark"}`}
+          onMouseEnter={() => handleEnter("moments")}
+          aria-haspopup="true"
+          aria-expanded={activeMenu === "moments"}
+        >
+          MOMENTS
+        </button>
 
-            <nav className="flex items-center gap-7" aria-label="Secondary navigation">
-              <button
-                className={`${navLinkBase} ${activeMenu === "moments" ? navLinkActive : navLinkIdle}`}
-                onMouseEnter={() => handleEnter("moments")}
-                aria-haspopup="true"
-                aria-expanded={activeMenu === "moments"}
-              >
-                MOMENTS
-              </button>
-              <Link href="/contact-us" className={`${navLinkBase} ${navLinkIdle}`}>
-                CONTACT US
-              </Link>
-            </nav>
-          </div>
+        {/* CONTACT: Active only if on the contact path */}
+        <Link 
+          href="/contact-us" 
+          className={`${navLinkBase} ${pathname === "/contact-us" ? "text-bd-dark" : "text-bd-muted hover:text-bd-dark"}`}
+        >
+          CONTACT US
+        </Link>
+      </nav>
+    </div>
 
-          {activeMenu && (
-            <div
-              className="absolute top-full left-0 right-0 z-98 bg-white border-t border-b border-[#e8e8e8] shadow-[0_4px_20px_rgba(0,0,0,0.08)] animate-[megaIn_0.18s_ease_forwards]"
-              onMouseEnter={handleMegaEnter}
-              onMouseLeave={handleLeave}
-              role="region"
-              aria-label={activeMenu === "products" ? "Products menu" : "Moments menu"}
-            >
-              {activeMenu === "products" ? <ProductsMegaMenu /> : <MomentsMegaMenu />}
-            </div>
-          )}
-        </div>
-      </header>
+    {activeMenu && (
+      <div
+        className="absolute top-full left-0 right-0 z-98 bg-white border-t border-b border-[#e8e8e8] shadow-[0_4px_20px_rgba(0,0,0,0.08)] animate-[megaIn_0.18s_ease_forwards]"
+        onMouseEnter={handleMegaEnter}
+        onMouseLeave={handleLeave}
+        role="region"
+      >
+        {activeMenu === "products" ? <ProductsMegaMenu /> : <MomentsMegaMenu />}
+      </div>
+    )}
+  </div>
+</header>
 
-      {/* ══════════════════ MOBILE ══════════════════ */}
       <header className="lg:hidden">
         <div className="bg-[#1a2b3c] h-8.5 flex items-center justify-center w-full">
           <Link
@@ -515,7 +514,6 @@ export default function Header() {
           </Link>
         </div>
 
-        {/* Mobile nav bar — same hide/show behaviour */}
         <div
           className={`sticky top-0 z-99 bg-white h-14.5 border-b border-[#e8e8e8] flex items-center justify-between px-4 transition-transform duration-300 ease-in-out ${
             navVisible ? "translate-y-0" : "-translate-y-full"
@@ -523,18 +521,16 @@ export default function Header() {
         >
           <button
             onClick={() => setMobileOpen(true)}
-            aria-label="Open menu"
-            aria-expanded={mobileOpen}
             className="p-1.5 text-bd-dark bg-transparent border-0 cursor-pointer flex items-center"
           >
             <MenuIcon />
           </button>
 
-          <Link href="/" aria-label="Bodidoc home" className="absolute left-1/2 -translate-x-1/2 w-25 h-8 flex items-center">
+          <Link href="/" className="absolute left-1/2 -translate-x-1/2 w-25 h-8 flex items-center">
             <Image src="/images/logo.webp" alt="Bodidoc" fill className="object-contain" priority />
           </Link>
 
-          <button aria-label="Search" className="p-1.5 text-bd-dark bg-transparent border-0 cursor-pointer flex items-center">
+          <button className="p-1.5 text-bd-dark bg-transparent border-0 cursor-pointer flex items-center">
             <SearchIcon />
           </button>
         </div>
@@ -542,9 +538,7 @@ export default function Header() {
         <MobileDrawer open={mobileOpen} onClose={() => setMobileOpen(false)} />
       </header>
 
-      {subscribeOpen && (
-        <SubscriptionModal onClose={() => setSubscribeOpen(false)} />
-      )}
+      {subscribeOpen && <SubscriptionModal onClose={() => setSubscribeOpen(false)} />}
     </>
   );
 }

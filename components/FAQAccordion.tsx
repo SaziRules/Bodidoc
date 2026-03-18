@@ -38,11 +38,11 @@ function FaqItem({ q, a }: FAQItem) {
         </span>
       </button>
       <div
-        className={`overflow-hidden transition-all duration-300 ${
+        className={`overflow-hidden transition-all px-8 duration-300 ${
           open ? "max-h-96 pb-5" : "max-h-0"
         }`}
       >
-        <p className="text-[13px] font-light text-[#666] leading-relaxed">{a}</p>
+        <p className="text-[14px] font-normal text-[#2f2f2f] leading-relaxed">{a}</p>
       </div>
     </div>
   );

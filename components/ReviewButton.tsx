@@ -10,7 +10,7 @@ export default function ReviewButton({ productName, productSlug }: { productName
     <>
       <button
         onClick={() => setModalOpen(true)}
-        className="mt-1 self-start flex items-center justify-center rounded-full bg-[#112942] text-white text-[10px] tracking-[0.2em] uppercase font-light px-6 py-3 hover:bg-[#1a3a5c] transition-colors duration-200"
+        className="mt-1 self-start flex items-center justify-center rounded-full bg-[#112942] text-white text-[11px] tracking-[0.15em] uppercase font-semibold px-7 py-3 hover:bg-[#1a3a5c] transition-colors duration-200"
       >
         Give Your Opinion
       </button>

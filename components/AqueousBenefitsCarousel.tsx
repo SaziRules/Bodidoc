@@ -45,14 +45,14 @@ const slides = [
 function SlideHeading({ item }: { item: (typeof slides)[number] }) {
   if (item.headingItalic) {
     return (
-      <h2 className="font-display font-medium text-[#112942] text-[27px] leading-snug">
+      <h2 className="font-display font-medium text-[#112942] text-[27px] leading-6.75">
         {item.headingPrefix}
         <em className="italic">{item.headingItalic}</em>
       </h2>
     );
   }
   return (
-    <h2 className="font-display font-medium text-[#112942] text-[27px] leading-snug">
+    <h2 className="font-display font-medium text-[#112942] text-[27px] leading-6.75">
       {item.headingPrefix}
     </h2>
   );
@@ -109,7 +109,7 @@ export default function AqueousBenefitsCarousel() {
             >
               {/* Card — cream texture background */}
               <div
-                className="relative h-full min-h-60 flex flex-col gap-4 p-8 md:p-10 overflow-hidden"
+                className="relative h-full min-h-40 flex flex-col gap-4 p-8 md:p-6 overflow-hidden"
                 style={{
                   backgroundImage: "url('/carousel-bg.png')",
                   backgroundSize: "cover",
@@ -119,7 +119,7 @@ export default function AqueousBenefitsCarousel() {
                 <div className="relative z-10">
                   <SlideHeading item={slide} />
                 </div>
-                <p className="relative z-10 text-[14px] font-light text-[#444] leading-relaxed">
+                <p className="relative z-10 text-[14px] font-light text-[#2f2f2f] leading-5.25">
                   {slide.body}
                 </p>
               </div>
