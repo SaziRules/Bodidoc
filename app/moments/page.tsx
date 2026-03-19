@@ -139,8 +139,8 @@ export default async function MomentsPage() {
 
       {/* ── SECTION: Read More (Full Fetch) ── */}
       <div className="max-w-300 mx-auto px-6 md:px-12 lg:px-20 pb-32">
-        <h2 className="font-display italic text-[36px] text-[#112942] mb-16 pt-16 border-t border-gray-100">
-          Read <span className="font-sans not-italic font-extralight text-gray-300">more</span>
+        <h2 className="font-display not-italic text-[36px] text-[#112942] mb-16 pt-2">
+          Read <span className="font-display italic text-[#112942]">more</span>
         </h2>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-20">

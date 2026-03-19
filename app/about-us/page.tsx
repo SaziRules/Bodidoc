@@ -1,192 +1,89 @@
 "use client";
 
 import Link from "next/link";
-import type { Metadata } from "next";
-
-
-// ─── Page ─────────────────────────────────────────────────────────────────────
+import Image from "next/image";
 
 export default function AboutUsPage() {
   return (
-    <div className="w-full bg-white">
+    <div className="w-full bg-white font-sans selection:bg-[#112942] selection:text-white">
 
-      {/* ── Hero ── */}
-      <div className="relative bg-[#112942] overflow-hidden">
-
-        {/* Ghost watermark */}
-        <div className="absolute inset-0 flex items-end justify-end pr-0 pb-0 pointer-events-none select-none overflow-hidden">
-          <span
-            className="font-display italic font-normal text-white/4.5 leading-none whitespace-nowrap"
-            style={{ fontSize: "clamp(120px, 26vw, 340px)" }}
-          >
-            Us
-          </span>
-        </div>
-
-        {/* Subtle grid lines */}
-        <div className="absolute inset-0 pointer-events-none hidden lg:block">
-          <div className="absolute top-0 bottom-0 w-px bg-white/4" style={{ left: "33.333%" }} />
-          <div className="absolute top-0 bottom-0 w-px bg-white/4" style={{ left: "66.666%" }} />
-        </div>
-
-        <div className="relative max-w-360 mx-auto px-6 md:px-10 lg:px-16 pt-28 pb-14 md:pt-15 md:pb-20">
-
-          {/* Breadcrumb */}
-          <div className="flex items-center gap-2 mb-10">
-            <Link href="/" className="text-[10px] tracking-[0.25em] uppercase text-white/40 hover:text-white/70 transition-colors font-light">
-              Home
-            </Link>
-            <span className="text-white/20 text-[10px]">/</span>
-            <span className="text-[10px] tracking-[0.25em] uppercase text-white/60 font-light">About Us</span>
+      {/* ── SECTION 1: TOP PART (Elementor ID: 2068f90) ── */}
+      <section className="w-full bg-white pt-24 pb-20 overflow-hidden">
+        <div className="max-w-300 mx-auto px-6">
+          {/* Heading (Widget ID: 0891c79) */}
+          <div className="text-center">
+            <h2 className="font-display text-[42px] text-[#112942] leading-tight font-normal">
+              About <em className="italic font-display font-normal">Us</em>
+            </h2>
           </div>
 
-          <div className="max-w-2xl">
-            <p className="text-[10px] tracking-[0.35em] uppercase text-white/40 font-light mb-5">
-              Bodidoc — Our Story
+          {/* Text Editor (Widget ID: 19bace5) */}
+          <div className="max-w-250 mx-auto">
+            <div className="flex flex-col gap-8 text-center text-[14px] font-normal text-[#112942] leading-5.25">
+              <p>
+                Life can get pretty hectic – work, social life, kids, bills… you’ve clearly got
+                enough to worry about without having to worry about your skin on top of it all.
+                That’s where we come in. Our job is to make sure you are confident in your skin,
+                and that your everyday skincare needs are taken care of so that you can focus
+                on the rest. We create dermatologically tested products that contribute towards
+                glowing skin – a mark of good skin health that provide your skin with the
+                nourishment it needs to get through the day.
+              </p>
+              <p>
+                Bodidoc consists of accessible and affordable daily skincare solutions,
+                formulated so that you can stop worrying about your skincare regimen,
+                but also truly love the skin you’re in. Our ethos consists of celebrating
+                our bodies for what they do for us every day. However, we also know that
+                sometimes, skincare regimes can be expensive, adding another stress to
+                your life. Good skincare shouldn’t cost the earth – not when it comes to
+                your wallet or the environment. As a proudly South African business, we
+                care about producing quality products as well as the beautiful people
+                who use them.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── SECTION 2: Mission Slider (elementor-c6beaef) ── */}
+      <div className="w-full bg-[#112942] py-24 md:py-32 overflow-hidden text-center text-white">
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="animate-fadeInUp">
+            <p className=" text-[19px] leading-6.75 font-normal italic opacity-90">
+              Bodidoc is just one skincare brand, yet our mission is simple:
+              <br />
+              to give you a solution to your skincare problems.
             </p>
-            <h1
-              className="font-display font-normal text-white leading-none mb-0"
-              style={{ fontSize: "clamp(52px, 10vw, 112px)" }}
-            >
-              About <em className="italic">Us</em>
-            </h1>
           </div>
-
         </div>
       </div>
 
-      {/* ── Thin accent line ── */}
-      <div className="h-1 w-full bg-linear-to-r from-[#112942] via-[#112942]/30 to-transparent" />
-
-      {/* ── Main content ── */}
-      <div className="max-w-360 mx-auto px-6 md:px-10 lg:px-16 py-16 md:py-24">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
-
-          {/* ── Left column: paragraphs ── */}
-          <div className="lg:col-span-7 flex flex-col gap-8">
-
-            {/* Paragraph 1 */}
-            <p className="text-[15px] md:text-[16px] font-light text-[#222] leading-[1.9]">
-              Life can get pretty hectic – work, social life, kids, bills… you&apos;ve clearly got enough to worry about without having to worry about your skin on top of it all. That&apos;s where we come in. Our job is to make sure you are confident in your skin, and that your everyday skincare needs are taken care of so that you can focus on the rest. We create dermatologically tested products that contribute towards glowing skin – a mark of good skin health that provide your skin with the nourishment it needs to get through the day.
-            </p>
-
-            {/* Decorative divider */}
-            <div className="flex items-center gap-4">
-              <div className="w-8 h-px bg-[#112942]/30" />
-              <div className="w-2 h-2 rounded-full bg-[#112942]/15" />
-              <div className="w-8 h-px bg-[#112942]/30" />
-            </div>
-
-            {/* Paragraph 2 */}
-            <p className="text-[15px] md:text-[16px] font-light text-[#222] leading-[1.9]">
-              Bodidoc consists of accessible and affordable daily skincare solutions, formulated so that you can stop worrying about your skincare regimen, but also truly love the skin you&apos;re in. Our ethos consists of celebrating our bodies for what they do for us every day. However, we also know that sometimes, skincare regimes can be expensive, adding another stress to your life. Good skincare shouldn&apos;t cost the earth – not when it comes to your wallet or the environment. As a proudly South African business, we care about producing quality products as well as the beautiful people who use them.
-            </p>
-
-          </div>
-
-          {/* ── Right column: mission pull-quote ── */}
-          <div className="lg:col-span-5 flex items-center">
-            <div className="relative w-full border-l-2 border-[#112942] pl-8 md:pl-10 py-2">
-
-              {/* Large opening quote mark */}
-              <span
-                className="absolute -top-4 -left-2 font-display text-[#112942]/10 leading-none select-none"
-                style={{ fontSize: "clamp(80px, 10vw, 120px)" }}
-              >
-                &ldquo;
-              </span>
-
-              <p
-                className="font-display font-normal text-[#112942] leading-snug relative z-10"
-                style={{ fontSize: "clamp(20px, 2.5vw, 28px)" }}
-              >
-                Bodidoc is just one skincare brand, yet our mission is simple:
-              </p>
-              <p
-                className="font-display italic font-normal text-[#112942] leading-snug mt-3 relative z-10"
-                style={{ fontSize: "clamp(20px, 2.5vw, 28px)" }}
-              >
-                to give you a solution to your skincare problems.
-              </p>
-
-              {/* Bottom accent */}
-              <div className="mt-8 flex items-center gap-3">
-                <div className="w-6 h-px bg-[#112942]/40" />
-                <p className="text-[10px] tracking-[0.25em] uppercase text-[#112942]/40 font-light">Our Mission</p>
-              </div>
-
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      {/* ── Stats / values bar ── */}
-      <div className="border-t border-b border-[#eaeaea] bg-[#fafafa]">
-        <div className="max-w-360 mx-auto px-6 md:px-10 lg:px-16 py-10">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4">
+      {/* ── SECTION 3: Image Slide-Up Grid (Responsive 2x2 on Mobile, 4-col on Desktop) ── */}
+      <div className="w-full bg-white py-16">
+        <div className="max-w-300 mx-auto px-4">
+          {/* Mobile: 2 columns | Tablet/Desktop: 4 columns */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 items-start">
             {[
-              { value: "100%", label: "South African" },
-              { value: "Derm", label: "Tested & Approved" },
-              { value: "9/10", label: "Women Agree" },
-              { value: "2+", label: "Ranges & Growing" },
-            ].map(({ value, label }) => (
-              <div key={label} className="flex flex-col items-center text-center gap-1">
-                <span
-                  className="font-display font-normal text-[#112942] leading-none"
-                  style={{ fontSize: "clamp(28px, 4vw, 42px)" }}
-                >
-                  {value}
-                </span>
-                <span className="text-[10px] tracking-[0.2em] uppercase font-light text-[#112942]/50">
-                  {label}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+              { bottom: "firstBottom.png", top: "firstTop.png", alt: "Tissue Oil" },
+              { bottom: "secondBottom.png", top: "secondTop.png", alt: "Body Lotion" },
+              { bottom: "thirdBottom.png", top: "thirdTop.png", alt: "Body Creams" },
+              { bottom: "fourthBottom.png", top: "FourthTop.png", alt: "Speciality" },
+            ].map((card, index) => (
+              <div key={index} className="group relative cursor-pointer overflow-hidden">
+                {/* Bottom Image - Dictates the natural height */}
+                <img
+                  src={`/images/about/${card.bottom}`}
+                  alt={card.alt}
+                  className="w-full h-auto block"
+                />
 
-      {/* ── Flip card grid — hidden on mobile, slide-from-bottom animation ── */}
-      <style>{`
-        .flip-card { perspective: 1200px; }
-        .flip-card-inner {
-          position: relative; width: 100%; height: 100%;
-          transform-style: preserve-3d;
-          transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .flip-card:hover .flip-card-inner { transform: rotateX(-180deg); }
-        .flip-card-front, .flip-card-back {
-          position: absolute; inset: 0;
-          backface-visibility: hidden;
-          -webkit-backface-visibility: hidden;
-          overflow: hidden;
-        }
-        .flip-card-back { transform: rotateX(180deg); }
-      `}</style>
-
-      <div className="hidden md:block">
-        <div className="max-w-360 mx-auto px-6 md:px-10 lg:px-16 py-12 md:py-16">
-          <div className="grid grid-cols-4 gap-4">
-            {[0, 1, 2, 3].map((i) => (
-              <div key={i} className="flip-card aspect-square cursor-pointer">
-                <div className="flip-card-inner">
-                  <div className="flip-card-front">
-                    <img
-                      src="https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/01/WEBSITE-BODIDOC-2025-3.png"
-                      alt="Bodidoc"
-                      className="w-full h-full object-cover"
-                      draggable={false}
-                    />
-                  </div>
-                  <div className="flip-card-back">
-                    <img
-                      src="https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/01/WEBSITE-BODIDOC-20259.png"
-                      alt="Bodidoc"
-                      className="w-full h-full object-cover"
-                      draggable={false}
-                    />
-                  </div>
+                {/* Top Image - Slides up to match bottom image height exactly */}
+                <div className="absolute inset-0 z-20 translate-y-full transition-transform duration-500 ease-in-out group-hover:translate-y-0">
+                  <img
+                    src={`/images/about/${card.top}`}
+                    alt={`${card.alt} Reveal`}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
               </div>
             ))}
@@ -194,6 +91,21 @@ export default function AboutUsPage() {
         </div>
       </div>
 
+      <style jsx global>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fadeInUp {
+          animation: fadeInUp 0.8s ease-out forwards;
+        }
+      `}</style>
     </div>
   );
 }
