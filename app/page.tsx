@@ -74,6 +74,17 @@ export default async function Home() {
         alt="98% of women agree"
       />
       <HomePageImages />
+      {/* ── Footer Curve Divider ── */}
+<div className="relative w-full -mb-1 overflow-hidden leading-0 bg-[#112942]"> {/* Dark Background */}
+  <svg 
+    viewBox="0 0 1000 100" 
+    preserveAspectRatio="none" 
+    className="relative block w-[calc(100%+1.3px)] h-10 md:h-25 lg:h-35"
+    fill="#ffffff" // <── White Path cuts into the dark background
+  >
+    <path d="M1000,4.3V0H0v4.3C0.9,23.1,126.7,99.2,500,100S1000,22.7,1000,4.3z"></path>
+  </svg>
+</div>
     </main>
   );
 }

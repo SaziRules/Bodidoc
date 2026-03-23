@@ -453,7 +453,7 @@ function LogoAndCopyright() {
 
 export default function Footer() {
   return (
-    <footer className="w-full bg-[#112942]">
+    <footer className="w-full bg-[#112942] pt-10">
 
       {/* ── DESKTOP ── */}
       <div className="hidden md:block w-full px-10 lg:px-16 py-14">

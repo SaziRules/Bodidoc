@@ -258,8 +258,67 @@ export default async function PostPage({
           </div>
 
           {/* ── Split: image left | info panel right ── */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-0 mb-14 border border-[#e8e8e8] overflow-hidden">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-0 mb-14 border border-[#112942]/20 overflow-hidden">
 
+            
+
+            {/* Info panel — right */}
+            <div className="flex flex-col justify-between bg-white p-8 md:p-10 relative overflow-hidden">
+
+              
+
+              {/* Top section */}
+              <div className="flex flex-col gap-6 relative z-10">
+                {/* Tiny label */}
+                <p className="text-[10px] tracking-normal uppercase text-[#112942]/90 font-normal">
+                  The Bodidoc Journal
+                </p>
+
+                {/* Title */}
+                <h1
+                  itemProp="headline"
+                  className="font-display text-[24px] md:text-[28px] font-normal text-[#112942] leading-[1.15]"
+                >
+                  {post.title}
+                </h1>
+
+                {/* Excerpt */}
+                {post.excerpt && (
+                  <p className="text-[14px] font-normal text-[#112942] leading-relaxed line-clamp-4">
+                    {post.excerpt}
+                  </p>
+                )}
+              </div>
+
+              {/* Bottom meta */}
+              <div className="relative z-10 mt-10 pt-6 border-t border-[#112942]/30 flex flex-col gap-3">
+                {post.author && (
+                  <div className="flex items-center gap-2">
+                    <div className="w-5 h-5 rounded-full bg-[#112942] flex items-center justify-center">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-2.5 h-2.5 opacity-60">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                      </svg>
+                    </div>
+                    <span className="text-[13px] font-normal text-[#112942]">{post.author}</span>
+                  </div>
+                )}
+                <div className="flex items-center gap-3">
+                  <span className="text-[12px] font-normal text-[#112942]/90">{formattedDate}</span>
+                  <span className="text-[#112942]/20">·</span>
+                  <span className="text-[12px] font-normal text-[#112942]/90">{readingTime} min read</span>
+                </div>
+
+                {/* Decorative dots */}
+                <div className="flex items-center gap-1.5 mt-2">
+                  {[...Array(5)].map((_, i) => (
+                    <span
+                      key={i}
+                      className="w-1 h-1 rounded-full bg-[#112942]/90"
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
             {/* Image — left */}
             {post.coverImage && (
               <div className="relative w-full overflow-hidden bg-[#f0eeeb] min-h-75 md:min-h-105">
@@ -277,67 +336,6 @@ export default async function PostPage({
                 )}
               </div>
             )}
-
-            {/* Info panel — right */}
-            <div className="flex flex-col justify-between bg-[#112942] p-8 md:p-10 relative overflow-hidden">
-
-              {/* Decorative large number / watermark */}
-              <span className="absolute bottom-0 right-0 font-display text-[160px] leading-none text-white/4 select-none pointer-events-none translate-x-4 translate-y-6">
-                {new Date(post.publishedAt).getFullYear()}
-              </span>
-
-              {/* Top section */}
-              <div className="flex flex-col gap-6 relative z-10">
-                {/* Tiny label */}
-                <p className="text-[10px] tracking-[0.3em] uppercase text-white/30 font-light">
-                  The Bodidoc Journal
-                </p>
-
-                {/* Title */}
-                <h1
-                  itemProp="headline"
-                  className="font-display text-[24px] md:text-[28px] font-normal text-white leading-[1.15]"
-                >
-                  {post.title}
-                </h1>
-
-                {/* Excerpt */}
-                {post.excerpt && (
-                  <p className="text-[13px] font-light text-white/55 leading-relaxed line-clamp-4">
-                    {post.excerpt}
-                  </p>
-                )}
-              </div>
-
-              {/* Bottom meta */}
-              <div className="relative z-10 mt-10 pt-6 border-t border-white/10 flex flex-col gap-3">
-                {post.author && (
-                  <div className="flex items-center gap-2">
-                    <div className="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-2.5 h-2.5 opacity-60">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-                      </svg>
-                    </div>
-                    <span className="text-[12px] font-light text-white/60">{post.author}</span>
-                  </div>
-                )}
-                <div className="flex items-center gap-3">
-                  <span className="text-[11px] font-light text-white/40">{formattedDate}</span>
-                  <span className="text-white/20">·</span>
-                  <span className="text-[11px] font-light text-white/40">{readingTime} min read</span>
-                </div>
-
-                {/* Decorative dots */}
-                <div className="flex items-center gap-1.5 mt-2">
-                  {[...Array(5)].map((_, i) => (
-                    <span
-                      key={i}
-                      className="w-1 h-1 rounded-full bg-white/20"
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
 
           </div>
         </div>

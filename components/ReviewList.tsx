@@ -14,6 +14,7 @@ type Review = {
   message: string;
   rating: number;
   recommend: string | null;
+  gender: string | null;
   created_at: string;
 };
 
@@ -41,10 +42,32 @@ function formatDate(iso: string) {
   });
 }
 
+// ─── Gender-aware avatar ──────────────────────────────────────────────────────
+
+function UnisexAvatar({ name }: { name: string }) {
+  return (
+    <Image src="/icons/unisex.png" alt={name} width={56} height={56} className="rounded-full object-cover w-14 h-14" />
+  );
+}
+
+function ReviewAvatar({ gender, name }: { gender: string | null; name: string }) {
+  if (gender === "male") {
+    return (
+      <Image src="/icons/user-male.png" alt={name} width={56} height={56} className="rounded-full object-cover w-14 h-14" />
+    );
+  }
+  if (gender === "female") {
+    return (
+      <Image src="/icons/user.png" alt={name} width={56} height={56} className="rounded-full object-cover w-14 h-14" />
+    );
+  }
+  return <UnisexAvatar name={name} />;
+}
+
 export async function getProductReviews(productSlug: string): Promise<Review[]> {
   const { data } = await supabaseServer
     .from("product_reviews")
-    .select("id, name, title, message, rating, recommend, created_at")
+    .select("id, name, title, message, rating, recommend, gender, created_at")
     .eq("brand", "bodidoc")
     .eq("productSlug", productSlug)
     .eq("approved", true)
@@ -110,13 +133,7 @@ export function ReviewCards({ reviews }: { reviews: Review[] }) {
 
           {/* Avatar + name */}
           <div className="flex flex-col items-center gap-2 shrink-0 w-28">
-            <Image
-              src="/icons/user.png"
-              alt={r.name}
-              width={56}
-              height={56}
-              className="rounded-full object-cover w-14 h-14"
-            />
+            <ReviewAvatar gender={r.gender} name={r.name} />
             <p className="text-[14px] font-bold text-[#112942] text-center leading-tight wrap-break-word w-full">
               {r.name}
             </p>

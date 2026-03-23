@@ -85,37 +85,40 @@ export default function AqueousBenefitsCarousel() {
       onPointerEnter={onPointerEnter}
       onPointerLeave={onPointerLeave}
     >
-      {/*
-        offset-left: the carousel starts ~100px into the viewport from the left,
-        revealing a partial peek of the previous slide — matching the live site.
-        We achieve this by padding the container and letting overflow show.
-      */}
       <div
         ref={emblaRef}
         className="overflow-visible"
         style={{
-          paddingLeft:
-            "max(1.5rem, calc((100vw - 1440px) / 2 + 2.5rem))",
+          paddingLeft: "max(1.5rem, calc((100vw - 1440px) / 2 + 2.5rem))",
         }}
       >
-        <div className="flex" style={{ gap: "17px" }}>
+        {/* Fix for uniform spacing (from previous step) */}
+        <div className="flex -ml-4.25">
           {slides.map((slide, i) => (
             <div
               key={i}
-              className="shrink-0 w-[calc(100vw-80px)] md:w-[calc(50vw-40px)] lg:w-[calc(40vw-40px)] max-w-150"
+              className="shrink-0 pl-4.25 w-[calc(100vw-80px)] md:w-[calc(50vw-40px)] lg:w-[calc(40vw-40px)] max-w-150"
               role="group"
               aria-roledescription="slide"
               aria-label={`${i + 1} / ${slides.length}`}
             >
-              {/* Card — cream texture background */}
-              <div
-                className="relative h-full min-h-40 flex flex-col gap-4 p-8 md:p-6 overflow-hidden"
-                style={{
-                  backgroundImage: "url('/carousel-bg.png')",
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                }}
-              >
+              
+              {/* Card Container - must be 'relative' for the background to position correctly */}
+              <div className="relative h-full min-h-40 flex flex-col gap-4 p-8 md:p-6 overflow-hidden">
+                
+                {/* ─── NEW: Faint Background Layer ────────────────── */}
+                <div 
+                  className="absolute inset-0 z-0 opacity-50" // Adjust 'opacity-40' to make it more or less faint
+                  style={{
+                    backgroundImage: "url('/carousel-bg.png')",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
+                  aria-hidden="true"
+                />
+                {/* ───────────────────────────────────────────────── */}
+
+                {/* Text Content - Must use 'relative' and 'z-10' to stack on top of the background */}
                 <div className="relative z-10">
                   <SlideHeading item={slide} />
                 </div>
@@ -123,6 +126,7 @@ export default function AqueousBenefitsCarousel() {
                   {slide.body}
                 </p>
               </div>
+
             </div>
           ))}
         </div>

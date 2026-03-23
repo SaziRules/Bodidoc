@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function HomePageImages() {
   return (
-    <div className="w-full max-w-xl mx-auto px-8 py-15 md:py-32">
+    <div className="w-full max-w-xl mx-auto px-8 py-15 md:pb-0 md:pt-32">
 
       {/* Image — always visible on all breakpoints */}
       <div className="w-full mb-6">

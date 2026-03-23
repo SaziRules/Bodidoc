@@ -22,64 +22,27 @@ const useCases: UseCase[] = [
   {
     title: "Body Cream for the Whole Family",
     description: "Nourish and protect the skin of every family member, including babies, with its gentle, dermatologically tested formula.",
-    icon: (
-      <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="1" className="w-9 h-9">
-        <rect x="6" y="4" width="16" height="20" rx="2"/>
-        <line x1="10" y1="9" x2="18" y2="9"/>
-        <line x1="10" y1="13" x2="18" y2="13"/>
-        <line x1="10" y1="17" x2="14" y2="17"/>
-      </svg>
-    ),
+    icon: "/icons/bodyCream.svg",
   },
   {
     title: "Soap Alternative",
     description: "Ideal for sensitive skin, it cleanses without drying, helping to retain natural moisture for soft, healthy skin.",
-    icon: (
-      <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="1" className="w-9 h-9">
-        <path d="M14 4C9 4 5 9 5 14c0 5 4 10 9 10s9-5 9-10c0-5-4-10-9-10z"/>
-        <path d="M14 9v6l3 3"/>
-      </svg>
-    ),
+    icon: "/icons/soap.svg",
   },
   {
     title: "Shaving Cream Alternative",
     description: "Provides a smooth, hydrating base for shaving, reducing irritation and leaving skin silky and moisturized.",
-    icon: (
-      <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="1" className="w-9 h-9">
-        <path d="M10 4h8l3 8H7L10 4z"/>
-        <rect x="7" y="12" width="14" height="12" rx="1"/>
-        <line x1="11" y1="16" x2="17" y2="16"/>
-      </svg>
-    ),
+    icon: "/icons/shaving.svg",
   },
   {
     title: "Makeup Remover",
     description: "Gently lifts makeup without stripping your skin, perfect for sensitive or dry complexions.",
-    icon: (
-      <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="1" className="w-9 h-9">
-        <circle cx="14" cy="14" r="10"/>
-        <path d="M10 17s1.5 2 4 2 4-2 4-2"/>
-        <circle cx="10" cy="11" r="1" fill="currentColor" opacity="0.3"/>
-        <circle cx="18" cy="11" r="1" fill="currentColor" opacity="0.3"/>
-      </svg>
-    ),
+    icon: "/icons/makeupRemover.svg",
   },
   {
     title: "After-Sun Care",
     description: "Soothes and hydrates sun-exposed skin, offering cooling relief and replenishing lost moisture.",
-    icon: (
-      <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="1" className="w-9 h-9">
-        <circle cx="14" cy="14" r="5"/>
-        <line x1="14" y1="3" x2="14" y2="5"/>
-        <line x1="14" y1="23" x2="14" y2="25"/>
-        <line x1="3" y1="14" x2="5" y2="14"/>
-        <line x1="23" y1="14" x2="25" y2="14"/>
-        <line x1="6.05" y1="6.05" x2="7.46" y2="7.46"/>
-        <line x1="20.54" y1="20.54" x2="21.95" y2="21.95"/>
-        <line x1="6.05" y1="21.95" x2="7.46" y2="20.54"/>
-        <line x1="20.54" y1="7.46" x2="21.95" y2="6.05"/>
-      </svg>
-    ),
+    icon: "/icons/afterSun.svg",
   },
 ];
 
@@ -147,42 +110,63 @@ export default async function AqueousRangePage() {
       )}
 
       {/* ── 2. Product intro + benefits carousel ── */}
-      <section>
-        <div className="max-w-4xl mx-auto py-12 md:py-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center">
-            <div className="relative w-full aspect-square">
-              <Image
-                src="https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/05/aques-2048x2048.webp"
-                alt="Bodidoc Aqueous Cream"
-                fill
-                className="object-contain"
-              />
-            </div>
-            <div className="flex flex-col gap-4">
-              <h2
-                className="font-display font-medium text-[#112942] leading-tight"
-                style={{ fontSize: "clamp(17px, 1.4vw, 27px)", textTransform: "uppercase", letterSpacing: "0.1em" }}
-              >
-                Gentle Care for the Whole Family
-              </h2>
-              <p className="text-[14px] font-normal text-[#444] leading-relaxed" style={{ textAlign: "justify" }}>
-                Discover the ultimate solution for your skin's everyday needs with Bodidoc Aqueous Cream. Perfectly formulated for all skin types, this gentle cream is safe for the whole family, including babies. It offers 24-hour moisture and soothing care for sensitive skin. Dermatologically tested and free from harsh chemicals, it's the versatile, go-to product your skin deserves.
-              </p>
-              <div className="pt-2">
-                <Link
-                  href="/shop/bodidoc-aqueous-cream-for-all-skin-types"
-                  className="inline-flex items-center justify-center rounded-full bg-[#112942] text-white text-[11px] tracking-[0.25em] uppercase font-light px-8 py-3.5 hover:bg-[#1a3a5c] transition-colors duration-200"
-                >
-                  Buy Online
-                </Link>
-              </div>
-            </div>
+      <section className="bg-white">
+  <div className="max-w-300 mx-auto py-12 md:py-20 px-6">
+    {/* Grid with custom column split to match reference proportions */}
+    <div className="grid grid-cols-1 md:grid-cols-[45%_55%] gap-8 md:gap-2 items-center">
+      
+      {/* Image: Adjusted to center and fit the jar size perfectly */}
+      <div className="relative w-full md:ml-55  justify-center items-center hidden md:block">
+        <div className="relative w-full max-w-65 aspect-square">
+          <Image
+            src="/images/acqueous.webp" 
+            alt="Bodidoc Aqueous Cream"
+            fill
+            className="object-contain"
+            priority
+          />
+        </div>
+      </div>
+
+      {/* Text Content: Constrained width to force the height match */}
+      <div className="flex flex-col justify-center">
+        <div className="max-w-170 md:-pl-10"> {/* This max-width is the key to the vertical height */}
+          <h2
+            className="font-display font-normal text-[#112942] leading-[1.15] mb-4"
+            style={{ 
+              fontSize: "clamp(24px, 2.2vw, 27px)", 
+              textTransform: "uppercase", 
+              letterSpacing: "0.02em" 
+            }}
+          >
+            Gentle Care for the Whole Family
+          </h2>
+          
+          <p 
+            className="text-[14px] md:text-[15px] font-normal text-[#2f2f2f] leading-5.25 mb-6" 
+            style={{ textAlign: "left" }}
+          >
+            Discover the ultimate solution for your skin's everyday needs with Bodidoc Aqueous Cream. Perfectly formulated for all skin types, this gentle cream is safe for the whole family, including babies. It offers 24-hour moisture and soothing care for sensitive skin. Dermatologically tested and free from harsh chemicals, it's the versatile, go-to product your skin deserves.
+          </p>
+
+          <div>
+            <Link
+              href="/shop/bodidoc-aqueous-cream-for-all-skin-types"
+              className="inline-flex items-center justify-center rounded-full bg-[#112942] text-white text-[11px] tracking-[0.2em] uppercase font-semibold px-10 py-4 hover:bg-[#1a3a5c] transition-shadow duration-200 shadow-sm"
+            >
+              Buy Online
+            </Link>
           </div>
         </div>
-        <div className="py-4">
-          <AqueousBenefitsCarousel />
-        </div>
-      </section>
+      </div>
+
+    </div>
+  </div>
+  
+  <div className="pb-16">
+    <AqueousBenefitsCarousel />
+  </div>
+</section>
 
       {/* ── 3. Lifestyle banner ── */}
       {rangePage?.heroBannerImage && (
@@ -204,7 +188,7 @@ export default async function AqueousRangePage() {
           tabs={useCases}
         />
 
-        {/* ── B.P. Approved copy ── */}
+        {/* ── B.P. Approved copy ── 
         <div className="max-w-4xl mx-auto px-6 pb-16 md:pb-20 text-center flex flex-col gap-5">
           <h2
             className="font-display font-medium text-[#112942] uppercase"
@@ -215,7 +199,7 @@ export default async function AqueousRangePage() {
           <p className="text-[14px] font-normal text-[#2f2f2f] leading-relaxed">
             Our Bodidoc Aqueous Cream is B.P. (British Pharmacopoeia) approved, meaning it meets the highest standards of quality, safety, and effectiveness. The British Pharmacopoeia sets strict guidelines for medicines and healthcare products, ensuring they are consistently safe for use. By being B.P. approved, you can trust that our cream has been carefully formulated and tested to deliver the best care for your skin, with ingredients that are both effective and reliable. This certification provides peace of mind, knowing that you're using a product backed by trusted pharmaceutical standards.
           </p>
-        </div>
+        </div> */}
       </section>
 
       {/* ── 5. Derm-tested banner ── */}

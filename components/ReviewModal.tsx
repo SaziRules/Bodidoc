@@ -18,6 +18,7 @@ export default function ReviewModal({ productName, productSlug, onClose }: Props
   const [title, setTitle]                   = useState("");
   const [message, setMessage]               = useState("");
   const [recommend, setRecommend]           = useState<"yes" | "no" | null>(null);
+  const [gender, setGender]                 = useState<"male" | "female" | "prefer_not_to_say" | null>(null);
   const [submitted, setSubmitted]           = useState(false);
   const [loading, setLoading]               = useState(false);
   const [error, setError]                   = useState("");
@@ -33,7 +34,8 @@ export default function ReviewModal({ productName, productSlug, onClose }: Props
     else if (name.trim().length < 2) errs.name = "Name must be at least 2 characters.";
     if (!email.trim()) errs.email = "Email is required.";
     else if (!EMAIL_RE.test(email.trim())) errs.email = "Please enter a valid email address.";
-    if (phone.trim() && !PHONE_RE.test(phone.trim())) errs.phone = "Please enter a valid phone number.";
+    if (!phone.trim()) errs.phone = "Contact number is required.";
+    else if (!PHONE_RE.test(phone.trim())) errs.phone = "Please enter a valid phone number.";
     if (!title.trim()) errs.title = "Please summarise your review in a few words.";
     else if (title.trim().length < 4) errs.title = "Title must be at least 4 characters.";
     const wordCount = message.trim().split(/\s+/).filter(Boolean).length;
@@ -41,6 +43,7 @@ export default function ReviewModal({ productName, productSlug, onClose }: Props
     else if (wordCount < MIN_WORDS) errs.message = `Please write at least ${MIN_WORDS} words (${wordCount}/${MIN_WORDS} so far).`;
     if (selectedRating === 0) errs.rating = "Please select a star rating.";
     if (recommend === null) errs.recommend = "Please let us know if you would recommend this product.";
+    if (gender === null) errs.gender = "Please select your gender.";
     return errs;
   }
 
@@ -57,10 +60,11 @@ export default function ReviewModal({ productName, productSlug, onClose }: Props
   const canSubmit = selectedRating > 0
     && name.trim().length >= 2
     && EMAIL_RE.test(email.trim())
-    && (phone.trim() === "" || PHONE_RE.test(phone.trim()))
+    && phone.trim().length > 0 && PHONE_RE.test(phone.trim())
     && title.trim().length >= 4
     && message.trim().split(/\s+/).filter(Boolean).length >= MIN_WORDS
-    && recommend !== null;
+    && recommend !== null
+    && gender !== null;
 
   const handleSubmit = async () => {
     const errs = validateAll();
@@ -82,6 +86,7 @@ export default function ReviewModal({ productName, productSlug, onClose }: Props
         message: message.trim(),
         rating: selectedRating,
         recommend,
+        gender: gender ?? null,
         approved: false,
       });
 
@@ -101,7 +106,7 @@ export default function ReviewModal({ productName, productSlug, onClose }: Props
   const ratingLabel = ["", "Poor", "Fair", "Good", "Very Good", "Excellent"][selectedRating] ?? "";
 
   const fieldLabel = (text: string) => (
-    <p className="text-[14px] font-normal text-[#112942] mb-1.5">
+    <p className="text-[11px] font-light text-[#112942] mb-1.5">
       {text} <span className="text-[#112942]">*</span>
     </p>
   );
@@ -162,9 +167,10 @@ export default function ReviewModal({ productName, productSlug, onClose }: Props
             <>
               {/* ── Header ── */}
               <div className="text-center mb-6">
-                <h2 className="font-display text-[27px] font-medium tracking-wide text-[#112942] uppercase">
+                <h2 className="font-display text-[20px] font-normal tracking-wide text-[#112942] uppercase">
                   Give Your Opinion
                 </h2>
+                <p className="text-[11px] font-light text-[#aaa] mt-1">{productName}</p>
                 <div className="h-px bg-[#ebebeb] mt-4" />
               </div>
 
@@ -220,13 +226,41 @@ export default function ReviewModal({ productName, productSlug, onClose }: Props
                     {fieldError("title")}
                   </div>
                   <div>
-                    <p className="text-[13px] font-normal text-[#112942] mb-1.5">
-                      Contact number <span className="text-[#bbb] font-light text-[11px]">(optional)</span>
-                    </p>
+                    {fieldLabel("Contact number")}
                     <input type="tel" value={phone} onChange={(e) => { setPhone(e.target.value); setFieldErrors(er => ({ ...er, phone: "" })); }} placeholder="e.g. 071 234 5678"
                       className={`${inputClass} ${fieldErrors.phone ? "border-red-400 focus:border-red-400" : ""}`} />
                     {fieldError("phone")}
                   </div>
+                </div>
+
+                {/* Gender selector */}
+                <div>
+                  {fieldLabel("Gender")}
+                  <div className="flex items-center gap-3">
+                    {(["male", "female", "prefer_not_to_say"] as const).map((val) => {
+                      const label = val === "prefer_not_to_say" ? "Prefer not to say" : val.charAt(0).toUpperCase() + val.slice(1);
+                      const active = gender === val;
+                      return (
+                        <button
+                          key={val}
+                          type="button"
+                          onClick={() => { setGender(val); setFieldErrors(er => ({ ...er, gender: "" })); }}
+                          className={`px-4 py-1.5 text-[11px] tracking-[0.08em] uppercase font-light border transition-all duration-150 cursor-pointer ${
+                            active
+                              ? "bg-[#112942] text-white border-[#112942]"
+                              : fieldErrors.gender
+                              ? "bg-white text-[#112942] border-red-400 hover:border-[#112942]"
+                              : "bg-white text-[#112942] border-[#d8d8d8] hover:border-[#112942]"
+                          }`}
+                        >
+                          {label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {fieldErrors.gender && (
+                    <p className="text-[11px] text-red-400 font-light mt-1">{fieldErrors.gender}</p>
+                  )}
                 </div>
 
                 {/* Message — full width */}

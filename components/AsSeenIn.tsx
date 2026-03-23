@@ -56,7 +56,7 @@ export default function AsSeenIn() {
           {/* Left Line */}
           <div className="flex-1 h-px bg-[#112942]/10" />
           
-          <p className="text-[12px] md:text-[27px] tracking-[0.4em] uppercase text-[#112942] font-display whitespace-nowrap">
+          <p className="text-[12px] md:text-[27px] tracking-normal uppercase text-[#112942] font-display whitespace-nowrap">
             As Seen In
           </p>
           
