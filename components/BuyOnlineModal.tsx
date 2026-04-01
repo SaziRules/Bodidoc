@@ -68,31 +68,31 @@ export default function BuyOnlineModal({
         <button
           onClick={onClose}
           aria-label="Close"
-          className="absolute top-4 right-4 w-7 h-7 flex items-center justify-center text-[#112942]/30 hover:text-[#112942] transition-colors z-10 cursor-pointer bg-transparent border-0"
+          className="absolute top-4 right-4 w-7 h-7 flex items-center justify-center text-[#112942] hover:text-[#112942] transition-colors z-10 cursor-pointer bg-transparent border-0"
         >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="w-4 h-4">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="w-4 h-4">
             <path d="M18 6L6 18M6 6l12 12" />
           </svg>
         </button>
 
         <div className="p-7">
 
-          {/* Product identity */}
+          {/* Product identity 
           <p className="text-[10px] tracking-[0.2em] uppercase text-[#112942]/40 font-light mb-1">
             {typeLabels[productType] ?? productType}
           </p>
           <h2 className="font-display text-[19px] font-semibold text-[#112942] leading-snug mb-5 pr-8">
             {productName}
-          </h2>
-          <div className="h-px bg-[#ebebeb] mb-6" />
+          </h2>  */}
+          <div className=" mb-6" />
 
           {/* ── Shop Online ── */}
           {buyLinks.length > 0 && (
             <div className="mb-7">
-              <p className="font-display text-[20px] font-medium text-[#112942] leading-none mb-1">
+              <p className="font-display text-[27px] font-normal text-[#112942] leading-none mb-1">
                 Shop <em className="italic">Online</em>
               </p>
-              <p className="text-[12px] font-light text-[#aaa] mb-4">
+              <p className="text-[13px] font-medium text-[#2f2f2f] mb-4">
                 Get your Bodidoc fix delivered to your door
               </p>
               <div className="flex flex-col gap-2">
@@ -106,10 +106,10 @@ export default function BuyOnlineModal({
           {/* ── Find In-store ── */}
           {inStoreLinks.length > 0 && (
             <div className="mb-2">
-              <p className="font-display text-[20px] font-medium text-[#112942] leading-none mb-1">
+              <p className="font-display text-[27px] font-normal text-[#112942] leading-none mb-1">
                 Find <em className="italic">In-store</em>
               </p>
-              <p className="text-[12px] font-light text-[#aaa] mb-4">
+              <p className="text-[13px] font-medium text-[#2f2f2f] mb-4">
                 Get your Bodidoc fix from your nearest store
               </p>
               <div className="flex flex-col gap-2">
@@ -141,7 +141,7 @@ export default function BuyOnlineModal({
             </div>
           )}
 
-          {/* ── View full product details (shop grid context) ── */}
+          {/* ── View full product details (shop grid context) 
           {hasAnyLinks && productSlug && (
             <>
               <div className="h-px bg-[#ebebeb] mt-5 mb-4" />
@@ -156,7 +156,7 @@ export default function BuyOnlineModal({
                 </svg>
               </Link>
             </>
-          )}
+          )}  ── */}
 
         </div>
       </div>
@@ -172,14 +172,14 @@ function RetailerRow({ link, label }: { link: BuyLink; label: string }) {
       href={link.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex items-center justify-between px-4 py-3.5 bg-[#ececec] hover:bg-[#112942] group transition-colors duration-200 rounded-full"
+      className="flex items-center justify-between px-5 py-2 bg-[#ececec] hover:bg-[#112942] group transition-colors duration-200 rounded-full"
     >
-      <span className="text-[11px] tracking-[0.2em] uppercase font-light text-[#9c9c9c] group-hover:text-white transition-colors whitespace-nowrap shrink-0">
+      <span className="text-[13px] tracking-normal uppercase font-light text-[#112942] group-hover:text-white transition-colors whitespace-nowrap shrink-0">
         {label}
       </span>
 
       {link.logo ? (
-        <div className="relative h-8 w-36 flex items-center justify-end shrink-0">
+        <div className="relative h-8 w-28 flex items-center justify-end shrink-0">
           <Image
             src={urlFor(link.logo).width(288).height(64).url()}
             alt={link.retailer}

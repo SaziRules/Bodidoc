@@ -106,7 +106,7 @@ export default function ReviewModal({ productName, productSlug, onClose }: Props
   const ratingLabel = ["", "Poor", "Fair", "Good", "Very Good", "Excellent"][selectedRating] ?? "";
 
   const fieldLabel = (text: string) => (
-    <p className="text-[11px] font-light text-[#112942] mb-1.5">
+    <p className="text-[14px] font-normal text-[#112942] mb-1.5">
       {text} <span className="text-[#112942]">*</span>
     </p>
   );
@@ -133,9 +133,9 @@ export default function ReviewModal({ productName, productSlug, onClose }: Props
         <button
           onClick={onClose}
           aria-label="Close"
-          className="absolute top-4 right-4 w-7 h-7 flex items-center justify-center text-[#112942]/30 hover:text-[#112942] transition-colors z-10 bg-transparent border-0 cursor-pointer"
+          className="absolute top-4 right-4 w-7 h-7 flex items-center justify-center text-[#112942] hover:text-[#112942] transition-colors z-10 bg-transparent border-0 cursor-pointer"
         >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="w-4 h-4">
+          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="w-4 h-4">
             <path d="M18 6L6 18M6 6l12 12" />
           </svg>
         </button>
@@ -167,10 +167,9 @@ export default function ReviewModal({ productName, productSlug, onClose }: Props
             <>
               {/* ── Header ── */}
               <div className="text-center mb-6">
-                <h2 className="font-display text-[20px] font-normal tracking-wide text-[#112942] uppercase">
+                <h2 className="font-medium text-[27px]  tracking-normal text-[#112942] uppercase">
                   Give Your Opinion
                 </h2>
-                <p className="text-[11px] font-light text-[#aaa] mt-1">{productName}</p>
                 <div className="h-px bg-[#ebebeb] mt-4" />
               </div>
 
@@ -187,7 +186,7 @@ export default function ReviewModal({ productName, productSlug, onClose }: Props
                         onClick={() => { setSelectedRating(s); setFieldErrors(e => ({ ...e, rating: "" })); }}
                         onMouseEnter={() => setHoverRating(s)}
                         onMouseLeave={() => setHoverRating(0)}
-                        className={`text-[28px] leading-none transition-colors duration-100 cursor-pointer bg-transparent border-0 p-0.5 ${
+                        className={`text-[25px] leading-none transition-colors duration-100 cursor-pointer bg-transparent border-0 p-0.5 ${
                           s <= displayRating ? "text-[#112942]" : "text-[#ddd]"
                         }`}
                       >
@@ -247,7 +246,7 @@ export default function ReviewModal({ productName, productSlug, onClose }: Props
                           onClick={() => { setGender(val); setFieldErrors(er => ({ ...er, gender: "" })); }}
                           className={`px-4 py-1.5 text-[11px] tracking-[0.08em] uppercase font-light border transition-all duration-150 cursor-pointer ${
                             active
-                              ? "bg-[#112942] text-white border-[#112942]"
+                              ? "bg-[#112942] text-[white] border-[#112942]"
                               : fieldErrors.gender
                               ? "bg-white text-[#112942] border-red-400 hover:border-[#112942]"
                               : "bg-white text-[#112942] border-[#d8d8d8] hover:border-[#112942]"
@@ -290,13 +289,13 @@ export default function ReviewModal({ productName, productSlug, onClose }: Props
                           type="button"
                           onClick={() => { setRecommend(val); setFieldErrors(er => ({ ...er, recommend: "" })); }}
                           className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-colors duration-150 cursor-pointer bg-transparent p-0 shrink-0 ${
-                            recommend === val ? "border-[#112942] bg-[#112942]" : "border-[#bbb] bg-white hover:border-[#112942]"
+                            recommend === val ? "border-[#112942] bg-[#112942]" : "border-[#112942] bg-[white] hover:border-[#112942]"
                           }`}
                           aria-label={val}
                         >
-                          {recommend === val && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                          {recommend === val && <div className="w-4 h-4 rounded-full bg-[#112942]" />}
                         </button>
-                        <span onClick={() => { setRecommend(val); setFieldErrors(er => ({ ...er, recommend: "" })); }} className="text-[11px] font-light tracking-widest uppercase text-[#555] cursor-pointer">
+                        <span onClick={() => { setRecommend(val); setFieldErrors(er => ({ ...er, recommend: "" })); }} className="text-[14px] font-[400px] tracking-widest uppercase text-[#112942] cursor-pointer">
                           {val === "yes" ? "Yes" : "No"}
                         </span>
                       </label>
@@ -315,7 +314,7 @@ export default function ReviewModal({ productName, productSlug, onClose }: Props
                   <button
                     onClick={handleSubmit}
                     disabled={!canSubmit || loading}
-                    className="flex items-center justify-center gap-2 rounded-full bg-[#112942] text-white text-[10px] tracking-[0.2em] uppercase font-light px-10 py-3.5 hover:bg-[#1a3a5c] transition-colors duration-200 disabled:opacity-30 disabled:cursor-not-allowed border-0 cursor-pointer"
+                    className="flex items-center justify-center gap-2 rounded-full bg-[#112942] text-white text-[13px] tracking-normal uppercase font-light px-10 py-3.5 hover:bg-[#1a3a5c] transition-colors duration-200 disabled:opacity-30 disabled:cursor-not-allowed border-0 cursor-pointer"
                   >
                     {loading && (
                       <svg className="animate-spin w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">

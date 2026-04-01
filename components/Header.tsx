@@ -292,13 +292,13 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
   const subLinks = {
     products: [
       { label: "ALL PRODUCTS", href: "/shop" },
-      { label: "AQUEOUS RANGE", href: "/products/aqueous-range" },
-      { label: "TISSUE OIL RANGE", href: "/products/tissue-oil-range" },
+      { label: "AQUEOUS RANGE", href: "/shop/aqueous-range" },
+      { label: "TISSUE OIL RANGE", href: "/shop/tissue-oil-range" },
     ],
     moments: [
-      { label: "SEE ALL", href: "/blog" },
-      { label: "Embracing Your Bodi: A Journey of Self-Love and Acceptance", href: "/embracing-your-bodi-a-journey-of-self-love-and-acceptance" },
-      { label: "Beyond The Bin: Give Your Bodidoc Packaging A Second Life", href: "/beyond-the-bin-give-your-bodidoc-packaging-a-second-life" },
+      { label: "SEE ALL", href: "/moments" },
+      { label: "Embracing Your Bodi: A Journey of Self-Love and Acceptance", href: "/moments/embracing-your-bodi-a-journey-of-self-love-and-acceptance" },
+      { label: "Beyond The Bin: Give Your Bodidoc Packaging A Second Life", href: "/moments/beyond-the-bin-give-your-bodidoc-packaging-a-second-life" },
     ],
   };
 
@@ -380,7 +380,7 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
               OUR #1 BESTSELLER
             </p>
             <Link href="/product/bodidoc-tissue-oil-cream-2" onClick={onClose} className="block relative w-full h-37.5 rounded overflow-hidden bg-[#f0f4f8]">
-              <Image src="/images/mobile-bestseller.png" alt="Bodidoc Tissue Oil Cream" fill className="object-cover object-center" />
+              <Image src="/images/mega-menu-new.webp" alt="Bodidoc Tissue Oil Cream" fill className="object-cover object-center" />
             </Link>
           </div>
 

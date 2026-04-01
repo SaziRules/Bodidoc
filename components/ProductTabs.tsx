@@ -4,34 +4,52 @@ import { useState } from "react";
 import type { Product } from "@/sanity/lib/sanity";
 
 const tabs = [
-  { id: "benefits",     label: "Benefits" },
-  { id: "for-me",       label: "Is It For Me?" },
-  { id: "proven",       label: "Proven Results" },
-  { id: "ingredients",  label: "Ingredients" },
+  { id: "benefits", label: "Benefits" },
+  { id: "for-me", label: "Is It For Me?" },
+  { id: "proven", label: "Proven Results" },
+  { id: "ingredients", label: "Ingredients" },
 ];
 
 function TabContent({ product, id }: { product: Product; id: string }) {
   return (
     <>
-      {id === "benefits" && product.benefits && (
-        <ul className="flex flex-col gap-5 max-w-2xl">
-          {product.benefits.map((b, i) => (
-            <li key={i} className="flex items-start gap-4">
-              <span className="w-5 h-5 rounded-full bg-[#112942] flex items-center justify-center shrink-0 mt-0.5">
-                <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3">
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
-              </span>
-              <div>
-                <p className="text-[14px] font-semibold text-[#112942] mb-0.5">{b.heading}</p>
-                {b.detail && (
-                  <p className="text-[13px] font-normal text-[#2f2f2f] leading-5.25">{b.detail}</p>
-                )}
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
+      {/* --- Benefits Section --- */}
+{id === "benefits" && product.benefits && (
+  <ul className="flex flex-col gap-6 max-w-2xl">
+    {product.benefits.map((b, i) => (
+      <li key={i} className="flex items-start gap-3">
+        {/* Render a simple Checkmark instead of a rounded circle */}
+        {b.heading && (
+          <span className="shrink-0 mt-1">
+            <svg 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="#112942" 
+              strokeWidth="3" 
+              strokeLinecap="round" 
+              strokeLinejoin="round" 
+              className="w-5 h-5"
+            >
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          </span>
+        )}
+        <div>
+          {b.heading && (
+            <h4 className="text-[16px] font-semibold text-[#4a4a4a] leading-tight mb-1">
+              {b.heading}
+            </h4>
+          )}
+          {b.detail && (
+            <p className="text-[13px] font-normal text-[#4a4a4a] leading-5">
+              {b.detail}
+            </p>
+          )}
+        </div>
+      </li>
+    ))}
+  </ul>
+)}
 
       {id === "for-me" && (
         <p className="text-[13px] font-normal text-[#2f2f2f] leading-5.25 whitespace-pre-line max-w-2xl">
@@ -39,10 +57,34 @@ function TabContent({ product, id }: { product: Product; id: string }) {
         </p>
       )}
 
+      {/* --- Proven Results Section (Matches structure but NO bullets) --- */}
       {id === "proven" && (
-        <p className="text-[13px] font-normal text-[#2f2f2f] leading-5 whitespace-pre-line max-w-2xl">
-          {product.provenResults ?? "Information coming soon."}
-        </p>
+        <div className="max-w-2xl">
+          {product.provenResults && Array.isArray(product.provenResults) ? (
+            <div className="flex flex-col gap-5">
+              {product.provenResults.map((res, i) => (
+                <div key={i} className="flex flex-col">
+                  {res.heading && (
+                    <p className="text-[14px] font-semibold text-[#112942] mb-0.5">
+                      {res.heading}
+                    </p>
+                  )}
+                  {res.detail && (
+                    <p className="text-[13px] font-normal text-[#2f2f2f] leading-5.25">
+                      {res.detail}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-[13px] font-normal text-[#2f2f2f]">
+              {typeof product.provenResults === "string" 
+                ? product.provenResults 
+                : "Information coming soon."}
+            </p>
+          )}
+        </div>
       )}
 
       {id === "ingredients" && (
@@ -99,10 +141,8 @@ export default function ProductTabs({ product }: { product: Product }) {
         })}
       </div>
 
-      {/* ── Desktop: sidebar layout — unchanged ── */}
+      {/* ── Desktop: sidebar layout ── */}
       <div className="hidden md:flex gap-0">
-
-        {/* Left: vertical tab labels */}
         <div className="flex flex-col shrink-0 w-48 border-r border-[#e8e8e8] pt-6 pr-6">
           {tabs.map((tab) => (
             <button
@@ -119,11 +159,9 @@ export default function ProductTabs({ product }: { product: Product }) {
           ))}
         </div>
 
-        {/* Right: content */}
         <div className="flex-1 min-w-0 pt-6 pl-12">
           <TabContent product={product} id={active} />
         </div>
-
       </div>
     </>
   );

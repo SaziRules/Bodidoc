@@ -180,16 +180,16 @@ export default async function ProductPage({
               )}
 
               {/* Ingredient strip image (icons row) — sits above Buy Online */}
-              {product.ingredientStripImage && (
-                <div className="relative w-120 mb-4" style={{ aspectRatio: "5/1" }}>
-                  <Image
-                    src={urlFor(product.ingredientStripImage).width(900).url()}
-                    alt="Key ingredients"
-                    fill
-                    className="object-contain object-left"
-                  />
-                </div>
-              )}
+{product.ingredientStripImage && (
+  <div className="relative w-full max-w-120 mb-4" style={{ aspectRatio: "5/1" }}>
+    <Image
+      src={urlFor(product.ingredientStripImage).width(900).url()}
+      alt="Key ingredients"
+      fill
+      className="object-contain object-left"
+    />
+  </div>
+)}
 
               {/* Client island: Buy Online button → opens BuyOnlineModal */}
               <ProductPageClient

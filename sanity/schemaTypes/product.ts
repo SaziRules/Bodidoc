@@ -156,9 +156,18 @@ export const productType = defineType({
     defineField({
       name: "provenResults",
       title: "Proven Results",
-      type: "text",
-      rows: 4,
-      description: "Dermatological testing claims and statistics",
+      description: "Dermatological testing claims and statistics (each result shown with a checkmark)",
+      type: "array",
+      of: [
+        {
+          type: "object",
+          fields: [
+            { name: "heading", type: "string", title: "Heading" },
+            { name: "detail", type: "text", title: "Detail (optional)", rows: 2 },
+          ],
+          preview: { select: { title: "heading" } },
+        },
+      ],
     }),
     defineField({
       name: "ingredients",
