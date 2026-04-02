@@ -6,6 +6,8 @@ import FullWidthBanner from "@/components/FullWidthBanner";
 import Testimonials from "@/components/Testimonials";
 import VideoBanner from "@/components/VideoBanner";
 import HomePageImages from "@/components/HomePageImages";
+import AutoSubscribeModal from "@/components/AutoSubscribeModal";
+import CookieAlert from "@/components/CookieAlert";
 
 const supabaseServer = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -57,6 +59,8 @@ export default async function Home() {
   return (
     <main>
       <HeroSlider />
+      <AutoSubscribeModal />
+      <CookieAlert />
       <ProductGrid
         newArrivals={newArrivals.length ? newArrivals : fallback}
         bestSelling={bestSelling.length ? bestSelling : fallback}

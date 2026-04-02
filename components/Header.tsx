@@ -416,6 +416,7 @@ export default function Header() {
   // Tracks the last active menu so content stays visible during the close transition
   const lastMenuRef = useRef<ActiveMenu>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [subscribeOpen, setSubscribeOpen] = useState(false);
   const leaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const navVisible = useScrollDirection();
@@ -450,115 +451,146 @@ export default function Header() {
 
   return (
     <>
-      <header className="hidden lg:block">
+      {/* ── Desktop ── */}
+
+      {/* Announcement bar — scrolls away with the page */}
+      <div className="hidden lg:block">
         <AnnouncementBar onSubscribeClick={() => setSubscribeOpen(true)} />
+      </div>
 
-        <div
-          className={`sticky top-0 z-99 bg-white border-b border-[#e8e8e8] transition-transform duration-300 ease-in-out ${
-            navVisible ? "translate-y-0" : "-translate-y-full"
-          }`}
-          onMouseLeave={handleLeave}
-        >
-          <div className="w-full px-10 h-20 flex items-center justify-center gap-50">
-            <nav className="flex items-center gap-7" aria-label="Primary navigation">
-              {/* HOME — hovering closes any open mega menu */}
-              <Link
-                href="/"
-                onMouseEnter={handleLeave}
-                className={`${navLinkBase} ${pathname === "/" && !activeMenu ? "text-bd-dark" : "text-bd-muted hover:text-bd-dark"}`}
-              >
-                HOME
-              </Link>
-
-              {/* PRODUCTS */}
-              <button
-                className={`${navLinkBase} ${(pathname.startsWith("/shop") || activeMenu === "products") ? "text-bd-dark" : "text-bd-muted hover:text-bd-dark"}`}
-                onMouseEnter={() => handleEnter("products")}
-                aria-haspopup="true"
-                aria-expanded={activeMenu === "products"}
-              >
-                PRODUCTS
-              </button>
-            </nav>
-
-            <Link href="/" aria-label="Bodidoc home" className="relative w-30 h-9 flex items-center">
-              <Image src="/images/logo.webp" alt="Bodidoc" fill className="object-contain" priority />
+      {/* Sticky nav — sticks independently, slides out on scroll-down */}
+      <header
+        className={`hidden lg:block sticky top-0 z-99 bg-white border-b border-[#e8e8e8] transition-transform duration-300 ease-in-out ${
+          navVisible ? "translate-y-0" : "-translate-y-full"
+        }`}
+        onMouseLeave={handleLeave}
+      >
+        <div className="w-full px-10 h-20 flex items-center justify-center gap-50">
+          <nav className="flex items-center gap-7" aria-label="Primary navigation">
+            {/* HOME — hovering closes any open mega menu */}
+            <Link
+              href="/"
+              onMouseEnter={handleLeave}
+              className={`${navLinkBase} ${pathname === "/" && !activeMenu ? "text-bd-dark" : "text-bd-muted hover:text-bd-dark"}`}
+            >
+              HOME
             </Link>
 
-            <nav className="flex items-center gap-7" aria-label="Secondary navigation">
-              {/* MOMENTS */}
-              <button
-                className={`${navLinkBase} ${(pathname.startsWith("/moments") || activeMenu === "moments") ? "text-bd-dark" : "text-bd-muted hover:text-bd-dark"}`}
-                onMouseEnter={() => handleEnter("moments")}
-                aria-haspopup="true"
-                aria-expanded={activeMenu === "moments"}
-              >
-                MOMENTS
-              </button>
+            {/* PRODUCTS */}
+            <button
+              className={`${navLinkBase} ${(pathname.startsWith("/shop") || activeMenu === "products") ? "text-bd-dark" : "text-bd-muted hover:text-bd-dark"}`}
+              onMouseEnter={() => handleEnter("products")}
+              aria-haspopup="true"
+              aria-expanded={activeMenu === "products"}
+            >
+              PRODUCTS
+            </button>
+          </nav>
 
-              {/* CONTACT US — hovering closes any open mega menu */}
-              <Link
-                href="/contact-us"
-                onMouseEnter={handleLeave}
-                className={`${navLinkBase} ${pathname === "/contact-us" ? "text-bd-dark" : "text-bd-muted hover:text-bd-dark"}`}
-              >
-                CONTACT US
-              </Link>
-            </nav>
-          </div>
-
-          {/* Mega menu — always mounted, CSS transition for animate-in/out */}
-          <div
-            className={`absolute top-full left-0 right-0 z-98 bg-white border-t border-b border-[#e8e8e8] shadow-[0_4px_20px_rgba(0,0,0,0.08)] transition-[opacity,transform] duration-180 ease-out origin-top ${
-              activeMenu
-                ? "opacity-100 scale-y-100 translate-y-0 pointer-events-auto"
-                : "opacity-0 scale-y-95 -translate-y-1 pointer-events-none"
-            }`}
-            onMouseEnter={handleMegaEnter}
-            onMouseLeave={handleLeave}
-            role="region"
-          >
-            {menuToRender === "products"
-              ? <ProductsMegaMenu onLinkClick={closeMenu} />
-              : <MomentsMegaMenu onLinkClick={closeMenu} />
-            }
-          </div>
-        </div>
-      </header>
-
-      <header className="lg:hidden">
-        <div className="bg-[#1a2b3c] h-8.5 flex items-center justify-center w-full">
-          <Link
-            href="/shop?type=petroleum-jelly"
-            className="text-white text-[12px] font-normal tracking-wide no-underline"
-          >
-            Try our ALL NEW Tissue Oil Jellies
-          </Link>
-        </div>
-
-        <div
-          className={`sticky top-0 z-99 bg-white h-14.5 border-b border-[#e8e8e8] flex items-center justify-between px-4 transition-transform duration-300 ease-in-out ${
-            navVisible ? "translate-y-0" : "-translate-y-full"
-          }`}
-        >
-          <button
-            onClick={() => setMobileOpen(true)}
-            className="p-1.5 text-bd-dark bg-transparent border-0 cursor-pointer flex items-center"
-          >
-            <MenuIcon />
-          </button>
-
-          <Link href="/" className="absolute left-1/2 -translate-x-1/2 w-25 h-8 flex items-center">
+          <Link href="/" aria-label="Bodidoc home" className="relative w-30 h-9 flex items-center">
             <Image src="/images/logo.webp" alt="Bodidoc" fill className="object-contain" priority />
           </Link>
 
-          <button className="p-1.5 text-bd-dark bg-transparent border-0 cursor-pointer flex items-center">
-            <SearchIcon />
-          </button>
+          <nav className="flex items-center gap-7" aria-label="Secondary navigation">
+            {/* MOMENTS */}
+            <button
+              className={`${navLinkBase} ${(pathname.startsWith("/moments") || activeMenu === "moments") ? "text-bd-dark" : "text-bd-muted hover:text-bd-dark"}`}
+              onMouseEnter={() => handleEnter("moments")}
+              aria-haspopup="true"
+              aria-expanded={activeMenu === "moments"}
+            >
+              MOMENTS
+            </button>
+
+            {/* CONTACT US — hovering closes any open mega menu */}
+            <Link
+              href="/contact-us"
+              onMouseEnter={handleLeave}
+              className={`${navLinkBase} ${pathname === "/contact-us" ? "text-bd-dark" : "text-bd-muted hover:text-bd-dark"}`}
+            >
+              CONTACT US
+            </Link>
+          </nav>
         </div>
 
-        <MobileDrawer open={mobileOpen} onClose={() => setMobileOpen(false)} />
+        {/* Mega menu — always mounted, CSS transition for animate-in/out */}
+        <div
+          className={`absolute top-full left-0 right-0 z-98 bg-white border-t border-b border-[#e8e8e8] shadow-[0_4px_20px_rgba(0,0,0,0.08)] transition-[opacity,transform] duration-180 ease-out origin-top ${
+            activeMenu
+              ? "opacity-100 scale-y-100 translate-y-0 pointer-events-auto"
+              : "opacity-0 scale-y-95 -translate-y-1 pointer-events-none"
+          }`}
+          onMouseEnter={handleMegaEnter}
+          onMouseLeave={handleLeave}
+          role="region"
+        >
+          {menuToRender === "products"
+            ? <ProductsMegaMenu onLinkClick={closeMenu} />
+            : <MomentsMegaMenu onLinkClick={closeMenu} />
+          }
+        </div>
       </header>
+
+      {/* ── Mobile ── */}
+
+      {/* Mobile announcement strip — scrolls away */}
+      <div className="lg:hidden bg-[#1a2b3c] h-8.5 flex items-center justify-center w-full">
+        <Link
+          href="/shop?type=petroleum-jelly"
+          className="text-white text-[12px] font-normal tracking-wide no-underline"
+        >
+          Try our ALL NEW Tissue Oil Jellies
+        </Link>
+      </div>
+
+      {/* Mobile sticky nav */}
+      <header
+        className={`lg:hidden sticky top-0 z-99 bg-white border-b border-[#e8e8e8] transition-transform duration-300 ease-in-out ${
+          navVisible ? "translate-y-0" : "-translate-y-full"
+        }`}
+      >
+        <div className="h-14.5 flex items-center justify-between px-4">
+            <button
+              onClick={() => setMobileOpen(true)}
+              className="p-1.5 text-bd-dark bg-transparent border-0 cursor-pointer flex items-center"
+            >
+              <MenuIcon />
+            </button>
+
+            <Link href="/" className="absolute left-1/2 -translate-x-1/2 w-25 h-8 flex items-center">
+              <Image src="/images/logo.webp" alt="Bodidoc" fill className="object-contain" priority />
+            </Link>
+
+            <button
+              onClick={() => {
+                const opening = !mobileSearchOpen;
+                setMobileSearchOpen(opening);
+                if (opening) window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              className="p-1.5 text-bd-dark bg-transparent border-0 cursor-pointer flex items-center"
+            >
+              <SearchIcon />
+            </button>
+          </div>
+
+          {/* Mobile search bar — slides in below nav */}
+          <div className={`overflow-hidden transition-all duration-300 ease-in-out ${mobileSearchOpen ? "max-h-14" : "max-h-0"}`}>
+            <form action="/search" method="GET" className="flex items-center gap-2 px-4 py-2.5 border-t border-[#e8e8e8]">
+              <input
+                type="text"
+                name="q"
+                placeholder="Search products and articles..."
+                autoFocus={mobileSearchOpen}
+                className="flex-1 bg-[#f5f5f5] border-0 outline-none text-[13px] text-bd-dark placeholder:text-[#aaa] px-3 py-2 rounded-full"
+              />
+              <button type="submit" className="flex items-center justify-center w-8 h-8 rounded-full bg-[#112942] text-white border-0 shrink-0">
+                <SearchIcon />
+              </button>
+            </form>
+          </div>
+      </header>
+
+      <MobileDrawer open={mobileOpen} onClose={() => setMobileOpen(false)} />
 
       {subscribeOpen && <SubscriptionModal onClose={() => setSubscribeOpen(false)} />}
     </>

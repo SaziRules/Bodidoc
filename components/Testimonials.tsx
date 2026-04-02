@@ -94,7 +94,7 @@ export default function Testimonials() {
 
         {/* Carousel */}
         <div
-          className="relative"
+          className="relative px-8 md:px-0"
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
         >
@@ -102,7 +102,7 @@ export default function Testimonials() {
           <button
             onClick={prev}
             aria-label="Previous testimonial"
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-8 md:-translate-x-12 text-[#112942] hover:text-[#112942] transition-colors duration-200 cursor-pointer bg-transparent border-0 p-1 z-10"
+            className="absolute left-0 top-1/2 -translate-y-1/2 md:-translate-x-12 text-[#112942] hover:text-[#112942] transition-colors duration-200 cursor-pointer bg-transparent border-0 p-1 z-10"
           >
             <ChevronLeft />
           </button>
@@ -137,7 +137,7 @@ export default function Testimonials() {
           <button
             onClick={next}
             aria-label="Next testimonial"
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-8 md:translate-x-12 text-[#112942] hover:text-[#112942] transition-colors duration-200 cursor-pointer bg-transparent border-0 p-1 z-10"
+            className="absolute right-0 top-1/2 -translate-y-1/2 md:translate-x-12 text-[#112942] hover:text-[#112942] transition-colors duration-200 cursor-pointer bg-transparent border-0 p-1 z-10"
           >
             <ChevronRight />
           </button>
