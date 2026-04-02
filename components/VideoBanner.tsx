@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 type VideoBannerProps = {
   videoSrc: string;
@@ -6,6 +7,7 @@ type VideoBannerProps = {
   mobileWidth?: number;
   mobileHeight?: number;
   alt?: string;
+  href?: string;
 };
 
 export default function VideoBanner({
@@ -14,10 +16,10 @@ export default function VideoBanner({
   mobileWidth = 2372,
   mobileHeight = 1997,
   alt = "",
+  href,
 }: VideoBannerProps) {
-  return (
-    <section className="w-full">
-
+  const content = (
+    <>
       {/* Desktop — autoplay looping muted video */}
       <div className="hidden md:block w-full leading-none">
         <video
@@ -42,7 +44,18 @@ export default function VideoBanner({
           sizes="100vw"
         />
       </div>
+    </>
+  );
 
+  return (
+    <section className="w-full">
+      {href ? (
+        <Link href={href} className="block w-full">
+          {content}
+        </Link>
+      ) : (
+        content
+      )}
     </section>
   );
 }

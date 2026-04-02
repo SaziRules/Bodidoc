@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
 import { urlFor } from "@/sanity/lib/sanity";
@@ -51,13 +52,13 @@ export default function BuyOnlineModal({
 
   const hasAnyLinks = buyLinks.length > 0 || inStoreLinks.length > 0;
 
-  return (
+  return createPortal(
     <div
       className="fixed inset-0 z-999 flex items-center justify-center p-4"
       onClick={onClose}
     >
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]" />
 
       {/* Panel */}
       <div
@@ -160,7 +161,8 @@ export default function BuyOnlineModal({
 
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 

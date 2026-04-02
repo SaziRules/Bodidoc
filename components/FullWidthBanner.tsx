@@ -1,10 +1,12 @@
 import Image from "next/image";
+import Link from "next/link";
 
 type FullWidthBannerProps = {
   src: string;
   mobileSrc?: string;
   alt: string;
   priority?: boolean;
+  href?: string;
 };
 
 export default function FullWidthBanner({
@@ -12,10 +14,10 @@ export default function FullWidthBanner({
   mobileSrc,
   alt,
   priority = false,
+  href,
 }: FullWidthBannerProps) {
-  return (
-    <section aria-label={alt} className="w-full mt-10">
-
+  const content = (
+    <>
       {/* Desktop */}
       <div className={mobileSrc ? "hidden md:block" : "block"}>
         <Image
@@ -43,7 +45,18 @@ export default function FullWidthBanner({
           />
         </div>
       )}
+    </>
+  );
 
+  return (
+    <section aria-label={alt} className="w-full mt-10">
+      {href ? (
+        <Link href={href} className="block w-full">
+          {content}
+        </Link>
+      ) : (
+        content
+      )}
     </section>
   );
 }

@@ -173,3 +173,34 @@ export async function getRangePage(range: string): Promise<RangePage | null> {
     { next: { revalidate: 60 } }
   );
 }
+
+// ─── Search Queries ───────────────────────────────────────────────────────────
+
+export async function searchProducts(query: string): Promise<Product[]> {
+  const pattern = `*${query}*`;
+  return client.fetch(
+    `*[_type == "product" && (
+      name match $pattern ||
+      shortDescription match $pattern ||
+      productType match $pattern ||
+      range match $pattern
+    )] | order(order asc) {
+      _id, name, slug, range, productType, skinType, size,
+      shortDescription, mainImage, isBestseller, isNewArrival
+    }`,
+    { pattern }
+  );
+}
+
+export async function searchPosts(query: string): Promise<Post[]> {
+  const pattern = `*${query}*`;
+  return client.fetch(
+    `*[_type == "post" && (
+      title match $pattern ||
+      excerpt match $pattern
+    )] | order(publishedAt desc) {
+      _id, title, slug, publishedAt, coverImage, excerpt, category
+    }`,
+    { pattern }
+  );
+}

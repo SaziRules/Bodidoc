@@ -308,8 +308,8 @@ function FooterSubscribeSection() {
   const isDone = state === "success";
 
   return (
-    <div className="flex flex-col gap-3">
-      <h3 className="font-display text-[20px] font-bold text-white">Down For More? We got You</h3>
+    <div className="flex flex-col gap-1">
+      <h3 className="font-display text-[20px] font-bold text-white uppercase">Down For More? We got You</h3>
       <p className="text-[13px] font-normal text-white leading-relaxed">
         Subscribe to our mailing list for all the latest product drops, limited offers and in-store event info.
       </p>

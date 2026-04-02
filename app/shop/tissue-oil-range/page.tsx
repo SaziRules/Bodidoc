@@ -94,6 +94,7 @@ export default async function TissueOilRangePage() {
 
           {/* Nav-height spacer — white background blends seamlessly behind nav */}
           <div className="h-16 md:h-22.5 lg:h-32.5" />
+          <Link href="/shop/bodidoc-tissue-oil-cream-with-urea-for-dry-skin" className="block w-full">
 
           {/* Desktop — natural dimensions, never cropped */}
           <div className={`w-full ${rangePage.heroMobileImage ? "hidden md:block" : "block"}`}>
@@ -121,6 +122,7 @@ export default async function TissueOilRangePage() {
               />
             </div>
           )}
+          </Link>
 
         </section>
       )}
@@ -165,6 +167,7 @@ export default async function TissueOilRangePage() {
               : undefined
           }
           alt="9 out of 10 women agree — Bodidoc Tissue Oil Lotion reduces the appearance of stretch marks, uneven skin tone and dry skin"
+          href="/shop/bodidoc-tissue-oil-lotion-with-urea-for-dry-skin"
         />
       )}
 
@@ -181,6 +184,7 @@ export default async function TissueOilRangePage() {
               : undefined
           }
           alt="Bodidoc Tissue Oil — clinically proven to reduce stretch marks and scars in 28 days"
+          href="/shop/bodidoc-tissue-oil-for-all-skin-types"
         />
       )}
 

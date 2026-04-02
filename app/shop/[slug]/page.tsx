@@ -207,7 +207,7 @@ export default async function ProductPage({
         </div>
 
         {/* ── 3-Tab nav ── */}
-        <div className="max-w-360 mx-auto px-6 md:px-10 md:py-0 lg:px-16 hidden md:block sticky top-0 z-10 bg-white">
+        <div className="max-w-360 mx-auto px-6 md:px-10 md:py-0 lg:px-16 hidden md:block sticky top-0 z-1 bg-white">
           <div className="border-b border-[#e8e8e8] flex items-center justify-center md:pl-42">
             <a href="#description" className="px-8 py-4 text-[14px] tracking-normal uppercase font-medium text-[#aaa] hover:text-[#112942] transition-colors">
               Description

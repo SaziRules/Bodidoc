@@ -64,6 +64,7 @@ export default async function Home() {
       <FullWidthBanner
         src="https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/05/7-1536x536.webp"
         alt="Bodidoc banner"
+        href="shop/bodidoc-aqueous-cream-for-all-skin-types"
       />
       <Testimonials />
       <VideoBanner
@@ -72,6 +73,7 @@ export default async function Home() {
         mobileWidth={2372}
         mobileHeight={1997}
         alt="98% of women agree"
+        href="shop/bodidoc-tissue-oil-for-all-skin-types"
       />
       <HomePageImages />
       {/* ── Footer Curve Divider ── */}

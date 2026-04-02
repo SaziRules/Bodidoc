@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 // ─── Slide data ───────────────────────────────────────────────────────────────
 
@@ -11,26 +12,30 @@ const slides = [
     desktop: "/images/herp-1-desktop.png",
     mobile:  "/images/hero-1-mobile.webp",
     alt:     "Bodidoc Tissue Oil Cream with Urea",
+    url:     "/shop/bodidoc-tissue-oil-jelly-with-aloe-vera-for-all-skin-types",
   },
   {
     id: 2,
     desktop: "/images/hero-2-desktop.png",
     mobile:  "/images/hero-2-mobile.webp",
     alt:     "Bodidoc Tissue Oil Jelly Aloe Vera",
+    url:     "/shop/bodidoc-tissue-oil-cream-with-urea-for-dry-skin",
   },
   {
     id: 3,
     desktop: "/images/hero-3-desktop.webp",
     mobile:  "/images/hero-3-mobile.webp",
     alt:     "Bodidoc Tissue Oil Range",
+    url:     "/shop/tissue-oil-range",
   },
   {
     id: 4,
     desktop: "/images/hero-2-desktop.png",
     mobile:  "/images/hero-4-mobile.webp",
-    alt:     "Bodidoc Aqueous Cream Range", 
+    alt:     "Bodidoc Aqueous Cream Range",
+    url:     "/shop/bodidoc-tissue-oil-cream-with-urea-for-dry-skin",
   },
-]; 
+];
 
 const AUTOPLAY_MS = 5000;
 
@@ -72,33 +77,35 @@ export default function HeroSlider() {
           {slides.map((slide, i) => (
             <div key={slide.id} aria-hidden={i !== current} className="w-full shrink-0">
 
-              {/* Desktop */}
-              <div className="hidden md:block w-full">
-                <Image
-                  src={slide.desktop}
-                  alt={slide.alt}
-                  width={1920}
-                  height={500}
-                  className="w-full h-auto block align-bottom"
-                  priority={i === 0}
-                  draggable={false}
-                spellCheck={false}
-                />
-              </div>
+              <Link href={slide.url} className="block w-full">
+                {/* Desktop */}
+                <div className="hidden md:block w-full">
+                  <Image
+                    src={slide.desktop}
+                    alt={slide.alt}
+                    width={1920}
+                    height={500}
+                    className="w-full h-auto block align-bottom"
+                    priority={i === 0}
+                    draggable={false}
+                    spellCheck={false}
+                  />
+                </div>
 
-              {/* Mobile */}
-              <div className="block md:hidden w-full">
-                <Image
-                  src={slide.mobile}
-                  alt={slide.alt}
-                  width={768}
-                  height={600}
-                  className="w-full h-auto block align-bottom"
-                  priority={i === 0}
-                  draggable={false}
-                spellCheck={false}
-                />
-              </div>
+                {/* Mobile */}
+                <div className="block md:hidden w-full">
+                  <Image
+                    src={slide.mobile}
+                    alt={slide.alt}
+                    width={768}
+                    height={600}
+                    className="w-full h-auto block align-bottom"
+                    priority={i === 0}
+                    draggable={false}
+                    spellCheck={false}
+                  />
+                </div>
+              </Link>
 
             </div>
           ))}

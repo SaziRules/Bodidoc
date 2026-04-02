@@ -76,11 +76,13 @@ export default async function AqueousRangePage() {
       {rangePage?.heroImage && (
         <section aria-label="Aqueous Range hero" className="w-full bg-white">
 
-          {/* Nav-height spacer — mirrors the wrapper negative margin */}
-          <div className="h-16 md:h-22.5 lg:h-32.5" />
+  {/* Nav-height spacer — mirrors the wrapper negative margin */}
+  <div className="h-16 md:h-22.5 lg:h-32.5" />
 
-          {/* Desktop — natural dimensions, never cropped */}
-          <div className={`w-full ${rangePage.heroMobileImage ? "hidden md:block" : "block"}`}>
+  <Link href="/shop/bodidoc-aqueous-cream-for-all-skin-types" className="block w-full" >
+
+  {/* Desktop — natural dimensions, never cropped */}
+  <div className={`w-full ${rangePage.heroMobileImage ? "hidden md:block" : "block"}`}>
             <Image
               src={urlFor(rangePage.heroImage).width(2560).url()}
               alt="Moisturise & Protect your bodi with our all new Aqueous Cream"
@@ -106,6 +108,7 @@ export default async function AqueousRangePage() {
             </div>
           )}
 
+        </Link>
         </section>
       )}
 
@@ -116,7 +119,7 @@ export default async function AqueousRangePage() {
     <div className="grid grid-cols-1 md:grid-cols-[45%_55%] gap-8 md:gap-2 items-center">
       
       {/* Image: Adjusted to center and fit the jar size perfectly */}
-      <div className="relative w-full md:ml-55  justify-center items-center hidden md:block">
+      <div className="relative w-full md:ml-55 justify-center items-center hidden md:block pointer-events-none">
         <div className="relative w-full max-w-65 aspect-square">
           <Image
             src="/images/acqueous.webp" 
@@ -176,6 +179,7 @@ export default async function AqueousRangePage() {
             ? urlFor(rangePage.heroBannerMobileImage).width(768).height(768).url()
             : undefined}
           alt="Gentle enough for the whole family"
+          href="/shop/bodidoc-aqueous-cream-for-all-skin-types"
         />
       )}
 

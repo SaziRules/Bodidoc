@@ -25,7 +25,12 @@ const skinLabels: Record<string, string> = {
   "oily": "Oily Skin",
 };
 
-export default async function ShopPage() {
+export default async function ShopPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ type?: string }>;
+}) {
+  const { type } = await searchParams;
   const [products, { data: reviews }] = await Promise.all([
     getAllProducts(),
     supabaseServer
@@ -82,6 +87,7 @@ export default async function ShopPage() {
           types={types.map((t) => ({ value: t, label: typeLabels[t] ?? t }))}
           skins={skins.map((s) => ({ value: s, label: skinLabels[s] ?? s }))}
           products={enrichedProducts}
+          initialTypes={type ? [type] : []}
         />
       </div>
 

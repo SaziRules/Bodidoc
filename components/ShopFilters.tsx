@@ -14,6 +14,7 @@ type Props = {
   types: FilterOption[];
   skins: FilterOption[];
   products: Product[];
+  initialTypes?: string[];
 };
 
 const typeLabels: Record<string, string> = {
@@ -224,9 +225,9 @@ function sortProducts(products: Product[], sort: SortKey): Product[] {
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
-export default function ShopFilters({ ranges, types, skins, products }: Props) {
+export default function ShopFilters({ ranges, types, skins, products, initialTypes = [] }: Props) {
   const [selectedRanges, setSelectedRanges] = useState<string[]>([]);
-  const [selectedTypes, setSelectedTypes]   = useState<string[]>([]);
+  const [selectedTypes, setSelectedTypes]   = useState<string[]>(initialTypes);
   const [selectedSkins, setSelectedSkins]   = useState<string[]>([]);
   const [mobileOpen, setMobileOpen]         = useState(false);
   const [sort, setSort]                     = useState<SortKey>("default");
