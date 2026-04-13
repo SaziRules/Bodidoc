@@ -379,7 +379,7 @@ export default function SubscriptionModal({ onClose }: Props) {
         <button
           onClick={onClose}
           aria-label="Close"
-          className="absolute top-4 right-4 w-7 h-7 flex items-center justify-center text-white hover:text-[#112942] transition-colors z-10 bg-transparent border-0 cursor-pointer"
+          className="absolute top-4 right-4 w-7 h-7 flex items-center justify-center sm:text-white hover:text-[#112942] transition-colors z-10 bg-transparent border-0 cursor-pointer"
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="w-4 h-4">
             <path d="M18 6L6 18M6 6l12 12" />

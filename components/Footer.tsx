@@ -36,6 +36,11 @@ const ChevronRight = () => (
     <path d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z" />
   </svg>
 );
+const TwitterIcon = () => (
+  <svg viewBox="0 0 512 512" fill="currentColor" className="w-4 h-4">
+    <path d="M389.2 48H458L312.1 215.6 484 464H349.4L241.6 318.6 107.6 464H39L194.9 289.5 24 48H162.6L260.1 180.3 389.2 48zM365.6 421.8h38.1L141.8 88.5h-40.9z"/>
+  </svg>
+);
 
 // ─── Shared data ──────────────────────────────────────────────────────────────
 
@@ -43,6 +48,7 @@ const socialLinks = [
   { href: "https://www.facebook.com/bodidoc/", icon: <FacebookIcon />, label: "Facebook" },
   { href: "https://www.instagram.com/bodidoc/", icon: <InstagramIcon />, label: "Instagram" },
   { href: "https://www.tiktok.com/@bodidoc.africa", icon: <TikTokIcon />, label: "TikTok" },
+  { href: "https://x.com/bodidoc_sa?s=21&t=ZnBUMmqPzP4Eva55qHJ9WQ", icon: <TwitterIcon />, label: "Twitter" },
   { href: "https://www.youtube.com/channel/UCiY8H3AZObpv4RqKhGQJy3Q/featured", icon: <YouTubeIcon />, label: "YouTube" },
 ];
 

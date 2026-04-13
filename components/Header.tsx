@@ -28,6 +28,12 @@ const TikTokIcon = () => (
   </svg>
 );
 
+const TwitterIcon = () => (
+  <svg height="9" width="9" viewBox="0 0 512 512" fill="currentColor" className="w-4 h-4">
+    <path d="M389.2 48H458L312.1 215.6 484 464H349.4L241.6 318.6 107.6 464H39L194.9 289.5 24 48H162.6L260.1 180.3 389.2 48zM365.6 421.8h38.1L141.8 88.5h-40.9z"/>
+  </svg>
+);
+
 const YouTubeIcon = () => (
   <svg width="13" height="9" viewBox="0 0 24 17" fill="currentColor">
     <path d="M23.5 2.5a3 3 0 0 0-2.1-2.1C19.5 0 12 0 12 0S4.5 0 2.6.4A3 3 0 0 0 .5 2.5 31 31 0 0 0 0 8.5a31 31 0 0 0 .5 6 3 3 0 0 0 2.1 2.1C4.5 17 12 17 12 17s7.5 0 9.4-.4a3 3 0 0 0 2.1-2.1 31 31 0 0 0 .5-6 31 31 0 0 0-.5-6z" />
@@ -114,6 +120,7 @@ function AnnouncementBar({ onSubscribeClick }: { onSubscribeClick: () => void })
               { href: "https://www.facebook.com/bodidoc/", label: "Facebook", icon: <FacebookIcon /> },
               { href: "https://www.instagram.com/bodidoc/", label: "Instagram", icon: <InstagramIcon /> },
               { href: "https://www.tiktok.com/@bodidoc", label: "TikTok", icon: <TikTokIcon /> },
+              { href: "https://x.com/bodidoc_sa?s=21&t=ZnBUMmqPzP4Eva55qHJ9WQ", label: "Twitter", icon: <TwitterIcon /> },
               { href: "https://www.youtube.com/channel/UCiY8H3AZObpv4RqKhGQJy3Q", label: "YouTube", icon: <YouTubeIcon /> },
             ].map(({ href, label, icon }) => (
               <a

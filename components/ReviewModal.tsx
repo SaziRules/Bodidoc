@@ -26,7 +26,7 @@ export default function ReviewModal({ productName, productSlug, onClose }: Props
 
   const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const PHONE_RE = /^[\d\s\-+()]{7,20}$/;
-  const MIN_WORDS = 10;
+  const MIN_WORDS = 3;
 
   function validateAll() {
     const errs: Record<string, string> = {};
@@ -120,7 +120,7 @@ export default function ReviewModal({ productName, productSlug, onClose }: Props
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-999 flex items-center justify-center p-4"
       onClick={onClose}
     >
       <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
