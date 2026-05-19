@@ -33,6 +33,13 @@ export const metadata: Metadata = {
   title: "Bodidoc — Your Skin's New Best Friend",
   description:
     "Proudly South African skincare. Cruelty-free, dermatologically tested daily body care products packed with natural ingredients.",
+  icons: {
+    icon: [
+      { url: "/bodidoc-favicon.png", type: "image/png", sizes: "32x32" },
+      { url: "/bodidoc-favicon.svg", type: "image/svg+xml" },
+    ],
+    apple: "/bodidoc-favicon.png",
+  },
 };
 
 export default function RootLayout({
@@ -41,7 +48,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${openSans.variable} ${playfairDisplay.variable}`}>
+    <html
+      lang="en"
+      className={`${openSans.variable} ${playfairDisplay.variable}`}
+    >
       <body className="antialiased">
         <Header />
         <main>{children}</main>

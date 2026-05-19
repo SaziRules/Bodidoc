@@ -38,18 +38,38 @@ const ChevronRight = () => (
 );
 const TwitterIcon = () => (
   <svg viewBox="0 0 512 512" fill="currentColor" className="w-4 h-4">
-    <path d="M389.2 48H458L312.1 215.6 484 464H349.4L241.6 318.6 107.6 464H39L194.9 289.5 24 48H162.6L260.1 180.3 389.2 48zM365.6 421.8h38.1L141.8 88.5h-40.9z"/>
+    <path d="M389.2 48H458L312.1 215.6 484 464H349.4L241.6 318.6 107.6 464H39L194.9 289.5 24 48H162.6L260.1 180.3 389.2 48zM365.6 421.8h38.1L141.8 88.5h-40.9z" />
   </svg>
 );
 
 // ─── Shared data ──────────────────────────────────────────────────────────────
 
 const socialLinks = [
-  { href: "https://www.facebook.com/bodidoc/", icon: <FacebookIcon />, label: "Facebook" },
-  { href: "https://www.instagram.com/bodidoc/", icon: <InstagramIcon />, label: "Instagram" },
-  { href: "https://www.tiktok.com/@bodidoc.africa", icon: <TikTokIcon />, label: "TikTok" },
-  { href: "https://x.com/bodidoc_sa?s=21&t=ZnBUMmqPzP4Eva55qHJ9WQ", icon: <TwitterIcon />, label: "Twitter" },
-  { href: "https://www.youtube.com/channel/UCiY8H3AZObpv4RqKhGQJy3Q/featured", icon: <YouTubeIcon />, label: "YouTube" },
+  {
+    href: "https://www.facebook.com/bodidoc/",
+    icon: <FacebookIcon />,
+    label: "Facebook",
+  },
+  {
+    href: "https://www.instagram.com/bodidoc/",
+    icon: <InstagramIcon />,
+    label: "Instagram",
+  },
+  {
+    href: "https://www.tiktok.com/@bodidoc.africa",
+    icon: <TikTokIcon />,
+    label: "TikTok",
+  },
+  {
+    href: "https://x.com/bodidoc_sa?s=21&t=ZnBUMmqPzP4Eva55qHJ9WQ",
+    icon: <TwitterIcon />,
+    label: "Twitter",
+  },
+  {
+    href: "https://www.youtube.com/channel/UCiY8H3AZObpv4RqKhGQJy3Q/featured",
+    icon: <YouTubeIcon />,
+    label: "YouTube",
+  },
 ];
 
 const navLinks = [
@@ -60,25 +80,27 @@ const navLinks = [
   { label: "CONTACT US", href: "/contact-us" },
   { label: "PRIVACY POLICY", href: "/terms-conditions-privacy-policy" },
   { label: "TERMS AND CONDITIONS", href: "/terms-conditions-privacy-policy" },
+  { label: "COMPETITIONS", href: "/competitions" },
 ];
 
-const disclaimer = "If you subscribe to Bodidoc, please note that you are agreeing to receive recurring promotional and marketing messages from us. These messages are automated, including email and text. Consent is not a condition of any purchase. Please view our";
+const disclaimer =
+  "If you subscribe to Bodidoc, please note that you are agreeing to receive recurring promotional and marketing messages from us. These messages are automated, including email and text. Consent is not a condition of any purchase. Please view our";
 
 // ─── Dial codes ───────────────────────────────────────────────────────────────
 // min/max = digits AFTER the country code, NOT including a leading 0.
 // e.g. South Africa: 082 123 4567 → user types 821234567 (9 digits)
 
 const DIAL_CODES = [
-  { code: "+27",  iso: "za", name: "South Africa", min: 9,  max: 9  }, // 8x/7x/6x + 7 = 9
-  { code: "+267", iso: "bw", name: "Botswana",     min: 7,  max: 8  }, // landline 7, mobile 8
-  { code: "+268", iso: "sz", name: "Eswatini",     min: 8,  max: 8  }, // all numbers 8 digits
-  { code: "+266", iso: "ls", name: "Lesotho",      min: 8,  max: 8  }, // all numbers 8 digits
-  { code: "+265", iso: "mw", name: "Malawi",       min: 7,  max: 9  }, // landline 7, mobile 9
-  { code: "+258", iso: "mz", name: "Mozambique",   min: 8,  max: 9  }, // landline 8, mobile 9
-  { code: "+264", iso: "na", name: "Namibia",      min: 7,  max: 8  }, // landline 7, mobile 8
-  { code: "+255", iso: "tz", name: "Tanzania",     min: 9,  max: 9  }, // all 9 digits
-  { code: "+260", iso: "zm", name: "Zambia",       min: 9,  max: 9  }, // all 9 digits
-  { code: "+263", iso: "zw", name: "Zimbabwe",     min: 9,  max: 9  }, // all 9 digits
+  { code: "+27", iso: "za", name: "South Africa", min: 9, max: 9 }, // 8x/7x/6x + 7 = 9
+  { code: "+267", iso: "bw", name: "Botswana", min: 7, max: 8 }, // landline 7, mobile 8
+  { code: "+268", iso: "sz", name: "Eswatini", min: 8, max: 8 }, // all numbers 8 digits
+  { code: "+266", iso: "ls", name: "Lesotho", min: 8, max: 8 }, // all numbers 8 digits
+  { code: "+265", iso: "mw", name: "Malawi", min: 7, max: 9 }, // landline 7, mobile 9
+  { code: "+258", iso: "mz", name: "Mozambique", min: 8, max: 9 }, // landline 8, mobile 9
+  { code: "+264", iso: "na", name: "Namibia", min: 7, max: 8 }, // landline 7, mobile 8
+  { code: "+255", iso: "tz", name: "Tanzania", min: 9, max: 9 }, // all 9 digits
+  { code: "+260", iso: "zm", name: "Zambia", min: 9, max: 9 }, // all 9 digits
+  { code: "+263", iso: "zw", name: "Zimbabwe", min: 9, max: 9 }, // all 9 digits
 ];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -89,13 +111,17 @@ function isValidEmail(val: string) {
 
 // Strip leading zero (user shouldn't include it) then check digit count
 // against the exact spec for the selected country.
-function isValidPhone(val: string, dialCode: string): { valid: boolean; message: string } {
+function isValidPhone(
+  val: string,
+  dialCode: string,
+): { valid: boolean; message: string } {
   const entry = DIAL_CODES.find((d) => d.code === dialCode) ?? DIAL_CODES[0];
   const digits = val.replace(/\D/g, "").replace(/^0+/, ""); // strip non-digits + leading zeros
   if (digits.length < entry.min || digits.length > entry.max) {
-    const range = entry.min === entry.max
-      ? `${entry.min} digits`
-      : `${entry.min}–${entry.max} digits`;
+    const range =
+      entry.min === entry.max
+        ? `${entry.min} digits`
+        : `${entry.min}–${entry.max} digits`;
     return {
       valid: false,
       message: `${entry.name} numbers require exactly ${range} after the country code — no leading zero.`,
@@ -133,7 +159,8 @@ function DialDropdown({
   useEffect(() => {
     if (!open) return;
     const handler = (e: MouseEvent) => {
-      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) setOpen(false);
+      if (wrapRef.current && !wrapRef.current.contains(e.target as Node))
+        setOpen(false);
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
@@ -154,8 +181,14 @@ function DialDropdown({
           {selected.code}
         </span>
         <svg
-          width="7" height="7" viewBox="0 0 24 24" fill="none"
-          stroke="rgba(255,255,255,0.4)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+          width="7"
+          height="7"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="rgba(255,255,255,0.4)"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
           className={`transition-transform duration-200 ${open ? "rotate-180" : "rotate-0"}`}
         >
           <polyline points="6 9 12 15 18 9" />
@@ -166,29 +199,40 @@ function DialDropdown({
       <div
         className={`absolute left-0 top-[calc(100%+4px)] w-52 z-50 overflow-hidden
           transition-all duration-200 ease-out origin-top
-          ${open
-            ? "opacity-100 scale-y-100 translate-y-0 pointer-events-auto"
-            : "opacity-0 scale-y-95 -translate-y-1 pointer-events-none"
+          ${
+            open
+              ? "opacity-100 scale-y-100 translate-y-0 pointer-events-auto"
+              : "opacity-0 scale-y-95 -translate-y-1 pointer-events-none"
           }`}
-        style={{ boxShadow: "0 16px 48px rgba(0,0,0,0.35), 0 2px 8px rgba(0,0,0,0.2)" }}
+        style={{
+          boxShadow: "0 16px 48px rgba(0,0,0,0.35), 0 2px 8px rgba(0,0,0,0.2)",
+        }}
       >
         {/* Top accent */}
         <div className="h-0.5 bg-linear-to-r from-[#112942] via-[#2a6096] to-[#112942]" />
 
         {/* Header */}
         <div className="bg-[#0a1e30] px-3.5 py-2">
-          <span className="text-[9px] font-bold tracking-[0.18em] text-white/40 uppercase">Select region</span>
+          <span className="text-[9px] font-bold tracking-[0.18em] text-white/40 uppercase">
+            Select region
+          </span>
         </div>
 
         {/* List */}
-        <div className="bg-white overflow-y-auto" style={{ maxHeight: "180px" }}>
+        <div
+          className="bg-white overflow-y-auto"
+          style={{ maxHeight: "180px" }}
+        >
           {DIAL_CODES.map((d, i) => {
             const isActive = d.code === dialCode;
             return (
               <button
                 key={d.code}
                 type="button"
-                onClick={() => { onChange(d.code); setOpen(false); }}
+                onClick={() => {
+                  onChange(d.code);
+                  setOpen(false);
+                }}
                 className={`
                   group/row flex items-center gap-2.5 w-full px-3.5 py-2.5
                   bg-transparent border-0 cursor-pointer text-left
@@ -198,16 +242,30 @@ function DialDropdown({
                 `}
               >
                 <FlagImg iso={d.iso} size={16} />
-                <span className={`flex-1 text-[11.5px] font-light transition-colors
-                  ${isActive ? "text-[#112942] font-medium" : "text-[#444] group-hover/row:text-[#112942]"}`}>
+                <span
+                  className={`flex-1 text-[11.5px] font-light transition-colors
+                  ${isActive ? "text-[#112942] font-medium" : "text-[#444] group-hover/row:text-[#112942]"}`}
+                >
                   {d.name}
                 </span>
-                <span className={`text-[10.5px] font-light tabular-nums shrink-0 transition-colors
-                  ${isActive ? "text-[#112942]/60" : "text-[#bbb] group-hover/row:text-[#888]"}`}>
+                <span
+                  className={`text-[10.5px] font-light tabular-nums shrink-0 transition-colors
+                  ${isActive ? "text-[#112942]/60" : "text-[#bbb] group-hover/row:text-[#888]"}`}
+                >
                   {d.code}
                 </span>
                 {isActive && (
-                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#112942" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 opacity-50">
+                  <svg
+                    width="9"
+                    height="9"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#112942"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="shrink-0 opacity-50"
+                  >
                     <polyline points="20 6 9 17 4 12" />
                   </svg>
                 )}
@@ -229,11 +287,30 @@ function Spinner() {
   return (
     <svg
       className="animate-spin"
-      width="13" height="13" viewBox="0 0 24 24"
-      fill="none" stroke="#112942" strokeWidth="2.5" strokeLinecap="round"
+      width="13"
+      height="13"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="#112942"
+      strokeWidth="2.5"
+      strokeLinecap="round"
     >
-      <circle cx="12" cy="12" r="10" stroke="#112942" strokeOpacity="0.2" strokeWidth="2.5" fill="none" />
-      <path d="M12 2a10 10 0 0 1 10 10" stroke="#112942" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+      <circle
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="#112942"
+        strokeOpacity="0.2"
+        strokeWidth="2.5"
+        fill="none"
+      />
+      <path
+        d="M12 2a10 10 0 0 1 10 10"
+        stroke="#112942"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        fill="none"
+      />
     </svg>
   );
 }
@@ -243,28 +320,32 @@ function Spinner() {
 type FormState = "idle" | "loading" | "success" | "error";
 
 function FooterSubscribeSection() {
-  const [email, setEmail]       = useState("");
-  const [phone, setPhone]       = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [dialCode, setDialCode] = useState("+27");
-  const [state, setState]       = useState<FormState>("idle");
-  const [message, setMessage]   = useState("");
+  const [state, setState] = useState<FormState>("idle");
+  const [message, setMessage] = useState("");
 
   const loading = state === "loading";
 
   const setMsg = (msg: string, s: FormState = "error") => {
-    setMessage(msg); setState(s);
+    setMessage(msg);
+    setState(s);
   };
 
   const handleSubmit = async (field: "phone" | "email") => {
-    setMessage(""); setState("idle");
+    setMessage("");
+    setState("idle");
 
     const trimEmail = field === "email" ? email.trim() : "";
     const trimPhone = field === "phone" ? phone.trim() : "";
 
     if (!trimEmail && !trimPhone) {
-      setMsg(field === "email"
-        ? "Pop in your email address."
-        : "Pop in your phone number.");
+      setMsg(
+        field === "email"
+          ? "Pop in your email address."
+          : "Pop in your phone number.",
+      );
       return;
     }
     if (trimEmail && !isValidEmail(trimEmail)) {
@@ -285,14 +366,30 @@ function FooterSubscribeSection() {
     setState("loading");
 
     if (trimEmail) {
-      const { data } = await supabase.from("subscriptions").select("id")
-        .eq("brand", "bodidoc").eq("email", trimEmail).maybeSingle();
-      if (data) { setMsg("Looks like that email is already on the list — you're all good! 🎉"); return; }
+      const { data } = await supabase
+        .from("subscriptions")
+        .select("id")
+        .eq("brand", "bodidoc")
+        .eq("email", trimEmail)
+        .maybeSingle();
+      if (data) {
+        setMsg(
+          "Looks like that email is already on the list — you're all good! 🎉",
+        );
+        return;
+      }
     }
     if (fullPhone) {
-      const { data } = await supabase.from("subscriptions").select("id")
-        .eq("brand", "bodidoc").eq("phone", fullPhone).maybeSingle();
-      if (data) { setMsg("That number's already with us — you're covered! 🎉"); return; }
+      const { data } = await supabase
+        .from("subscriptions")
+        .select("id")
+        .eq("brand", "bodidoc")
+        .eq("phone", fullPhone)
+        .maybeSingle();
+      if (data) {
+        setMsg("That number's already with us — you're covered! 🎉");
+        return;
+      }
     }
 
     const { error: sbError } = await supabase.from("subscriptions").insert({
@@ -301,13 +398,18 @@ function FooterSubscribeSection() {
       phone: fullPhone,
     });
 
-    if (sbError) { setMsg("Something went wrong. Please try again."); return; }
+    if (sbError) {
+      setMsg("Something went wrong. Please try again.");
+      return;
+    }
 
     setMsg("You're in! Thanks for subscribing. ", "success");
   };
 
-  const inputBase = "flex-1 px-3 py-2 text-[12px] tracking-widest text-white placeholder:text-white/50 bg-transparent outline-none font-light min-w-0";
-  const fieldWrap = "flex w-full border border-white/20 focus-within:border-white/40 transition-colors duration-200";
+  const inputBase =
+    "flex-1 px-3 py-2 text-[12px] tracking-widest text-white placeholder:text-white/50 bg-transparent outline-none font-light min-w-0";
+  const fieldWrap =
+    "flex w-full border border-white/20 focus-within:border-white/40 transition-colors duration-200";
   const submitBtn = `px-3 py-2 flex items-center justify-center transition-colors duration-200 cursor-pointer border-0 shrink-0
     ${loading ? "bg-white/70 pointer-events-none" : "bg-white hover:bg-white/90 text-[#112942]"}`;
 
@@ -315,16 +417,26 @@ function FooterSubscribeSection() {
 
   return (
     <div className="flex flex-col gap-1">
-      <h3 className="font-display text-[20px] font-bold text-white uppercase">Down For More? We got You</h3>
+      <h3 className="font-display text-[20px] font-bold text-white uppercase">
+        Down For More? We got You
+      </h3>
       <p className="text-[13px] font-normal text-white leading-relaxed">
-        Subscribe to our mailing list for all the latest product drops, limited offers and in-store event info.
+        Subscribe to our mailing list for all the latest product drops, limited
+        offers and in-store event info.
       </p>
 
       {!isDone ? (
         <>
           {/* Phone field */}
           <div className={fieldWrap}>
-            <DialDropdown dialCode={dialCode} onChange={(code) => { setDialCode(code); setMessage(""); setState("idle"); }} />
+            <DialDropdown
+              dialCode={dialCode}
+              onChange={(code) => {
+                setDialCode(code);
+                setMessage("");
+                setState("idle");
+              }}
+            />
             <div className="w-px bg-white/20 self-stretch shrink-0" />
             <input
               type="tel"
@@ -382,7 +494,9 @@ function FooterSubscribeSection() {
 
           {/* Message */}
           {message && (
-            <p className={`text-[11px] font-light leading-relaxed ${state === "error" ? "text-red-300" : "text-white/70"}`}>
+            <p
+              className={`text-[11px] font-light leading-relaxed ${state === "error" ? "text-red-300" : "text-white/70"}`}
+            >
               {message}
             </p>
           )}
@@ -391,11 +505,22 @@ function FooterSubscribeSection() {
         /* Done state */
         <div className="flex items-start gap-3 py-1">
           <div className="w-4 h-4 rounded-full border border-white/30 flex items-center justify-center shrink-0 mt-0.5">
-            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              width="8"
+              height="8"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="white"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <polyline points="20 6 9 17 4 12" />
             </svg>
           </div>
-          <p className="text-[13px] font-light text-white/70 leading-relaxed">{message}</p>
+          <p className="text-[13px] font-light text-white/70 leading-relaxed">
+            {message}
+          </p>
         </div>
       )}
 
@@ -409,7 +534,10 @@ function FooterSubscribeSection() {
 
       <p className="text-[12px] font-normal text-white leading-relaxed">
         {disclaimer}{" "}
-        <Link href="/terms-conditions-privacy-policy" className=" text-[#db73b6] hover:text-white">
+        <Link
+          href="/terms-conditions-privacy-policy"
+          className=" text-[#db73b6] hover:text-white"
+        >
           Terms of Use and Privacy Policy.
         </Link>
       </p>
@@ -450,7 +578,9 @@ function LogoAndCopyright() {
         height={120}
         className="w-28 h-auto"
       />
-      <p className="text-[11px] text-white/50 font-light">Copyright @BODIDOC {new Date().getFullYear()}</p>
+      <p className="text-[11px] text-white/50 font-light">
+        Copyright @BODIDOC {new Date().getFullYear()}
+      </p>
     </div>
   );
 }
@@ -460,11 +590,9 @@ function LogoAndCopyright() {
 export default function Footer() {
   return (
     <footer className="w-full bg-[#112942] pt-10">
-
       {/* ── DESKTOP ── */}
       <div className="hidden md:block w-full px-10 lg:px-16 py-14">
         <div className="max-w-360 mx-auto grid grid-cols-3 gap-12">
-
           {/* Col 1 — Subscribe */}
           <div className="flex flex-col gap-4">
             <FooterSubscribeSection />
@@ -486,44 +614,62 @@ export default function Footer() {
 
           {/* Col 3 — Contact info */}
           <div className="flex flex-col gap-3 pt-1">
-            <h4 className="text-[16px] font-medium text-white">Customer Care</h4>
+            <h4 className="text-[16px] font-medium text-white">
+              Customer Care
+            </h4>
             <div className="text-[13px] font-normal text-white/70 leading-relaxed">
               <p>08:00 – 17:00</p>
               <p>Monday – Friday</p>
               <p>0860 002 652</p>
             </div>
-            <h4 className="text-[16px] font-semibold text-white mt-1">Whatsapp</h4>
-            <p className="text-[13px] font-normal text-white/70">+27 (0)60 996 6087</p>
-            <h4 className="text-[16px] font-semibold text-white mt-1">Find us at</h4>
+            <h4 className="text-[16px] font-semibold text-white mt-1">
+              Whatsapp
+            </h4>
+            <p className="text-[13px] font-normal text-white/70">
+              +27 (0)60 996 6087
+            </p>
+            <h4 className="text-[16px] font-semibold text-white mt-1">
+              Find us at
+            </h4>
             <div className="text-[13px] font-normal text-white/70 leading-relaxed">
               <p>14 Ellman Street</p>
               <p>Sunderland Ridge</p>
               <p>0157</p>
             </div>
-            <h4 className="text-[16px] font-semibold text-white mt-1 tracking-wide uppercase">Follow Us On</h4>
+            <h4 className="text-[16px] font-semibold text-white mt-1 tracking-wide uppercase">
+              Follow Us On
+            </h4>
             <SocialIcons />
           </div>
-
         </div>
       </div>
 
       {/* ── MOBILE ── */}
       <div className="md:hidden w-full px-6 py-10 flex flex-col gap-8">
-
         <FooterSubscribeSection />
 
         {/* Nav — 2 columns */}
         <div className="grid grid-cols-2 gap-4 pt-2">
           <div className="flex flex-col gap-2">
-            {[navLinks[0], navLinks[1], navLinks[2], navLinks[3]].map(({ label, href }) => (
-              <Link key={label} href={href} className="text-[12px] font-light text-white no-underline">
-                {label}
-              </Link>
-            ))}
+            {[navLinks[0], navLinks[1], navLinks[2], navLinks[3]].map(
+              ({ label, href }) => (
+                <Link
+                  key={label}
+                  href={href}
+                  className="text-[12px] font-light text-white no-underline"
+                >
+                  {label}
+                </Link>
+              ),
+            )}
           </div>
           <div className="flex flex-col gap-2">
             {[navLinks[4], navLinks[5], navLinks[6]].map(({ label, href }) => (
-              <Link key={label} href={href} className="text-[12px] font-light text-white no-underline">
+              <Link
+                key={label}
+                href={href}
+                className="text-[12px] font-light text-white no-underline"
+              >
                 {label}
               </Link>
             ))}
@@ -538,25 +684,31 @@ export default function Footer() {
             <p>Monday - Friday</p>
             <p>0860 002 652</p>
           </div>
-          <h4 className="text-[13px] font-semibold text-white mt-2 tracking-wide uppercase">Follow Us On</h4>
+          <h4 className="text-[13px] font-semibold text-white mt-2 tracking-wide uppercase">
+            Follow Us On
+          </h4>
           <SocialIcons />
-          <h4 className="text-[13px] font-semibold text-white mt-2">Find us at</h4>
+          <h4 className="text-[13px] font-semibold text-white mt-2">
+            Find us at
+          </h4>
           <div className="text-[12px] font-light text-white/70 leading-relaxed">
             <p>14 Ellman Street</p>
             <p>Sunderland Ridge</p>
             <p>0157</p>
           </div>
-          <h4 className="text-[13px] font-semibold text-white mt-2">WHATSAPP</h4>
-          <p className="text-[12px] font-light text-white/70">+27 (0)60 996 6087</p>
+          <h4 className="text-[13px] font-semibold text-white mt-2">
+            WHATSAPP
+          </h4>
+          <p className="text-[12px] font-light text-white/70">
+            +27 (0)60 996 6087
+          </p>
         </div>
 
         {/* Logo + Copyright */}
         <div className="pt-2">
           <LogoAndCopyright />
         </div>
-
       </div>
-
     </footer>
   );
 }
