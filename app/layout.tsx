@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Open_Sans, Playfair_Display } from "next/font/google";
-import Header from "@/components/Header";
 import "./globals.css";
-import Footer from "@/components/Footer";
 
 /*
  * Open Sans — all UI text
@@ -53,9 +51,7 @@ export default function RootLayout({
       className={`${openSans.variable} ${playfairDisplay.variable}`}
     >
       <body className="antialiased">
-        <Header />
-        <main>{children}</main>
-        <Footer />
+        {children}
       </body>
     </html>
   );
