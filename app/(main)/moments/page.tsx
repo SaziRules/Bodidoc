@@ -1,8 +1,31 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { getAllPosts } from "@/sanity/lib/sanity";
 import { urlFor } from "@/sanity/lib/sanity";
 import AsSeenIn from "@/components/AsSeenIn";
+
+export const metadata: Metadata = {
+  title: "Moments | Bodidoc",
+  description:
+    "Discover Bodidoc's latest news, sustainability initiatives, and skin-care stories. Every moment tells a story — explore articles, milestones, and tips from the Bodidoc team.",
+  openGraph: {
+    title: "Moments | Bodidoc",
+    description:
+      "Read about Bodidoc's sustainability efforts, brand milestones, and skin-care insights. Stories that inspire and inform.",
+    url: "https://www.bodidoc.com/moments",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Moments | Bodidoc",
+    description:
+      "Every moment tells a story — explore Bodidoc news, sustainability initiatives, and skin-care tips.",
+  },
+  alternates: {
+    canonical: "https://www.bodidoc.com/moments",
+  },
+};
 
 export default async function MomentsPage() {
   const posts = await getAllPosts();

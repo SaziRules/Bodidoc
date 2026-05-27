@@ -1,6 +1,29 @@
+import type { Metadata } from "next";
 import { createClient } from "@supabase/supabase-js";
 import { getAllProducts } from "@/sanity/lib/sanity";
 import ShopFilters from "@/components/ShopFilters";
+
+export const metadata: Metadata = {
+  title: "Shop All Products | Bodidoc",
+  description:
+    "Browse the full Bodidoc skincare range — Tissue Oil body creams, lotions, and oils plus Aqueous Cream. Cruelty-free, dermatologically tested South African skincare.",
+  openGraph: {
+    title: "Shop All Products | Bodidoc",
+    description:
+      "Shop Bodidoc's full range of cruelty-free, dermatologically tested South African skincare. Tissue Oil and Aqueous Cream products for every skin type.",
+    url: "https://www.bodidoc.com/shop",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Shop All Products | Bodidoc",
+    description:
+      "Browse the full Bodidoc skincare range — Tissue Oil and Aqueous Cream products for every skin type.",
+  },
+  alternates: {
+    canonical: "https://www.bodidoc.com/shop",
+  },
+};
 
 const supabaseServer = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,

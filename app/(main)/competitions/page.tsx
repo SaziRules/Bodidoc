@@ -4,7 +4,23 @@ import type { ReactNode } from "react";
 export const metadata: Metadata = {
   title: "Competitions & Giveaways | Bodidoc",
   description:
-    "Terms and conditions and privacy policy for Bodidoc skincare products.",
+    "Win your share of R250,000 in cash prizes with the Bodidoc competition! Buy any participating Bodidoc product, enter via WhatsApp or USSD, and stand a chance to win. Open to South African residents 18+.",
+  openGraph: {
+    title: "Competitions & Giveaways | Bodidoc",
+    description:
+      "Enter the Bodidoc competition for a chance to win R250,000 in cash prizes. Buy any participating product and enter via WhatsApp or USSD. Open to SA residents 18+.",
+    url: "https://www.bodidoc.com/competitions",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Competitions & Giveaways | Bodidoc",
+    description:
+      "Win your share of R250,000! Buy a Bodidoc product and enter via WhatsApp or USSD. Open to South African residents 18+.",
+  },
+  alternates: {
+    canonical: "https://www.bodidoc.com/competitions",
+  },
 };
 
 // --- Shared link styles ---

@@ -1,0 +1,56 @@
+PROJECT: Bodidoc.com SEO Readiness
+
+GOAL: Implement comprehensive SEO optimization across the entire website without altering any UI, content, or functional behavior.
+
+PRIORITIES:
+1. **Meta Optimization**
+   - Generate competitive meta titles, image alt text and descriptions for each page.
+   - Ensure answerability strength: meta descriptions should clearly answer likely user questions.
+   - Apply consistent, keyword-rich, and localized content where relevant.
+
+2. **Schema & Structured Data**
+   - Implement all relevant schema types:
+     - LocalBusiness schema (accurate NAP, geolocation, service areas)
+     - Organization schema
+     - Product schema (for product pages)
+     - FAQ schema
+     - Review schema
+     - JSON-LD for rich results
+   - Ensure schema is valid and compliant with Google standards.
+   - Include geolocation, business hours, and contact info for maximum local SEO impact.
+
+3. **Sitemap & Robots**
+   - Create or update XML sitemap with all pages, including canonical URLs.
+   - Ensure robots.txt allows crawling of all relevant pages.
+   - Verify proper hreflang tags if multi-language pages exist.
+
+4. **Programmatic SEO**
+   - Review dynamic routes (Next.js app router) and ensure they generate proper meta tags per route.
+   - Auto-generate SEO-friendly URLs where missing.
+   - Ensure all dynamic content pages have proper schema, meta, and canonical links.
+
+5. **Performance & PSI Principles**
+   - Audit pages for Core Web Vitals: LCP, CLS, FID.
+   - Minimize render-blocking resources.
+   - Ensure images are optimized with proper srcset, sizes, alt tags, and next/image integration.
+   - Verify server-side rendering (SSR) or static generation for SEO-critical pages.
+
+6. **Content Integrity**
+   - Do **not** change existing text, images, or layout.
+   - Do **not** modify functional components.
+   - Only add meta, schema, structured data, sitemap, or programmatic SEO improvements.
+
+7. **Validation**
+   - Run Google Rich Results Test and Structured Data Testing Tool on each updated page.
+   - Confirm all meta, schema, and sitemap updates are error-free.
+
+DELIVERABLES:
+- A list of all SEO additions/changes made per page.
+- Full updated files or code snippets ready to merge without breaking UI.
+- Sitemap and robots.txt.
+- Validation reports for schema and performance checks.
+
+ADDITIONAL INSTRUCTIONS:
+- Prioritize GEO/AI programmatic optimization (location + structured schema) for Bodidoc’s South African audience.
+- Ensure competitive edge by comparing meta and schema against top skincare competitors.
+- Make the site top-tier SEO ready while preserving all visual and functional aspects.

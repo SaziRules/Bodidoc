@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { createClient } from "@supabase/supabase-js";
 import { getAllProducts, urlFor } from "@/sanity/lib/sanity";
 import HeroSlider from "@/components/HeroSlider";
@@ -8,6 +9,98 @@ import VideoBanner from "@/components/VideoBanner";
 import HomePageImages from "@/components/HomePageImages";
 import AutoSubscribeModal from "@/components/AutoSubscribeModal";
 import CookieAlert from "@/components/CookieAlert";
+
+export const metadata: Metadata = {
+  title: "Bodidoc — Your Skin's New Best Friend",
+  description:
+    "Shop Bodidoc skincare — proudly South African, cruelty-free, dermatologically tested. Discover our Tissue Oil and Aqueous Cream ranges for the whole family.",
+  openGraph: {
+    title: "Bodidoc — Your Skin's New Best Friend",
+    description:
+      "Proudly South African skincare. Cruelty-free, dermatologically tested body care with proven results. Shop the Tissue Oil and Aqueous Cream ranges.",
+    url: "https://www.bodidoc.com",
+    type: "website",
+    images: [
+      {
+        url: "https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/05/7-1536x536.webp",
+        width: 1536,
+        height: 536,
+        alt: "Bodidoc skincare products",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Bodidoc — Your Skin's New Best Friend",
+    description:
+      "Proudly South African skincare. Shop the Tissue Oil and Aqueous Cream ranges.",
+  },
+  alternates: {
+    canonical: "https://www.bodidoc.com",
+  },
+};
+
+const localBusinessSchema = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "@id": "https://www.bodidoc.com/#business",
+  name: "Bodidoc",
+  url: "https://www.bodidoc.com",
+  logo: {
+    "@type": "ImageObject",
+    url: "https://www.bodidoc.com/bodidoc-favicon.png",
+  },
+  description:
+    "Bodidoc is a proudly South African skincare brand offering cruelty-free, dermatologically tested body care products — Tissue Oil and Aqueous Cream ranges — trusted by families across South Africa.",
+  telephone: "+27-860-002-652",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "14 Ellman Street",
+    addressLocality: "Sunderland Ridge",
+    postalCode: "0157",
+    addressCountry: "ZA",
+  },
+  geo: {
+    "@type": "GeoCoordinates",
+    latitude: -25.7075,
+    longitude: 28.182,
+  },
+  openingHoursSpecification: [
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      opens: "08:00",
+      closes: "17:00",
+    },
+  ],
+  areaServed: {
+    "@type": "Country",
+    name: "South Africa",
+  },
+  sameAs: [
+    "https://www.facebook.com/bodidoc/",
+    "https://www.instagram.com/bodidoc/",
+    "https://www.tiktok.com/@bodidoc.africa",
+    "https://x.com/bodidoc_sa",
+    "https://www.youtube.com/channel/UCiY8H3AZObpv4RqKhGQJy3Q/featured",
+  ],
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "Bodidoc Skincare Range",
+    itemListElement: [
+      {
+        "@type": "OfferCatalog",
+        name: "Tissue Oil Range",
+        url: "https://www.bodidoc.com/shop/tissue-oil-range",
+      },
+      {
+        "@type": "OfferCatalog",
+        name: "Aqueous Cream Range",
+        url: "https://www.bodidoc.com/shop/aqueous-range",
+      },
+    ],
+  },
+};
 
 const supabaseServer = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -58,6 +151,10 @@ export default async function Home() {
 
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
+      />
       <HeroSlider />
       <AutoSubscribeModal />
       <CookieAlert />

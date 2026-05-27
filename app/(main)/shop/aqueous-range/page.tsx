@@ -8,11 +8,24 @@ import AllInOneSection, { type UseCase } from "@/components/AllInOneSection";
 import FAQAccordion, { type FAQItem } from "@/components/FAQAccordion";
 
 export const metadata: Metadata = {
-  title: "Aqueous Range | Bodidoc",
-  description: "Discover Bodidoc Aqueous Cream — gentle, hypoallergenic care for the whole family. SLS-free, fragrance-free, dermatologically tested, and safe for babies.",
+  title: "Aqueous Cream Range | Bodidoc",
+  description:
+    "Discover Bodidoc Aqueous Cream — gentle, hypoallergenic care for the whole family. SLS-free, fragrance-free, B.P. approved, and dermatologically tested. Safe for babies.",
   openGraph: {
-    title: "Aqueous Range | Bodidoc",
-    description: "Gentle care for the whole family. SLS-free, fragrance-free, B.P. approved.",
+    title: "Aqueous Cream Range | Bodidoc",
+    description:
+      "Gentle, hypoallergenic skincare for the whole family. SLS-free, fragrance-free, and B.P. approved — Bodidoc Aqueous Cream is safe for babies and sensitive skin.",
+    url: "https://www.bodidoc.com/shop/aqueous-range",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Aqueous Cream Range | Bodidoc",
+    description:
+      "Gentle, hypoallergenic care for the whole family. SLS-free, fragrance-free, and B.P. approved.",
+  },
+  alternates: {
+    canonical: "https://www.bodidoc.com/shop/aqueous-range",
   },
 };
 
@@ -62,6 +75,24 @@ const faqs: FAQItem[] = [
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
+function AqueousFAQSchema() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map(({ q, a }) => ({
+      "@type": "Question",
+      name: q,
+      acceptedAnswer: { "@type": "Answer", text: a },
+    })),
+  };
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
 export default async function AqueousRangePage() {
   const [allProducts, rangePage] = await Promise.all([
     getAllProducts(),
@@ -71,6 +102,7 @@ export default async function AqueousRangePage() {
 
   return (
     <div className="w-full bg-white -mt-16 md:-mt-22.5 lg:-mt-32.5">
+      <AqueousFAQSchema />
 
       {/* ── 1. Full-screen hero ── */}
       {rangePage?.heroImage && (

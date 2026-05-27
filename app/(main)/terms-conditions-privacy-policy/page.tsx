@@ -3,7 +3,11 @@ import type { ReactNode } from "react";
 
 export const metadata: Metadata = {
   title: "Terms & Privacy Policy | Bodidoc",
-  description: "Terms and conditions and privacy policy for Bodidoc skincare products.",
+  description:
+    "Read Bodidoc's terms and conditions and privacy policy. Understand how we collect, use, and protect your personal information in compliance with POPIA.",
+  alternates: {
+    canonical: "https://www.bodidoc.com/terms-conditions-privacy-policy",
+  },
 };
 
 // --- Shared link styles ---

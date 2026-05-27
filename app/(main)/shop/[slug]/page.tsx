@@ -20,15 +20,29 @@ export async function generateMetadata({
   const { slug } = await params;
   const product = await getProductBySlug(slug);
   if (!product) return {};
+  const ogImage = product.mainImage
+    ? urlFor(product.mainImage).width(1200).height(630).url()
+    : undefined;
   return {
     title: `${product.name} | Bodidoc`,
-    description: product.shortDescription ?? `${product.name} — Bodidoc skincare.`,
+    description:
+      product.shortDescription ??
+      `${product.name} — cruelty-free, dermatologically tested South African skincare by Bodidoc.`,
     openGraph: {
-      title: product.name,
-      description: product.shortDescription,
-      images: product.mainImage
-        ? [{ url: urlFor(product.mainImage).width(1200).height(630).url() }]
-        : [],
+      title: `${product.name} | Bodidoc`,
+      description: product.shortDescription ?? `${product.name} — Bodidoc skincare.`,
+      url: `https://www.bodidoc.com/shop/${slug}`,
+      type: "website",
+      images: ogImage ? [{ url: ogImage, width: 1200, height: 630, alt: product.name }] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${product.name} | Bodidoc`,
+      description: product.shortDescription ?? `${product.name} — Bodidoc skincare.`,
+      images: ogImage ? [ogImage] : [],
+    },
+    alternates: {
+      canonical: `https://www.bodidoc.com/shop/${slug}`,
     },
   };
 }
@@ -61,8 +75,16 @@ export async function generateStaticParams() {
 
 // ─── Schema.org ───────────────────────────────────────────────────────────────
 
-function ProductSchema({ product }: { product: any }) {
-  const schema = {
+function ProductSchema({
+  product,
+  reviewRating,
+  reviewCount,
+}: {
+  product: any;
+  reviewRating: number;
+  reviewCount: number;
+}) {
+  const productSchema = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.name,
@@ -71,6 +93,15 @@ function ProductSchema({ product }: { product: any }) {
     image: product.mainImage
       ? urlFor(product.mainImage).width(800).height(800).url()
       : undefined,
+    ...(reviewCount > 0 && {
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: reviewRating,
+        reviewCount,
+        bestRating: 5,
+        worstRating: 1,
+      },
+    }),
     offers: {
       "@type": "Offer",
       availability: "https://schema.org/InStock",
@@ -78,11 +109,28 @@ function ProductSchema({ product }: { product: any }) {
       seller: { "@type": "Organization", name: "Bodidoc" },
     },
   };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home",  item: "https://www.bodidoc.com" },
+      { "@type": "ListItem", position: 2, name: "Shop",  item: "https://www.bodidoc.com/shop" },
+      { "@type": "ListItem", position: 3, name: product.name, item: `https://www.bodidoc.com/shop/${product.slug.current}` },
+    ],
+  };
+
   return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+    </>
   );
 }
 
@@ -138,7 +186,7 @@ export default async function ProductPage({
 
   return (
     <>
-      <ProductSchema product={product} />
+      <ProductSchema product={product} reviewRating={reviewRating} reviewCount={reviewCount} />
 
       <div className="w-full">
         {/* ── Product Hero ── */}

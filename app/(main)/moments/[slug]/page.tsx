@@ -3,7 +3,7 @@
 
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { getPostBySlug } from "@/sanity/lib/sanity";
+import { getPostBySlug, getAllPosts, urlFor } from "@/sanity/lib/sanity";
 
 // ─── Bespoke article components ──────────────────────────────────────────────
 import ArticleAwardWinning        from "@/components/moments/ArticleAwardWinning";
@@ -21,6 +21,16 @@ const BESPOKE: Record<string, React.ComponentType> = {
   "embracing-your-bodi-a-journey-of-self-love-and-acceptance": ArticleEmbracingYourBodi,
 };
 
+export async function generateStaticParams() {
+  const posts = await getAllPosts();
+  const bespokeKeys = Object.keys(BESPOKE);
+  const postSlugs = posts.map((p) => ({ slug: p.slug.current }));
+  const bespokeSlugs = bespokeKeys
+    .filter((s) => !postSlugs.some((p) => p.slug === s))
+    .map((s) => ({ slug: s }));
+  return [...postSlugs, ...bespokeSlugs];
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -29,9 +39,29 @@ export async function generateMetadata({
   const { slug } = await params;
   const post = await getPostBySlug(slug);
   if (!post) return {};
+  const ogImage = post.coverImage
+    ? urlFor(post.coverImage).width(1200).height(630).url()
+    : undefined;
   return {
     title: `${post.title} | Bodidoc`,
     description: post.excerpt ?? `${post.title} — Bodidoc.`,
+    openGraph: {
+      title: `${post.title} | Bodidoc`,
+      description: post.excerpt ?? `${post.title} — Bodidoc.`,
+      url: `https://www.bodidoc.com/moments/${slug}`,
+      type: "article",
+      publishedTime: post.publishedAt,
+      images: ogImage ? [{ url: ogImage, width: 1200, height: 630, alt: post.title }] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${post.title} | Bodidoc`,
+      description: post.excerpt ?? `${post.title} — Bodidoc.`,
+      images: ogImage ? [ogImage] : [],
+    },
+    alternates: {
+      canonical: `https://www.bodidoc.com/moments/${slug}`,
+    },
   };
 }
 
@@ -49,5 +79,40 @@ export default async function MomentPage({
 
   const post = await getPostBySlug(slug);
   if (!post) notFound();
-  return <GenericPost post={post} />;
+
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    description: post.excerpt,
+    datePublished: post.publishedAt,
+    author: {
+      "@type": "Organization",
+      name: "Bodidoc",
+      url: "https://www.bodidoc.com",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Bodidoc",
+      url: "https://www.bodidoc.com",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://www.bodidoc.com/bodidoc-favicon.png",
+      },
+    },
+    url: `https://www.bodidoc.com/moments/${slug}`,
+    ...(post.coverImage && {
+      image: urlFor(post.coverImage).width(1200).height(630).url(),
+    }),
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <GenericPost post={post} />
+    </>
+  );
 }

@@ -16,10 +16,22 @@ import { TissueOilIngredients } from "@/components/TissueOilRangeClient";
 export const metadata: Metadata = {
   title: "Tissue Oil Range | Bodidoc",
   description:
-    "Discover Bodidoc's Tissue Oil range — enriched with avocado oil, vitamin E, and evening primrose oil to reduce stretch marks, scarring, and uneven skin tone.",
+    "Discover Bodidoc's Tissue Oil range — clinically proven to reduce stretch marks and scars in 28 days. Enriched with 5 beneficial oils including avocado oil, vitamin E, and evening primrose oil.",
   openGraph: {
     title: "Tissue Oil Range | Bodidoc",
-    description: "Dermatologically tested. Clinically proven. Enriched with 5 beneficial oils.",
+    description:
+      "Clinically proven to reduce stretch marks and scars in 28 days. Enriched with avocado oil, vitamin E, and evening primrose oil. Dermatologically tested South African skincare.",
+    url: "https://www.bodidoc.com/shop/tissue-oil-range",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Tissue Oil Range | Bodidoc",
+    description:
+      "Clinically proven to reduce stretch marks and scars in 28 days. Enriched with 5 beneficial oils.",
+  },
+  alternates: {
+    canonical: "https://www.bodidoc.com/shop/tissue-oil-range",
   },
 };
 
@@ -46,6 +58,24 @@ const typeLabel: Record<string, string> = {
 };
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
+
+function TissueOilFAQSchema() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map(({ q, a }) => ({
+      "@type": "Question",
+      name: q,
+      acceptedAnswer: { "@type": "Answer", text: a },
+    })),
+  };
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
 
 export default async function TissueOilRangePage() {
   const [allProducts, rangePage, { data: reviews }] = await Promise.all([
@@ -83,6 +113,7 @@ export default async function TissueOilRangePage() {
 
   return (
     <div className="w-full bg-white -mt-16 md:-mt-22.5 lg:-mt-32.5">
+      <TissueOilFAQSchema />
 
       {/* ── 1. Hero banner ──
            The wrapper has a responsive negative top margin so the page slides
