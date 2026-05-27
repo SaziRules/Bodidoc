@@ -1,10 +1,15 @@
 import type { MetadataRoute } from "next";
 import { getAllProducts, getAllPosts } from "@/sanity/lib/sanity";
 
+export const revalidate = 3600;
+
 const BASE = "https://www.bodidoc.com";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [products, posts] = await Promise.all([getAllProducts(), getAllPosts()]);
+  const [products, posts] = await Promise.all([
+    getAllProducts().catch(() => []),
+    getAllPosts().catch(() => []),
+  ]);
 
   const staticPages: MetadataRoute.Sitemap = [
     { url: BASE,                                              lastModified: new Date(), changeFrequency: "weekly",  priority: 1.0 },
