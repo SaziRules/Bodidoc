@@ -171,6 +171,7 @@ export default function FlipBook({ onClose }: FlipBookProps) {
   const [rendered, setRendered] = useState<Set<number>>(new Set([1, 2, 3, 4]));
   const [scale, setScale] = useState(1);
   const [isMobile, setIsMobile] = useState(false);
+  const [isFlipping, setIsFlipping] = useState(false);
 
   // Load PDF
   useEffect(() => {
@@ -191,9 +192,8 @@ export default function FlipBook({ onClose }: FlipBookProps) {
       setIsMobile(mobile);
       const areaW = bookAreaRef.current?.offsetWidth ?? window.innerWidth;
       const areaH = bookAreaRef.current?.offsetHeight ?? window.innerHeight;
-      const available = areaW - (mobile ? 80 : 140);
-      const bookW = mobile ? PAGE_W : PAGE_W * 2;
-      const scaleW = available / bookW;
+      const available = areaW - (mobile ? 32 : 140);
+      const scaleW = available / (PAGE_W * 2);
       const scaleH = (areaH - 16) / PAGE_H;
       setScale(Math.min(1, scaleW, scaleH));
     };
@@ -235,6 +235,7 @@ export default function FlipBook({ onClose }: FlipBookProps) {
     setCurrentPage(idx);
     expandRendered(idx + 1);
     playFlipSound(audioCtxRef);
+    setIsFlipping(false);
   }, [expandRendered]);
 
   // Fullscreen toggle
@@ -272,14 +273,26 @@ export default function FlipBook({ onClose }: FlipBookProps) {
   const pages: (number | null)[] = Array.from({ length: numPages }, (_, i) => i + 1);
   if (numPages % 2 !== 0) pages.push(null);
 
-  const bookTotalW = isMobile ? PAGE_W : PAGE_W * 2;
+  const bookTotalW = PAGE_W * 2;
   const isFirst = currentPage === 0;
-  const isLast = currentPage >= numPages - (isMobile ? 1 : 2);
+  const isLast  = currentPage >= numPages - 2;
   const displayL = currentPage + 1;
   const displayR = currentPage + 2;
 
-  const flipPrev = () => bookRef.current?.pageFlip().flipPrev();
-  const flipNext = () => bookRef.current?.pageFlip().flipNext();
+  // Cover and back page: clip the double-width canvas to show only the
+  // relevant half, mirroring TradeBookViewer's oneCol logic.
+  const isOnCover = currentPage === 0;
+  const isOnBack  = pages.length > 0 && currentPage >= pages.length - 1;
+  const oneCol    = !isFlipping && (isOnCover || isOnBack);
+
+  const displayNatW    = oneCol ? PAGE_W : PAGE_W * 2;
+  const innerOffsetNat = oneCol && isOnCover ? -PAGE_W : 0;
+  const displayW       = displayNatW    * scale;
+  const displayH       = PAGE_H         * scale;
+  const innerOffset    = innerOffsetNat * scale;
+
+  const flipPrev = () => { setIsFlipping(true); bookRef.current?.pageFlip().flipPrev(); };
+  const flipNext = () => { setIsFlipping(true); bookRef.current?.pageFlip().flipNext(); };
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-black/85 select-none" style={{ backdropFilter: "blur(4px)" }}>
@@ -292,8 +305,8 @@ export default function FlipBook({ onClose }: FlipBookProps) {
           <span className="font-sans text-white/30 text-xs hidden sm:inline">Trade Catalogue</span>
         </div>
 
-        <span className="font-sans text-sm text-white/45 absolute left-1/2 -translate-x-1/2">
-          {!isMobile && displayR <= numPages
+        <span className="font-sans text-sm text-white/45 absolute left-1/2 -translate-x-1/2 hidden md:block">
+          {displayR <= numPages
             ? `${displayL} – ${displayR} / ${numPages}`
             : `${displayL} / ${numPages}`}
         </span>
@@ -315,41 +328,60 @@ export default function FlipBook({ onClose }: FlipBookProps) {
         <button onClick={flipPrev} disabled={isFirst} aria-label="Previous page"
           className="absolute left-3 md:left-4 z-10 w-10 h-10 md:w-12 md:h-12 rounded-full
                      bg-white/8 hover:bg-white/18 border border-white/12
-                     flex items-center justify-center text-white
+                     hidden md:flex items-center justify-center text-white
                      disabled:opacity-15 transition-all cursor-pointer">
           <IconChevLeft />
         </button>
 
-        {/* Scaled book */}
-        <div style={{ width: bookTotalW * scale, height: PAGE_H * scale }} className="relative">
-          <div
-            className="absolute inset-0 rounded-sm pointer-events-none"
-            style={{ boxShadow: "0 32px 80px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.05)" }}
-          />
-          <div style={{ transform: `scale(${scale})`, transformOrigin: "top left", width: bookTotalW }}>
-            <HTMLFlipBook
-              ref={bookRef}
-              width={PAGE_W} height={PAGE_H}
-              size="fixed"
-              minWidth={PAGE_W} maxWidth={PAGE_W}
-              minHeight={PAGE_H} maxHeight={PAGE_H}
-              startPage={0}
-              drawShadow flippingTime={650}
-              usePortrait={isMobile}
-              startZIndex={0} autoSize={false}
-              maxShadowOpacity={0.6}
-              showCover mobileScrollSupport
-              clickEventForward useMouseEvents
-              swipeDistance={30} showPageCorners
-              disableFlipByClick={false}
-              onFlip={onFlip}
-              className="" style={{}}
-            >
-              {pages.map((n) => {
-                if (n === null) return <BlankPage key="blank" />;
-                return <PDFPage key={n} pageNum={n} pdf={pdf} shouldRender={rendered.has(n)} />;
-              })}
-            </HTMLFlipBook>
+        {/* Outer clip — single-page for cover/back, double for spreads */}
+        <div style={{
+          width:      displayW,
+          height:     displayH,
+          overflow:   "hidden",
+          transition: isFlipping ? "none" : "width 0.4s ease",
+        }}>
+          {/* Inner translate — shifts canvas left to reveal cover (right half) */}
+          <div style={{
+            transform:  `translateX(${innerOffset}px)`,
+            transition: isFlipping ? "none" : "transform 0.4s ease",
+          }}>
+            {/* Scale */}
+            <div style={{
+              transform:       `scale(${scale})`,
+              transformOrigin: "top left",
+              width:           bookTotalW,
+              position:        "relative",
+            }}>
+              <div style={{
+                position: "absolute", inset: 0, pointerEvents: "none",
+                boxShadow: "0 32px 80px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.05)",
+              }} />
+              <HTMLFlipBook
+                key="flipbook"
+                ref={bookRef}
+                width={PAGE_W} height={PAGE_H}
+                size="fixed"
+                minWidth={PAGE_W} maxWidth={PAGE_W}
+                minHeight={PAGE_H} maxHeight={PAGE_H}
+                startPage={0}
+                drawShadow flippingTime={650}
+                usePortrait={false}
+                startZIndex={0} autoSize={false}
+                maxShadowOpacity={0.6}
+                showCover
+                mobileScrollSupport={false}
+                clickEventForward useMouseEvents
+                swipeDistance={30} showPageCorners
+                disableFlipByClick={false}
+                onFlip={onFlip}
+                className="" style={{}}
+              >
+                {pages.map((n) => {
+                  if (n === null) return <BlankPage key="blank" />;
+                  return <PDFPage key={n} pageNum={n} pdf={pdf} shouldRender={rendered.has(n)} />;
+                })}
+              </HTMLFlipBook>
+            </div>
           </div>
         </div>
 
@@ -357,32 +389,49 @@ export default function FlipBook({ onClose }: FlipBookProps) {
         <button onClick={flipNext} disabled={isLast} aria-label="Next page"
           className="absolute right-3 md:right-4 z-10 w-10 h-10 md:w-12 md:h-12 rounded-full
                      bg-white/8 hover:bg-white/18 border border-white/12
-                     flex items-center justify-center text-white
+                     hidden md:flex items-center justify-center text-white
                      disabled:opacity-15 transition-all cursor-pointer">
           <IconChevRight />
         </button>
       </div>
 
       {/* ── Bottom toolbar ── */}
-      <div className="shrink-0 flex items-center justify-center gap-1 px-6 py-3 border-t border-white/10">
-        {[
-          { icon: <IconSingle />, label: "Single page", action: () => {} },
-          { icon: <IconSpread />, label: "Two-page spread", action: () => {} },
-          { icon: <IconZoomIn />, label: "Zoom", action: () => {} },
-          { icon: <IconFullscreen />, label: "Fullscreen", action: toggleFullscreen },
-          { icon: <IconShare />, label: "Share", action: () => {} },
-        ].map(({ icon, label, action }) => (
-          <button
-            key={label}
-            onClick={action}
-            aria-label={label}
-            title={label}
-            className="w-9 h-9 rounded flex items-center justify-center text-white/40
-                       hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
-          >
-            {icon}
+      <div className="shrink-0 border-t border-white/10">
+
+        {/* Mobile: prev / page counter / next */}
+        <div className="flex md:hidden items-center px-6 pt-3 pb-8">
+          <button onClick={flipPrev} disabled={isFirst} aria-label="Previous page"
+            className="w-12 h-12 rounded-full bg-white/8 hover:bg-white/18 border border-white/12
+                       flex items-center justify-center text-white disabled:opacity-20 transition-all cursor-pointer">
+            <IconChevLeft />
           </button>
-        ))}
+          <span className="flex-1 text-center text-sm tabular-nums text-white/45">
+            {displayR <= numPages ? `${displayL} – ${displayR}` : `${displayL}`} / {numPages}
+          </span>
+          <button onClick={flipNext} disabled={isLast} aria-label="Next page"
+            className="w-12 h-12 rounded-full bg-white/8 hover:bg-white/18 border border-white/12
+                       flex items-center justify-center text-white disabled:opacity-20 transition-all cursor-pointer">
+            <IconChevRight />
+          </button>
+        </div>
+
+        {/* Desktop: tool icons */}
+        <div className="hidden md:flex items-center justify-center gap-1 px-6 py-3">
+          {[
+            { icon: <IconSingle />, label: "Single page", action: () => {} },
+            { icon: <IconSpread />, label: "Two-page spread", action: () => {} },
+            { icon: <IconZoomIn />, label: "Zoom", action: () => {} },
+            { icon: <IconFullscreen />, label: "Fullscreen", action: toggleFullscreen },
+            { icon: <IconShare />, label: "Share", action: () => {} },
+          ].map(({ icon, label, action }) => (
+            <button key={label} onClick={action} aria-label={label} title={label}
+              className="w-9 h-9 rounded flex items-center justify-center
+                         text-white/50 hover:text-white hover:bg-white/10 transition-colors cursor-pointer">
+              {icon}
+            </button>
+          ))}
+        </div>
+
       </div>
 
     </div>

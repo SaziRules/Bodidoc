@@ -4,6 +4,8 @@ import Link from "next/link";
 type FullWidthBannerProps = {
   src: string;
   mobileSrc?: string;
+  mobileWidth?: number;
+  mobileHeight?: number;
   alt: string;
   priority?: boolean;
   href?: string;
@@ -12,6 +14,8 @@ type FullWidthBannerProps = {
 export default function FullWidthBanner({
   src,
   mobileSrc,
+  mobileWidth = 768,
+  mobileHeight = 600,
   alt,
   priority = false,
   href,
@@ -37,8 +41,8 @@ export default function FullWidthBanner({
           <Image
             src={mobileSrc}
             alt={alt}
-            width={768}
-            height={600}
+            width={mobileWidth}
+            height={mobileHeight}
             className="w-full h-auto block align-bottom"
             priority={priority}
             draggable={false}

@@ -155,9 +155,11 @@ export type RangePage = {
   // Banner 2 — lifestyle (mother + baby)
   heroBannerImage?: SanityImageSource;
   heroBannerMobileImage?: SanityImageSource;
+  heroBannerMobileImageDimensions?: { width: number; height: number };
   // Banner 3 — derm-tested
   dermBannerImage?: SanityImageSource;
   dermBannerMobileImage?: SanityImageSource;
+  dermBannerMobileImageDimensions?: { width: number; height: number };
 };
 
 // ─── Range Page Queries ───────────────────────────────────────────────────────
@@ -167,11 +169,40 @@ export async function getRangePage(range: string): Promise<RangePage | null> {
     `*[_type == "rangePage" && range == $range][0]{
       heroImage, heroMobileImage,
       heroBannerImage, heroBannerMobileImage,
-      dermBannerImage, dermBannerMobileImage
+      "heroBannerMobileImageDimensions": heroBannerMobileImage.asset->metadata.dimensions,
+      dermBannerImage, dermBannerMobileImage,
+      "dermBannerMobileImageDimensions": dermBannerMobileImage.asset->metadata.dimensions
     }`,
     { range },
     { next: { revalidate: 60 } }
   );
+}
+
+// ─── Hero Slider Types ────────────────────────────────────────────────────────
+
+export type HeroSlide = {
+  _key: string;
+  desktopImage: SanityImageSource;
+  mobileImage?: SanityImageSource;
+  alt: string;
+  url: string;
+};
+
+// ─── Hero Slider Query ────────────────────────────────────────────────────────
+
+export async function getHeroSlides(): Promise<HeroSlide[]> {
+  const doc = await client.fetch(
+    `*[_type == "heroSlider"][0] {
+      slides[] {
+        _key, alt, url,
+        desktopImage { asset-> },
+        mobileImage { asset-> }
+      }
+    }`,
+    {},
+    { next: { revalidate: 60 } }
+  );
+  return doc?.slides ?? [];
 }
 
 // ─── Search Queries ───────────────────────────────────────────────────────────

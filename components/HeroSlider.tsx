@@ -4,9 +4,19 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-// ─── Slide data ───────────────────────────────────────────────────────────────
+// ─── Slide shape ──────────────────────────────────────────────────────────────
 
-const slides = [
+type SlideData = {
+  id: string | number;
+  desktop: string;
+  mobile: string;
+  alt: string;
+  url: string;
+};
+
+// ─── Fallback data (used when no Sanity document exists yet) ──────────────────
+
+const fallbackSlides: SlideData[] = [
   {
     id: 1,
     desktop: "/images/herp-1-desktop.png",
@@ -41,7 +51,9 @@ const AUTOPLAY_MS = 5000;
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export default function HeroSlider() {
+type Props = { slides?: SlideData[] };
+
+export default function HeroSlider({ slides = fallbackSlides }: Props) {
   const [current, setCurrent] = useState(0);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -51,7 +63,7 @@ export default function HeroSlider() {
 
   const next = useCallback(() => {
     setCurrent((c) => (c + 1) % slides.length);
-  }, []);
+  }, [slides.length]);
 
   const resetTimer = useCallback(() => {
     if (timerRef.current) clearTimeout(timerRef.current);

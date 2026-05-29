@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { createClient } from "@supabase/supabase-js";
-import { getAllProducts, urlFor } from "@/sanity/lib/sanity";
+import { getAllProducts, getHeroSlides, urlFor } from "@/sanity/lib/sanity";
 import HeroSlider from "@/components/HeroSlider";
 import ProductGrid, { type GridProduct } from "@/components/ProductGrid";
 import FullWidthBanner from "@/components/FullWidthBanner";
@@ -115,14 +115,27 @@ const typeLabel: Record<string, string> = {
 };
 
 export default async function Home() {
-  const [products, { data: reviews }] = await Promise.all([
+  const [products, rawHeroSlides, { data: reviews }] = await Promise.all([
     getAllProducts(),
+    getHeroSlides(),
     supabaseServer
       .from("product_reviews")
       .select("productSlug, rating")
       .eq("brand", "bodidoc")
       .eq("approved", true),
   ]);
+
+  const heroSlides = rawHeroSlides
+    .filter((s) => s.desktopImage)
+    .map((s) => ({
+      id:      s._key,
+      desktop: urlFor(s.desktopImage).width(1920).url(),
+      mobile:  s.mobileImage
+                 ? urlFor(s.mobileImage).width(768).url()
+                 : urlFor(s.desktopImage).width(768).url(),
+      alt:     s.alt,
+      url:     s.url,
+    }));
 
   // Build per-slug ratings map
   const ratingsMap: Record<string, { sum: number; count: number }> = {};
@@ -155,7 +168,7 @@ export default async function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
       />
-      <HeroSlider />
+      <HeroSlider slides={heroSlides.length ? heroSlides : undefined} />
       <AutoSubscribeModal />
       <CookieAlert />
       <ProductGrid

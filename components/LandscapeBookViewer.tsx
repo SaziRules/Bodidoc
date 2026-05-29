@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import useEmblaCarousel from "embla-carousel-react";
 
 const RENDER_W = 1400;
@@ -80,11 +81,13 @@ const IcoView  = () => <svg viewBox="0 0 24 24" width="15" height="15" fill="non
 // ── Component ──────────────────────────────────────────────────────────────────
 
 export interface LandscapeBookViewerProps {
-  src:   string;
-  title: string;
+  src:         string;
+  title:       string;
+  isLightbox?: boolean;
+  onClose?:    () => void;
 }
 
-export default function LandscapeBookViewer({ src, title }: LandscapeBookViewerProps) {
+export default function LandscapeBookViewer({ src, title, isLightbox = false, onClose }: LandscapeBookViewerProps) {
   const outerRef = useRef<HTMLDivElement>(null);
 
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false, duration: 28 });
@@ -98,6 +101,7 @@ export default function LandscapeBookViewer({ src, title }: LandscapeBookViewerP
   const [canPrev,    setCanPrev   ] = useState(false);
   const [canNext,    setCanNext   ] = useState(false);
   const [copied,     setCopied    ] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   // ── Load PDF ────────────────────────────────────────────────────────────────
 
@@ -160,6 +164,15 @@ export default function LandscapeBookViewer({ src, title }: LandscapeBookViewerP
     return () => ro.disconnect();
   }, [emblaApi]);
 
+  // ── ESC to close when in lightbox ───────────────────────────────────────────
+
+  useEffect(() => {
+    if (!isLightbox) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose?.(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [isLightbox, onClose]);
+
   // ── Actions ─────────────────────────────────────────────────────────────────
 
   const handlePrint = () => { const w = window.open(src); if (w) w.onload = () => w.print(); };
@@ -173,7 +186,7 @@ export default function LandscapeBookViewer({ src, title }: LandscapeBookViewerP
     if (navigator.share) { await navigator.share({ title, url }).catch(() => {}); }
     else { await navigator.clipboard.writeText(url).catch(() => {}); setCopied(true); setTimeout(() => setCopied(false), 2500); }
   };
-  const handleView = () => window.open(src, "_blank");
+  const handleView = () => { if (isLightbox) { window.open(src, "_blank"); } else { setLightboxOpen(true); } };
 
   return (
     <div ref={outerRef} className="w-full select-none">
@@ -196,16 +209,18 @@ export default function LandscapeBookViewer({ src, title }: LandscapeBookViewerP
       {/* Carousel */}
       {status === "ready" && (
         <>
-          <div className="relative flex items-center py-10 px-[72px]">
+          <div className="relative flex items-center py-10 px-4 md:px-[72px]">
             {/* Prev */}
             <button
               onClick={() => emblaApi?.scrollPrev()}
               disabled={!canPrev}
               aria-label="Previous page"
-              className="absolute left-0 w-14 h-14 rounded-full z-10
-                         bg-[#112942]/6 hover:bg-[#112942]/14 border border-[#112942]/10
-                         flex items-center justify-center text-[#112942]
-                         disabled:opacity-15 transition-all cursor-pointer"
+              className={`absolute left-0 w-14 h-14 rounded-full z-10
+                hidden md:flex items-center justify-center disabled:opacity-20 transition-all cursor-pointer
+                ${isLightbox
+                  ? "bg-white/15 hover:bg-white/30 border border-white/30 text-white"
+                  : "bg-[#112942]/6 hover:bg-[#112942]/14 border border-[#112942]/10 text-[#112942]"
+                }`}
             >
               <ChevL />
             </button>
@@ -235,41 +250,102 @@ export default function LandscapeBookViewer({ src, title }: LandscapeBookViewerP
               onClick={() => emblaApi?.scrollNext()}
               disabled={!canNext}
               aria-label="Next page"
-              className="absolute right-0 w-14 h-14 rounded-full z-10
-                         bg-[#112942]/6 hover:bg-[#112942]/14 border border-[#112942]/10
-                         flex items-center justify-center text-[#112942]
-                         disabled:opacity-15 transition-all cursor-pointer"
+              className={`absolute right-0 w-14 h-14 rounded-full z-10
+                hidden md:flex items-center justify-center disabled:opacity-20 transition-all cursor-pointer
+                ${isLightbox
+                  ? "bg-white/15 hover:bg-white/30 border border-white/30 text-white"
+                  : "bg-[#112942]/6 hover:bg-[#112942]/14 border border-[#112942]/10 text-[#112942]"
+                }`}
             >
               <ChevR />
             </button>
+
+            {/* Lightbox toolbar — fixed at viewport bottom */}
+            {isLightbox && (
+              <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[10000] flex items-center bg-white/10 backdrop-blur-md border border-white/15 rounded-full px-1 max-w-[calc(100%-2rem)]">
+                <button onClick={() => emblaApi?.scrollPrev()} disabled={!canPrev}
+                  className="w-9 h-9 rounded-full flex items-center justify-center text-white/60 hover:text-white hover:bg-white/15 disabled:opacity-25 transition-colors cursor-pointer">
+                  <ChevL />
+                </button>
+                <span className="text-[11px] tabular-nums text-white/50 px-2.5 border-x border-white/15 whitespace-nowrap">
+                  {current + 1} / {numPages}
+                </span>
+                {[
+                  { label: "Print",    icon: <IcoPrint />, action: handlePrint    },
+                  { label: "Download", icon: <IcoDl    />, action: handleDownload },
+                  { label: copied ? "Copied!" : "Share", icon: <IcoShare />, action: handleShare },
+                ].map(({ label, icon, action }) => (
+                  <button key={label} onClick={action} title={label}
+                    className="flex items-center gap-1.5 px-2 md:px-3 py-2.5 md:py-2 rounded-full
+                               text-white/60 hover:text-white hover:bg-white/15
+                               transition-colors cursor-pointer text-[11px] tracking-wide">
+                    {icon}
+                    <span className="hidden sm:inline">{label}</span>
+                  </button>
+                ))}
+                <button onClick={() => emblaApi?.scrollNext()} disabled={!canNext}
+                  className="w-9 h-9 rounded-full flex items-center justify-center text-white/60 hover:text-white hover:bg-white/15 disabled:opacity-25 transition-colors cursor-pointer">
+                  <ChevR />
+                </button>
+              </div>
+            )}
           </div>
 
-          {/* Toolbar */}
-          <div className="flex items-center justify-between px-2 py-2.5 border-t border-[#112942]/8">
-            <span className="text-xs tabular-nums text-[#112942]/45 min-w-[90px]">
-              {current + 1} of {numPages}
-            </span>
-            <span className="hidden  text-xs text-[#112942]/55 font-medium tracking-wide truncate px-4 md:hidden">
-              {title}
-            </span>
-            <div className="flex items-center gap-0.5">
-              {[
-                { label: "Print",    icon: <IcoPrint />, action: handlePrint    },
-                { label: "Download", icon: <IcoDl    />, action: handleDownload },
-                { label: copied ? "Copied!" : "Share", icon: <IcoShare />, action: handleShare },
-                { label: "View",     icon: <IcoView  />, action: handleView     },
-              ].map(({ label, icon, action }) => (
-                <button key={label} onClick={action} title={label}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded
-                             text-[#112942]/55 hover:text-[#112942] hover:bg-[#112942]/6
-                             transition-colors cursor-pointer text-xs">
-                  {icon}
-                  <span className="hidden sm:inline">{label}</span>
+          {/* Toolbar — inline mode only */}
+          {!isLightbox && (
+            <div className="border-t border-[#112942]/8">
+              {/* Mobile nav row */}
+              <div className="flex md:hidden items-center justify-between px-4 py-3 border-b border-[#112942]/6">
+                <button onClick={() => emblaApi?.scrollPrev()} disabled={!canPrev}
+                  className="w-9 h-9 rounded-full bg-[#112942]/6 hover:bg-[#112942]/12 border border-[#112942]/10
+                             flex items-center justify-center text-[#112942] disabled:opacity-25 transition-all cursor-pointer">
+                  <ChevL />
                 </button>
-              ))}
+                <span className="text-xs tabular-nums text-[#112942]/45">{current + 1} of {numPages}</span>
+                <button onClick={() => emblaApi?.scrollNext()} disabled={!canNext}
+                  className="w-9 h-9 rounded-full bg-[#112942]/6 hover:bg-[#112942]/12 border border-[#112942]/10
+                             flex items-center justify-center text-[#112942] disabled:opacity-25 transition-all cursor-pointer">
+                  <ChevR />
+                </button>
+              </div>
+              {/* Actions row */}
+              <div className="flex items-center justify-between px-2 py-2.5">
+                <span className="hidden md:block text-xs tabular-nums text-[#112942]/45 min-w-[90px]">
+                  {current + 1} of {numPages}
+                </span>
+                <div className="flex items-center gap-0.5 w-full md:w-auto justify-end">
+                  {[
+                    { label: "Print",    icon: <IcoPrint />, action: handlePrint    },
+                    { label: "Download", icon: <IcoDl    />, action: handleDownload },
+                    { label: copied ? "Copied!" : "Share", icon: <IcoShare />, action: handleShare },
+                    { label: "View",     icon: <IcoView  />, action: handleView     },
+                  ].map(({ label, icon, action }) => (
+                    <button key={label} onClick={action} title={label}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded
+                                 text-[#112942]/55 hover:text-[#112942] hover:bg-[#112942]/6
+                                 transition-colors cursor-pointer text-xs">
+                      {icon}
+                      <span className="hidden sm:inline">{label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
-          </div>
+          )}
         </>
+      )}
+
+      {/* Lightbox portal */}
+      {lightboxOpen && createPortal(
+        <div
+          className="fixed inset-0 z-[9999] bg-black/80 flex items-center justify-center overflow-hidden p-4 md:p-8"
+          onClick={(e) => { if (e.target === e.currentTarget) setLightboxOpen(false); }}
+        >
+          <div className="w-full max-w-[1400px]">
+            <LandscapeBookViewer src={src} title={title} isLightbox onClose={() => setLightboxOpen(false)} />
+          </div>
+        </div>,
+        document.body
       )}
     </div>
   );

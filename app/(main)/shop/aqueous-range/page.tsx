@@ -208,8 +208,10 @@ export default async function AqueousRangePage() {
         <FullWidthBanner
           src={urlFor(rangePage.heroBannerImage).width(1536).height(536).url()}
           mobileSrc={rangePage.heroBannerMobileImage
-            ? urlFor(rangePage.heroBannerMobileImage).width(768).height(768).url()
+            ? urlFor(rangePage.heroBannerMobileImage).width(768).url()
             : undefined}
+          mobileWidth={rangePage.heroBannerMobileImageDimensions?.width}
+          mobileHeight={rangePage.heroBannerMobileImageDimensions?.height}
           alt="Gentle enough for the whole family"
           href="/shop/bodidoc-aqueous-cream-for-all-skin-types"
         />
@@ -243,8 +245,10 @@ export default async function AqueousRangePage() {
         <FullWidthBanner
           src={urlFor(rangePage.dermBannerImage).width(1536).url()}
           mobileSrc={rangePage.dermBannerMobileImage
-            ? urlFor(rangePage.dermBannerMobileImage).width(768).height(500).url()
+            ? urlFor(rangePage.dermBannerMobileImage).width(768).url()
             : undefined}
+          mobileWidth={rangePage.dermBannerMobileImageDimensions?.width}
+          mobileHeight={rangePage.dermBannerMobileImageDimensions?.height}
           alt="Skin safety matters — dermatologically tested and verified 100% safe"
         />
       )}
