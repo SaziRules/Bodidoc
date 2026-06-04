@@ -3,7 +3,7 @@ import { Open_Sans, Playfair_Display } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 
-const GA_ID = "G-GK0ERHY660";
+const GA_IDS = ["G-GK0ERHY660", "G-F67F4F42CK"];
 
 /*
  * Open Sans — all UI text
@@ -159,7 +159,7 @@ export default function RootLayout({
         />
         {children}
         <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_IDS[0]}`}
           strategy="afterInteractive"
         />
         <Script id="google-analytics" strategy="afterInteractive">
@@ -167,7 +167,7 @@ export default function RootLayout({
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', '${GA_ID}');
+            ${GA_IDS.map((id) => `gtag('config', '${id}');`).join("\n            ")}
           `}
         </Script>
       </body>
