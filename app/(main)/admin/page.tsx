@@ -8,6 +8,8 @@ import { supabase } from "@/lib/supabase";
 type Review = {
   id: string;
   name: string;
+  email: string | null;
+  phone: string | null;
   title: string;
   message: string;
   rating: number;
@@ -272,6 +274,29 @@ function ReviewsTab() {
     fetchCounts();
   };
 
+  const forwardReview = (r: Review) => {
+    const subject = encodeURIComponent(
+      `Product Review: ${r.name} — ${r.productSlug} (${r.rating}/5 ★)`
+    );
+    const body = encodeURIComponent(
+      `PRODUCT REVIEW\n` +
+      `─────────────────────────────\n` +
+      `Reviewer:   ${r.name}\n` +
+      `Email:      ${r.email ?? "—"}\n` +
+      `Phone:      ${r.phone ?? "—"}\n` +
+      `─────────────────────────────\n` +
+      `Product:    ${r.productSlug}\n` +
+      `Rating:     ${r.rating}/5\n` +
+      `Recommends: ${r.recommend === "yes" ? "Yes" : "No"}\n` +
+      `Submitted:  ${formatDate(r.created_at)}\n` +
+      `─────────────────────────────\n` +
+      `"${r.title}"\n\n` +
+      `${r.message}\n` +
+      `─────────────────────────────`
+    );
+    window.open(`mailto:?subject=${subject}&body=${body}`);
+  };
+
   return (
     <div>
       <div className="flex items-center gap-2 mb-7 flex-wrap">
@@ -317,13 +342,31 @@ function ReviewsTab() {
                         {expanded === r.id ? "Show less" : "Read more"}
                       </button>
                     )}
-                    <div className="flex items-center gap-2 mt-2.5">
+                    <div className="flex items-center gap-2 mt-2.5 flex-wrap">
                       <span className={`text-[10px] tracking-[0.15em] uppercase px-2.5 py-1 font-normal ${r.recommend === "yes" ? "bg-emerald-50 text-emerald-700" : "bg-red-50 text-red-500"}`}>
                         {r.recommend === "yes" ? "Recommends" : "Doesn't recommend"}
                       </span>
                       <span className={`text-[10px] tracking-[0.15em] uppercase px-2.5 py-1 font-normal ${r.approved ? "bg-[#112942]/8 text-[#112942]" : "bg-amber-50 text-amber-700"}`}>
                         {r.approved ? "Live" : "Pending"}
                       </span>
+                    </div>
+                    <div className="flex items-center gap-3 mt-2 flex-wrap">
+                      {r.email && (
+                        <span className="flex items-center gap-1.5 text-[12px] font-normal text-[#777]">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="w-3 h-3 shrink-0 text-[#aaa]">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+                          </svg>
+                          {r.email}
+                        </span>
+                      )}
+                      {r.phone && (
+                        <span className="flex items-center gap-1.5 text-[12px] font-normal text-[#777]">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="w-3 h-3 shrink-0 text-[#aaa]">
+                            <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.12 1.18 2 2 0 012.11 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/>
+                          </svg>
+                          {r.phone}
+                        </span>
+                      )}
                     </div>
                   </div>
                   <div className="flex items-center gap-2 shrink-0 pt-0.5">
@@ -338,6 +381,15 @@ function ReviewsTab() {
                         Unpublish
                       </button>
                     )}
+                    <button
+                      onClick={() => forwardReview(r)}
+                      title="Forward review by email"
+                      className="w-8 h-8 flex items-center justify-center text-[#bbb] hover:text-[#112942] transition-colors bg-transparent border-0 cursor-pointer"
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="w-4 h-4">
+                        <path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9-9-4 20-7z"/>
+                      </svg>
+                    </button>
                     <button onClick={() => remove(r.id)}
                       className="w-8 h-8 flex items-center justify-center text-[#ddd] hover:text-red-400 transition-colors bg-transparent border-0 cursor-pointer">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="w-4 h-4">
