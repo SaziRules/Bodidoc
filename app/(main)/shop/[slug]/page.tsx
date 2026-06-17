@@ -64,6 +64,8 @@ const typeLabels: Record<string, string> = {
   "body-lotion": "Body Lotion",
 };
 
+export const dynamic = "force-dynamic";
+
 // ─── Static params ────────────────────────────────────────────────────────────
 
 export async function generateStaticParams() {
