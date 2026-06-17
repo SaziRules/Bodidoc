@@ -2,9 +2,16 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 
-// ─── Data ─────────────────────────────────────────────────────────────────────
+// ─── Types & fallback data ─────────────────────────────────────────────────────
 
-const testimonials = [
+export interface TestimonialItem {
+  id: number;
+  text: string;
+  product: string;
+  name: string;
+}
+
+const fallbackTestimonials: TestimonialItem[] = [
   {
     id: 1,
     text: "About a month ago I bought this product at Pep. It was my first time seeing it and I must say it was the best decision yet. This product loves my skin in this hot weather. All pigmentation gone and my skin is smooth and glowing. I just love it. I would like to try the tissue oil as well but I can't find it anywhere. Keep up the good work.",
@@ -61,11 +68,12 @@ const ChevronRight = () => (
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export default function Testimonials() {
+export default function Testimonials({ testimonials }: { testimonials?: TestimonialItem[] }) {
+  const items = testimonials?.length ? testimonials : fallbackTestimonials;
   const [current, setCurrent] = useState(0);
   const [paused, setPaused] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const total = testimonials.length;
+  const total = items.length;
 
   const prev = useCallback(() => setCurrent((c) => (c - 1 + total) % total), [total]);
   const next = useCallback(() => setCurrent((c) => (c + 1) % total), [total]);
@@ -113,7 +121,7 @@ export default function Testimonials() {
               className="flex transition-transform duration-500 ease-in-out"
               style={{ transform: `translateX(-${current * 100}%)` }}
             >
-              {testimonials.map((t) => (
+              {items.map((t) => (
                 <div key={t.id} className="w-full shrink-0">
                   <blockquote>
                     <p className="text-[15px] md:text-[15px] font-light text-[#112942] leading-5.75 mb-3 italic">

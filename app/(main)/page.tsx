@@ -120,7 +120,7 @@ export default async function Home() {
     getHeroSlides(),
     supabaseServer
       .from("product_reviews")
-      .select("productSlug, rating")
+      .select("productSlug, rating, name, message")
       .eq("brand", "bodidoc")
       .eq("approved", true),
   ]);
@@ -162,6 +162,19 @@ export default async function Home() {
   const bestSelling = products.filter((p) => p.isBestseller).slice(0, 4).map(toGridProduct);
   const fallback    = products.slice(0, 4).map(toGridProduct);
 
+  // Build slug → display name map from Sanity products
+  const slugToName: Record<string, string> = {};
+  for (const p of products) slugToName[p.slug.current] = p.name;
+
+  const liveTestimonials = (reviews ?? [])
+    .filter((r) => r.message && r.name)
+    .map((r, i) => ({
+      id:      i + 1,
+      text:    r.message as string,
+      product: slugToName[r.productSlug] ?? r.productSlug,
+      name:    r.name as string,
+    }));
+
   return (
     <main>
       <script
@@ -180,7 +193,7 @@ export default async function Home() {
         alt="Bodidoc banner"
         href="shop/bodidoc-aqueous-cream-for-all-skin-types"
       />
-      <Testimonials />
+      <Testimonials testimonials={liveTestimonials.length ? liveTestimonials : undefined} />
       <VideoBanner
         videoSrc="https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/05/98of-women-agree.mp4"
         mobileSrc="https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/04/Helps-reduce-the-appearance-of-stretch-marks-uneven-skin-tone-dry-skin-7.webp"
