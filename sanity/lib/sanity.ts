@@ -133,7 +133,8 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
       inStoreLinks[] { retailer, url, logo { asset-> } },
       isBestseller, isNewArrival, isFeatured, rating, reviewCount
     }`,
-    { slug }
+    { slug },
+    { next: { revalidate: 300 } }
   );
 }
 

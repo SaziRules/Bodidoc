@@ -64,7 +64,7 @@ const typeLabels: Record<string, string> = {
   "body-lotion": "Body Lotion",
 };
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 // ─── Static params ────────────────────────────────────────────────────────────
 
