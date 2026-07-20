@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
   const tags = body._type ? TAG_MAP[body._type] : null;
 
   if (tags) {
-    tags.forEach(revalidateTag);
+    tags.forEach((tag) => revalidateTag(tag));
     return NextResponse.json({ revalidated: true, tags });
   }
 
