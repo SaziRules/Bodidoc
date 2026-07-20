@@ -44,7 +44,9 @@ export async function getAllPosts(): Promise<Post[]> {
   return client.fetch(
     `*[_type == "post"] | order(publishedAt desc) {
       _id, title, slug, publishedAt, author, category, coverImage, excerpt
-    }`
+    }`,
+    {},
+    { next: { revalidate: 3600, tags: ["posts"] } }
   );
 }
 
@@ -53,7 +55,8 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
     `*[_type == "post" && slug.current == $slug][0] {
       _id, title, slug, publishedAt, author, category, coverImage, excerpt, body, ctaButtons
     }`,
-    { slug }
+    { slug },
+    { next: { revalidate: 3600, tags: ["posts"] } }
   );
 }
 
@@ -62,7 +65,8 @@ export async function getPostsByCategory(category: string): Promise<Post[]> {
     `*[_type == "post" && category == $category] | order(publishedAt desc) {
       _id, title, slug, publishedAt, author, category, coverImage, excerpt
     }`,
-    { category }
+    { category },
+    { next: { revalidate: 3600, tags: ["posts"] } }
   );
 }
 
@@ -119,7 +123,7 @@ export async function getAllProducts(): Promise<Product[]> {
       inStoreLinks[] { retailer, url, logo { asset-> } }
     }`,
     {},
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 3600, tags: ["products"] } }
   );
 }
 
@@ -134,7 +138,7 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
       isBestseller, isNewArrival, isFeatured, rating, reviewCount
     }`,
     { slug },
-    { next: { revalidate: 300 } }
+    { next: { revalidate: 3600, tags: ["products"] } }
   );
 }
 
@@ -143,7 +147,9 @@ export async function getFeaturedProducts(): Promise<Product[]> {
     `*[_type == "product" && isFeatured == true] | order(order asc) {
       _id, name, slug, range, productType, skinType, size, badge,
       shortDescription, mainImage, isBestseller, rating, reviewCount
-    }`
+    }`,
+    {},
+    { next: { revalidate: 3600, tags: ["products"] } }
   );
 }
 
@@ -175,7 +181,7 @@ export async function getRangePage(range: string): Promise<RangePage | null> {
       "dermBannerMobileImageDimensions": dermBannerMobileImage.asset->metadata.dimensions
     }`,
     { range },
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 3600, tags: ["range-pages"] } }
   );
 }
 
@@ -201,7 +207,7 @@ export async function getHeroSlides(): Promise<HeroSlide[]> {
       }
     }`,
     {},
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 3600, tags: ["hero-slides"] } }
   );
   return doc?.slides ?? [];
 }

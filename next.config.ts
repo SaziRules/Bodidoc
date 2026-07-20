@@ -14,8 +14,10 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "flagcdn.com",
-      }
+      },
     ],
+    minimumCacheTTL: 2592000, // 30 days — prevents repeat bot hits from re-invoking the function
+    formats: ["image/avif", "image/webp"],
   },
 };
 

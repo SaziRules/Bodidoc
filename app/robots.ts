@@ -6,7 +6,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/studio/", "/admin/", "/api/"],
+        disallow: ["/studio/", "/admin/", "/api/", "/_next/image"],
       },
     ],
     sitemap: "https://www.bodidoc.com/sitemap.xml",
