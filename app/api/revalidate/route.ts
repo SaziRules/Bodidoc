@@ -1,13 +1,5 @@
-import { revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
-
-// Map Sanity document _type → cache tags to invalidate
-const TAG_MAP: Record<string, string[]> = {
-  product: ["products"],
-  post: ["posts"],
-  rangePage: ["range-pages"],
-  heroSlider: ["hero-slides"],
-};
 
 export async function POST(req: NextRequest) {
   const secret = req.headers.get("x-sanity-webhook-secret");
@@ -23,15 +15,24 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  const tags = body._type ? TAG_MAP[body._type] : null;
-
-  if (tags) {
-    tags.forEach((tag) => revalidateTag(tag));
-    return NextResponse.json({ revalidated: true, tags });
+  switch (body._type) {
+    case "product":
+      revalidatePath("/shop", "layout");   // covers /shop, /shop/[slug], range pages
+      revalidatePath("/", "page");          // home page shows featured products
+      break;
+    case "post":
+      revalidatePath("/moments", "layout"); // covers /moments and /moments/[slug]
+      break;
+    case "rangePage":
+      revalidatePath("/shop/tissue-oil-range", "page");
+      revalidatePath("/shop/aqueous-range", "page");
+      break;
+    case "heroSlider":
+      revalidatePath("/", "page");
+      break;
+    default:
+      revalidatePath("/", "layout");        // unknown type — revalidate everything
   }
 
-  // Unknown type — revalidate everything
-  const allTags = Object.values(TAG_MAP).flat();
-  allTags.forEach(revalidateTag);
-  return NextResponse.json({ revalidated: true, tags: allTags });
+  return NextResponse.json({ revalidated: true, type: body._type ?? "unknown" });
 }
