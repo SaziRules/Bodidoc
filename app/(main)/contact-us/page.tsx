@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import FAQAccordion, { type FAQItem } from "@/components/FAQAccordion";
-import { supabase } from "@/lib/supabase";
 
 // ─── Social Icons ─────────────────────────────────────────────────────────────
 
@@ -107,22 +106,22 @@ function ContactForm() {
 
     setStatus("submitting");
 
-    // Prepend phone to message if provided
     const fullMessage = form.phone.trim()
       ? `Phone: ${form.phone.trim()}\n\n${form.message.trim()}`
       : form.message.trim();
 
-    const { error: sbError } = await supabase
-      .from("contact_submissions")
-      .insert({
-        brand:   "bodidoc",
+    const res = await fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
         name:    form.name.trim(),
         email:   form.email.trim(),
+        phone:   form.phone.trim(),
         message: fullMessage,
-      });
+      }),
+    });
 
-    if (sbError) {
-      console.error("Contact submit error:", sbError.message, sbError.code, sbError.details);
+    if (!res.ok) {
       setStatus("error");
       return;
     }
