@@ -6,7 +6,7 @@ export const client = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET ?? "production",
   apiVersion: "2024-01-01",
-  useCdn: false,
+  useCdn: true,
 });
 
 const builder = imageUrlBuilder(client);
@@ -226,7 +226,8 @@ export async function searchProducts(query: string): Promise<Product[]> {
       _id, name, slug, range, productType, skinType, size,
       shortDescription, mainImage, isBestseller, isNewArrival
     }`,
-    { pattern }
+    { pattern },
+    { next: { revalidate: 300, tags: ["products"] } }
   );
 }
 
@@ -239,6 +240,7 @@ export async function searchPosts(query: string): Promise<Post[]> {
     )] | order(publishedAt desc) {
       _id, title, slug, publishedAt, coverImage, excerpt, category
     }`,
-    { pattern }
+    { pattern },
+    { next: { revalidate: 300, tags: ["posts"] } }
   );
 }

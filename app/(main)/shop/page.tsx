@@ -3,6 +3,8 @@ import { createClient } from "@supabase/supabase-js";
 import { getAllProducts } from "@/sanity/lib/sanity";
 import ShopFilters from "@/components/ShopFilters";
 
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: "Shop All Products | Bodidoc",
   description:

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
+export const revalidate = 86400;
+
 export const metadata: Metadata = {
   title: "Terms & Privacy Policy | Bodidoc",
   description:

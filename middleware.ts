@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 // Aggressive scrapers/SEO crawlers — excluded: Googlebot, Bingbot (they respect robots.txt)
 const BOT_RE =
-  /AhrefsBot|SemrushBot|MJ12bot|DotBot|BLEXBot|DataForSeoBot|PetalBot|YandexBot|Baiduspider|serpstatbot|linkdexbot|rogerbot|exabot|SeznamBot|ZoominfoBot|turnitinbot|NordVPNBot|NetcraftSurveyAgent|masscan|zgrab/i;
+  /AhrefsBot|SemrushBot|MJ12bot|DotBot|BLEXBot|DataForSeoBot|PetalBot|YandexBot|Baiduspider|serpstatbot|linkdexbot|rogerbot|exabot|SeznamBot|ZoominfoBot|turnitinbot|NordVPNBot|NetcraftSurveyAgent|masscan|zgrab|GPTBot|CCBot|Bytespider|AmazonBot|ClaudeBot|anthropic-ai|FacebookBot|Applebot-Extended|img2dataset|omgili|Diffbot/i;
 
 export function middleware(request: NextRequest) {
   const ua = request.headers.get("user-agent") ?? "";

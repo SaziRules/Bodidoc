@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import LandscapeBookViewer from "@/components/LandscapeBookViewer";
 import TradeBookViewer      from "@/components/TradeBookViewer";
 
+export const revalidate = 86400;
+
 export const metadata: Metadata = {
   title: "Trade Book | Bodidoc",
   description:

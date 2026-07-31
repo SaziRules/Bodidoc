@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { createClient } from "@supabase/supabase-js";
+
+export const revalidate = 3600;
 import { getAllProducts, getHeroSlides, urlFor } from "@/sanity/lib/sanity";
 import HeroSlider from "@/components/HeroSlider";
 import ProductGrid, { type GridProduct } from "@/components/ProductGrid";

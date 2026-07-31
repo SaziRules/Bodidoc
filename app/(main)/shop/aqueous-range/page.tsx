@@ -3,6 +3,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { getAllProducts, getRangePage, urlFor } from "@/sanity/lib/sanity";
 import AqueousBenefitsCarousel from "@/components/AqueousBenefitsCarousel";
+
+export const revalidate = 3600;
 import FullWidthBanner from "@/components/FullWidthBanner";
 import AllInOneSection, { type UseCase } from "@/components/AllInOneSection";
 import FAQAccordion, { type FAQItem } from "@/components/FAQAccordion";

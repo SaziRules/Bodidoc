@@ -5,6 +5,8 @@ import { getAllPosts } from "@/sanity/lib/sanity";
 import { urlFor } from "@/sanity/lib/sanity";
 import AsSeenIn from "@/components/AsSeenIn";
 
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: "Moments | Bodidoc",
   description:

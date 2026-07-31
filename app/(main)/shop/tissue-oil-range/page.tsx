@@ -4,6 +4,8 @@ import type { Metadata } from "next";
 import { createClient } from "@supabase/supabase-js";
 import { getAllProducts, getRangePage, urlFor } from "@/sanity/lib/sanity";
 
+export const revalidate = 3600;
+
 const supabaseServer = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!

@@ -1,4 +1,4 @@
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -17,21 +17,22 @@ export async function POST(req: NextRequest) {
 
   switch (body._type) {
     case "product":
-      revalidatePath("/shop", "layout");   // covers /shop, /shop/[slug], range pages
-      revalidatePath("/", "page");          // home page shows featured products
+      revalidateTag("products");
       break;
     case "post":
-      revalidatePath("/moments", "layout"); // covers /moments and /moments/[slug]
+      revalidateTag("posts");
       break;
     case "rangePage":
-      revalidatePath("/shop/tissue-oil-range", "page");
-      revalidatePath("/shop/aqueous-range", "page");
+      revalidateTag("range-pages");
       break;
     case "heroSlider":
-      revalidatePath("/", "page");
+      revalidateTag("hero-slides");
       break;
     default:
-      revalidatePath("/", "layout");        // unknown type — revalidate everything
+      revalidateTag("products");
+      revalidateTag("posts");
+      revalidateTag("range-pages");
+      revalidateTag("hero-slides");
   }
 
   return NextResponse.json({ revalidated: true, type: body._type ?? "unknown" });

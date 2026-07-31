@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { supabase } from "@/lib/supabase";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -44,8 +43,6 @@ type Tab = "reviews" | "subscriptions" | "contacts";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD ?? "bodidoc2025";
-
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-ZA", {
     day: "numeric", month: "short", year: "numeric",
@@ -58,6 +55,14 @@ function generateTicketId(): string {
   return `BDC-${year}-${rand}`;
 }
 
+async function api(path: string, options?: RequestInit) {
+  const res = await fetch(path, options);
+  if (res.status === 401) { window.location.reload(); return null; }
+  return res.json();
+}
+
+// ─── UI Atoms ─────────────────────────────────────────────────────────────────
+
 function Stars({ rating }: { rating: number }) {
   return (
     <span className="flex items-center gap-0.5">
@@ -68,18 +73,110 @@ function Stars({ rating }: { rating: number }) {
   );
 }
 
+function TabBtn({ label, active, count, onClick }: { label: string; active: boolean; count?: number; onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`flex items-center gap-2 px-6 py-4 text-[11px] tracking-[0.2em] uppercase font-normal border-0 cursor-pointer transition-all duration-150
+        ${active ? "bg-[#112942] text-white" : "bg-transparent text-[#112942]/50 hover:text-[#112942] hover:bg-[#112942]/5"}`}
+    >
+      {label}
+      {count !== undefined && (
+        <span className={`text-[10px] px-1.5 py-0.5 rounded-full min-w-4.5 text-center ${active ? "bg-white/20 text-white" : "bg-[#112942]/10 text-[#112942]/70"}`}>
+          {count}
+        </span>
+      )}
+    </button>
+  );
+}
+
+function FilterPill({ label, active, count, onClick }: { label: string; active: boolean; count?: number; onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`flex items-center gap-2 px-4 py-2 text-[11px] tracking-[0.15em] uppercase font-normal border transition-colors duration-150 cursor-pointer
+        ${active ? "bg-[#112942] border-[#112942] text-white" : "border-[#e0e0e0] text-[#666] hover:border-[#112942] hover:text-[#112942] bg-transparent"}`}
+    >
+      {label}
+      {count !== undefined && (
+        <span className={`text-[10px] px-1.5 py-0.5 rounded-full min-w-4.5 text-center ${active ? "bg-white/20 text-white" : "bg-[#112942]/8 text-[#112942]/60"}`}>
+          {count}
+        </span>
+      )}
+    </button>
+  );
+}
+
+function EmptyState({ label }: { label: string }) {
+  return (
+    <div className="flex flex-col items-center justify-center py-20 text-center">
+      <div className="w-12 h-12 border border-[#e0e0e0] flex items-center justify-center mb-4">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="1.5" strokeLinecap="round" className="w-5 h-5">
+          <path d="M9 17H5a2 2 0 0 0-2 2v1h18v-1a2 2 0 0 0-2-2h-4" /><path d="M12 3v10" /><path d="M8 7l4-4 4 4" />
+        </svg>
+      </div>
+      <p className="text-[13px] font-normal text-[#bbb] tracking-wide">{label}</p>
+    </div>
+  );
+}
+
+function Spinner() {
+  return (
+    <div className="py-16 flex justify-center">
+      <div className="w-5 h-5 border-2 border-[#112942]/20 border-t-[#112942] rounded-full animate-spin" />
+    </div>
+  );
+}
+
+function Pagination({ page, totalPages, onPrev, onNext }: {
+  page: number; totalPages: number; onPrev: () => void; onNext: () => void;
+}) {
+  if (totalPages <= 1) return null;
+  return (
+    <div className="flex items-center justify-between pt-6 mt-6 border-t border-[#f0f0f0]">
+      <button onClick={onPrev} disabled={page === 1}
+        className="flex items-center gap-2 px-4 py-2 text-[11px] tracking-[0.15em] uppercase font-normal border border-[#e0e0e0] text-[#666] hover:border-[#112942] hover:text-[#112942] transition-colors disabled:opacity-30 disabled:cursor-not-allowed bg-transparent cursor-pointer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="w-3.5 h-3.5"><path d="M15 18l-6-6 6-6" /></svg>
+        Prev
+      </button>
+      <span className="text-[12px] font-normal text-[#aaa]">
+        Page <span className="text-[#112942] font-semibold">{page}</span> of <span className="text-[#112942] font-semibold">{totalPages}</span>
+      </span>
+      <button onClick={onNext} disabled={page === totalPages}
+        className="flex items-center gap-2 px-4 py-2 text-[11px] tracking-[0.15em] uppercase font-normal border border-[#e0e0e0] text-[#666] hover:border-[#112942] hover:text-[#112942] transition-colors disabled:opacity-30 disabled:cursor-not-allowed bg-transparent cursor-pointer">
+        Next
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="w-3.5 h-3.5"><path d="M9 18l6-6-6-6" /></svg>
+      </button>
+    </div>
+  );
+}
+
 // ─── Password Gate ────────────────────────────────────────────────────────────
 
 function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
-  const [pw, setPw]       = useState("");
-  const [error, setError] = useState(false);
-  const [shake, setShake] = useState(false);
+  const [pw, setPw]           = useState("");
+  const [error, setError]     = useState(false);
+  const [shake, setShake]     = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const attempt = () => {
-    if (pw === ADMIN_PASSWORD) { onUnlock(); }
-    else {
-      setError(true); setShake(true);
-      setTimeout(() => setShake(false), 500);
+  const attempt = async () => {
+    if (!pw || loading) return;
+    setLoading(true);
+    try {
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: pw }),
+      });
+      if (res.ok) { onUnlock(); }
+      else {
+        setError(true); setShake(true);
+        setTimeout(() => setShake(false), 500);
+      }
+    } catch {
+      setError(true);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -114,103 +211,12 @@ function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
 
         <button
           onClick={attempt}
-          className="mt-6 w-full py-3.5 bg-[#112942] text-white text-[11px] tracking-[0.25em] uppercase font-light hover:bg-[#1a3a5c] transition-colors duration-200 border-0 cursor-pointer"
+          disabled={loading}
+          className="mt-6 w-full py-3.5 bg-[#112942] text-white text-[11px] tracking-[0.25em] uppercase font-light hover:bg-[#1a3a5c] transition-colors duration-200 border-0 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Enter
+          {loading ? "Verifying…" : "Enter"}
         </button>
       </div>
-    </div>
-  );
-}
-
-// ─── Tab Button ───────────────────────────────────────────────────────────────
-
-function TabBtn({ label, active, count, onClick }: { label: string; active: boolean; count?: number; onClick: () => void }) {
-  return (
-    <button
-      onClick={onClick}
-      className={`flex items-center gap-2 px-6 py-4 text-[11px] tracking-[0.2em] uppercase font-normal border-0 cursor-pointer transition-all duration-150
-        ${active
-          ? "bg-[#112942] text-white"
-          : "bg-transparent text-[#112942]/50 hover:text-[#112942] hover:bg-[#112942]/5"
-        }`}
-    >
-      {label}
-      {count !== undefined && (
-        <span className={`text-[10px] px-1.5 py-0.5 rounded-full min-w-4.5 text-center ${active ? "bg-white/20 text-white" : "bg-[#112942]/10 text-[#112942]/70"}`}>
-          {count}
-        </span>
-      )}
-    </button>
-  );
-}
-
-// ─── Filter Pill ──────────────────────────────────────────────────────────────
-
-function FilterPill({ label, active, count, onClick }: { label: string; active: boolean; count?: number; onClick: () => void }) {
-  return (
-    <button
-      onClick={onClick}
-      className={`flex items-center gap-2 px-4 py-2 text-[11px] tracking-[0.15em] uppercase font-normal border transition-colors duration-150 cursor-pointer
-        ${active ? "bg-[#112942] border-[#112942] text-white" : "border-[#e0e0e0] text-[#666] hover:border-[#112942] hover:text-[#112942] bg-transparent"}`}
-    >
-      {label}
-      {count !== undefined && (
-        <span className={`text-[10px] px-1.5 py-0.5 rounded-full min-w-4.5 text-center ${active ? "bg-white/20 text-white" : "bg-[#112942]/8 text-[#112942]/60"}`}>
-          {count}
-        </span>
-      )}
-    </button>
-  );
-}
-
-// ─── Empty State ──────────────────────────────────────────────────────────────
-
-function EmptyState({ label }: { label: string }) {
-  return (
-    <div className="flex flex-col items-center justify-center py-20 text-center">
-      <div className="w-12 h-12 border border-[#e0e0e0] flex items-center justify-center mb-4">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="1.5" strokeLinecap="round" className="w-5 h-5">
-          <path d="M9 17H5a2 2 0 0 0-2 2v1h18v-1a2 2 0 0 0-2-2h-4" /><path d="M12 3v10" /><path d="M8 7l4-4 4 4" />
-        </svg>
-      </div>
-      <p className="text-[13px] font-normal text-[#bbb] tracking-wide">{label}</p>
-    </div>
-  );
-}
-
-
-// ─── Pagination ───────────────────────────────────────────────────────────────
-
-function Pagination({ page, totalPages, onPrev, onNext }: {
-  page: number; totalPages: number; onPrev: () => void; onNext: () => void;
-}) {
-  if (totalPages <= 1) return null;
-  return (
-    <div className="flex items-center justify-between pt-6 mt-6 border-t border-[#f0f0f0]">
-      <button
-        onClick={onPrev}
-        disabled={page === 1}
-        className="flex items-center gap-2 px-4 py-2 text-[11px] tracking-[0.15em] uppercase font-normal border border-[#e0e0e0] text-[#666] hover:border-[#112942] hover:text-[#112942] transition-colors disabled:opacity-30 disabled:cursor-not-allowed bg-transparent cursor-pointer"
-      >
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="w-3.5 h-3.5">
-          <path d="M15 18l-6-6 6-6" />
-        </svg>
-        Prev
-      </button>
-      <span className="text-[12px] font-normal text-[#aaa]">
-        Page <span className="text-[#112942] font-semibold">{page}</span> of <span className="text-[#112942] font-semibold">{totalPages}</span>
-      </span>
-      <button
-        onClick={onNext}
-        disabled={page === totalPages}
-        className="flex items-center gap-2 px-4 py-2 text-[11px] tracking-[0.15em] uppercase font-normal border border-[#e0e0e0] text-[#666] hover:border-[#112942] hover:text-[#112942] transition-colors disabled:opacity-30 disabled:cursor-not-allowed bg-transparent cursor-pointer"
-      >
-        Next
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="w-3.5 h-3.5">
-          <path d="M9 18l6-6-6-6" />
-        </svg>
-      </button>
     </div>
   );
 }
@@ -230,69 +236,46 @@ function ReviewsTab() {
   const totalPages              = Math.ceil(total / REVIEWS_PER_PAGE);
 
   const fetchCounts = useCallback(async () => {
-    const [{ count: all }, { count: pending }, { count: approved }] = await Promise.all([
-      supabase.from("product_reviews").select("*", { count: "exact", head: true }).eq("brand", "bodidoc"),
-      supabase.from("product_reviews").select("*", { count: "exact", head: true }).eq("brand", "bodidoc").eq("approved", false),
-      supabase.from("product_reviews").select("*", { count: "exact", head: true }).eq("brand", "bodidoc").eq("approved", true),
-    ]);
-    setCounts({ all: all ?? 0, pending: pending ?? 0, approved: approved ?? 0 });
+    const data = await api(`/api/admin/reviews?type=counts`);
+    if (data) setCounts(data);
   }, []);
 
   const fetchReviews = useCallback(async () => {
     setLoading(true);
     setExpanded(null);
-    const from = (page - 1) * REVIEWS_PER_PAGE;
-    const to   = from + REVIEWS_PER_PAGE - 1;
-    const q = supabase
-      .from("product_reviews")
-      .select("*", { count: "exact" })
-      .eq("brand", "bodidoc")
-      .order("created_at", { ascending: false })
-      .range(from, to);
-    if (filter === "pending")  q.eq("approved", false);
-    if (filter === "approved") q.eq("approved", true);
-    const { data, count } = await q;
-    setReviews(data ?? []);
-    setTotal(count ?? 0);
+    const data = await api(`/api/admin/reviews?filter=${filter}&page=${page}`);
+    if (data) { setReviews(data.data); setTotal(data.count); }
     setLoading(false);
   }, [filter, page]);
 
-  // Reset to page 1 when filter changes
   useEffect(() => { setPage(1); }, [filter]);
   useEffect(() => { fetchCounts(); fetchReviews(); }, [fetchCounts, fetchReviews]);
 
   const approve = async (id: string, val: boolean) => {
-    await supabase.from("product_reviews").update({ approved: val }).eq("id", id);
+    await api(`/api/admin/reviews/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ approved: val }),
+    });
     setReviews((prev) => prev.map((r) => r.id === id ? { ...r, approved: val } : r));
     fetchCounts();
   };
 
   const remove = async (id: string) => {
-    await supabase.from("product_reviews").delete().eq("id", id);
+    await api(`/api/admin/reviews/${id}`, { method: "DELETE" });
     setReviews((prev) => prev.filter((r) => r.id !== id));
     setTotal((t) => t - 1);
     fetchCounts();
   };
 
   const forwardReview = (r: Review) => {
-    const subject = encodeURIComponent(
-      `Product Review: ${r.name} — ${r.productSlug} (${r.rating}/5 ★)`
-    );
+    const subject = encodeURIComponent(`Product Review: ${r.name} — ${r.productSlug} (${r.rating}/5 ★)`);
     const body = encodeURIComponent(
-      `PRODUCT REVIEW\n` +
-      `─────────────────────────────\n` +
-      `Reviewer:   ${r.name}\n` +
-      `Email:      ${r.email ?? "—"}\n` +
-      `Phone:      ${r.phone ?? "—"}\n` +
-      `─────────────────────────────\n` +
-      `Product:    ${r.productSlug}\n` +
-      `Rating:     ${r.rating}/5\n` +
-      `Recommends: ${r.recommend === "yes" ? "Yes" : "No"}\n` +
-      `Submitted:  ${formatDate(r.created_at)}\n` +
-      `─────────────────────────────\n` +
-      `"${r.title}"\n\n` +
-      `${r.message}\n` +
-      `─────────────────────────────`
+      `PRODUCT REVIEW\n─────────────────────────────\n` +
+      `Reviewer:   ${r.name}\nEmail:      ${r.email ?? "—"}\nPhone:      ${r.phone ?? "—"}\n` +
+      `─────────────────────────────\nProduct:    ${r.productSlug}\nRating:     ${r.rating}/5\n` +
+      `Recommends: ${r.recommend === "yes" ? "Yes" : "No"}\nSubmitted:  ${formatDate(r.created_at)}\n` +
+      `─────────────────────────────\n"${r.title}"\n\n${r.message}\n─────────────────────────────`
     );
     window.open(`mailto:?subject=${subject}&body=${body}`);
   };
@@ -308,11 +291,7 @@ function ReviewsTab() {
         </button>
       </div>
 
-      {loading ? (
-        <div className="py-16 flex justify-center">
-          <div className="w-5 h-5 border-2 border-[#112942]/20 border-t-[#112942] rounded-full animate-spin" />
-        </div>
-      ) : reviews.length === 0 ? (
+      {loading ? <Spinner /> : reviews.length === 0 ? (
         <EmptyState label={`No ${filter === "all" ? "" : filter + " "}reviews`} />
       ) : (
         <>
@@ -381,11 +360,8 @@ function ReviewsTab() {
                         Unpublish
                       </button>
                     )}
-                    <button
-                      onClick={() => forwardReview(r)}
-                      title="Forward review by email"
-                      className="w-8 h-8 flex items-center justify-center text-[#bbb] hover:text-[#112942] transition-colors bg-transparent border-0 cursor-pointer"
-                    >
+                    <button onClick={() => forwardReview(r)} title="Forward review by email"
+                      className="w-8 h-8 flex items-center justify-center text-[#bbb] hover:text-[#112942] transition-colors bg-transparent border-0 cursor-pointer">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="w-4 h-4">
                         <path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9-9-4 20-7z"/>
                       </svg>
@@ -422,32 +398,14 @@ function SubscriptionsTab() {
   const [allSubs, setAllSubs] = useState<Subscription[]>([]);
 
   const fetchAll = useCallback(async () => {
-    const { data } = await supabase
-      .from("subscriptions")
-      .select("*")
-      .eq("brand", "bodidoc")
-      .order("created_at", { ascending: false });
-    setAllSubs(data ?? []);
+    const data = await api(`/api/admin/subscriptions?type=all`);
+    if (data) setAllSubs(data.data);
   }, []);
 
   const fetchPage = useCallback(async () => {
     setLoading(true);
-    const from = (page - 1) * SUBS_PER_PAGE;
-    const to   = from + SUBS_PER_PAGE - 1;
-
-    let q = supabase
-      .from("subscriptions")
-      .select("*", { count: "exact" })
-      .eq("brand", "bodidoc")
-      .order("created_at", { ascending: false })
-      .range(from, to);
-
-    // Phone-only and email-only filters need client-side filtering
-    // since Supabase doesn't support "column IS NOT NULL AND other IS NULL" simply
-    // so we fetch all for stats and filter client-side for small datasets
-    const { data, count } = await q;
-    setSubs(data ?? []);
-    setTotal(count ?? 0);
+    const data = await api(`/api/admin/subscriptions?page=${page}`);
+    if (data) { setSubs(data.data); setTotal(data.count); }
     setLoading(false);
   }, [page]);
 
@@ -455,7 +413,7 @@ function SubscriptionsTab() {
   useEffect(() => { fetchAll(); fetchPage(); }, [fetchAll, fetchPage]);
 
   const remove = async (id: string) => {
-    await supabase.from("subscriptions").delete().eq("id", id);
+    await api(`/api/admin/subscriptions/${id}`, { method: "DELETE" });
     setSubs((prev) => prev.filter((s) => s.id !== id));
     setAllSubs((prev) => prev.filter((s) => s.id !== id));
     setTotal((t) => t - 1);
@@ -498,11 +456,7 @@ function SubscriptionsTab() {
         </button>
       </div>
 
-      {loading ? (
-        <div className="py-16 flex justify-center">
-          <div className="w-5 h-5 border-2 border-[#112942]/20 border-t-[#112942] rounded-full animate-spin" />
-        </div>
-      ) : displayed.length === 0 ? (
+      {loading ? <Spinner /> : displayed.length === 0 ? (
         <EmptyState label="No subscribers yet" />
       ) : (
         <>
@@ -548,30 +502,15 @@ function ContactsTab() {
   const totalPages              = Math.ceil(total / CONTACTS_PER_PAGE);
 
   const fetchCounts = useCallback(async () => {
-    const [{ count: open }, { count: replied }, { count: all }] = await Promise.all([
-      supabase.from("contact_submissions").select("*", { count: "exact", head: true }).eq("brand", "bodidoc").eq("status", "open"),
-      supabase.from("contact_submissions").select("*", { count: "exact", head: true }).eq("brand", "bodidoc").eq("status", "replied"),
-      supabase.from("contact_submissions").select("*", { count: "exact", head: true }).eq("brand", "bodidoc"),
-    ]);
-    setCounts({ open: open ?? 0, replied: replied ?? 0, all: all ?? 0 });
+    const data = await api(`/api/admin/contacts?type=counts`);
+    if (data) setCounts(data);
   }, []);
 
   const fetchContacts = useCallback(async () => {
     setLoading(true);
     setExpanded(null);
-    const from = (page - 1) * CONTACTS_PER_PAGE;
-    const to   = from + CONTACTS_PER_PAGE - 1;
-    const q = supabase
-      .from("contact_submissions")
-      .select("*", { count: "exact" })
-      .eq("brand", "bodidoc")
-      .order("created_at", { ascending: false })
-      .range(from, to);
-    if (filter === "open")    q.eq("status", "open");
-    if (filter === "replied") q.eq("status", "replied");
-    const { data, count } = await q;
-    setContacts((data ?? []) as Contact[]);
-    setTotal(count ?? 0);
+    const data = await api(`/api/admin/contacts?filter=${filter}&page=${page}`);
+    if (data) { setContacts(data.data); setTotal(data.count); }
     setLoading(false);
   }, [filter, page]);
 
@@ -579,12 +518,16 @@ function ContactsTab() {
   useEffect(() => { fetchCounts(); fetchContacts(); }, [fetchCounts, fetchContacts]);
 
   const markRead = async (id: string) => {
-    await supabase.from("contact_submissions").update({ read: true }).eq("id", id);
+    await api(`/api/admin/contacts/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ read: true }),
+    });
     setContacts((prev) => prev.map((c) => c.id === id ? { ...c, read: true } : c));
   };
 
   const remove = async (id: string) => {
-    await supabase.from("contact_submissions").delete().eq("id", id);
+    await api(`/api/admin/contacts/${id}`, { method: "DELETE" });
     setContacts((prev) => prev.filter((c) => c.id !== id));
     setTotal((t) => t - 1);
     fetchCounts();
@@ -594,10 +537,11 @@ function ContactsTab() {
     let ticketId = contact.ticket_id;
     if (!ticketId) {
       ticketId = generateTicketId();
-      await supabase
-        .from("contact_submissions")
-        .update({ ticket_id: ticketId, status: "replied", read: true })
-        .eq("id", contact.id);
+      await api(`/api/admin/contacts/${contact.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ticket_id: ticketId, status: "replied", read: true }),
+      });
       setContacts((prev) =>
         prev.map((c) => c.id === contact.id
           ? { ...c, ticket_id: ticketId!, status: "replied", read: true }
@@ -609,12 +553,8 @@ function ContactsTab() {
     const subject = encodeURIComponent(`Re: Your Bodidoc enquiry [${ticketId}]`);
     const body    = encodeURIComponent(
       `Hi ${contact.name},\n\nThank you for reaching out to Bodidoc.\n\n` +
-      `─────────────────────────────\n` +
-      `Your original message (${ticketId}):\n` +
-      `"${contact.message}"\n` +
-      `─────────────────────────────\n\n` +
-      `[Your reply here]\n\n` +
-      `Warm regards,\nBodidoc Customer Care`
+      `─────────────────────────────\nYour original message (${ticketId}):\n"${contact.message}"\n` +
+      `─────────────────────────────\n\n[Your reply here]\n\nWarm regards,\nBodidoc Customer Care`
     );
     window.open(`mailto:${contact.email}?subject=${subject}&body=${body}`);
   };
@@ -635,11 +575,7 @@ function ContactsTab() {
         </button>
       </div>
 
-      {loading ? (
-        <div className="py-16 flex justify-center">
-          <div className="w-5 h-5 border-2 border-[#112942]/20 border-t-[#112942] rounded-full animate-spin" />
-        </div>
-      ) : contacts.length === 0 ? (
+      {loading ? <Spinner /> : contacts.length === 0 ? (
         <EmptyState label={filter === "replied" ? "No replied messages" : "No open messages"} />
       ) : (
         <>
@@ -688,14 +624,10 @@ function ContactsTab() {
                 </div>
                 {expanded === c.id && (
                   <div className="mt-4 ml-9 pl-5 border-l-2 border-[#112942]/10">
-                    <p className="text-[13px] font-normal text-[#444] leading-relaxed whitespace-pre-wrap mb-4">
-                      {c.message}
-                    </p>
+                    <p className="text-[13px] font-normal text-[#444] leading-relaxed whitespace-pre-wrap mb-4">{c.message}</p>
                     <div className="flex items-center gap-3 flex-wrap">
-                      <button
-                        onClick={() => handleReply(c)}
-                        className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#112942] text-white text-[11px] tracking-[0.2em] uppercase font-normal hover:bg-[#1a3a5c] transition-colors border-0 cursor-pointer"
-                      >
+                      <button onClick={() => handleReply(c)}
+                        className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#112942] text-white text-[11px] tracking-[0.2em] uppercase font-normal hover:bg-[#1a3a5c] transition-colors border-0 cursor-pointer">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="w-3.5 h-3.5">
                           <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                         </svg>
@@ -706,9 +638,7 @@ function ContactsTab() {
                           Ticket <span className="font-mono text-[#112942]/60">{c.ticket_id}</span> · marked as replied
                         </span>
                       ) : (
-                        <span className="text-[12px] font-normal text-[#aaa]">
-                          A ticket number will be assigned on first reply
-                        </span>
+                        <span className="text-[12px] font-normal text-[#aaa]">A ticket number will be assigned on first reply</span>
                       )}
                     </div>
                   </div>
@@ -730,15 +660,7 @@ function Dashboard({ onLogout, onRefresh }: { onLogout: () => void; onRefresh: (
   const [counts, setCounts] = useState({ reviews: 0, subscriptions: 0, contacts: 0 });
 
   useEffect(() => {
-    const loadCounts = async () => {
-      const [{ count: r }, { count: s }, { count: c }] = await Promise.all([
-        supabase.from("product_reviews").select("*", { count: "exact", head: true }).eq("brand", "bodidoc").eq("approved", false),
-        supabase.from("subscriptions").select("*", { count: "exact", head: true }).eq("brand", "bodidoc"),
-        supabase.from("contact_submissions").select("*", { count: "exact", head: true }).eq("brand", "bodidoc").eq("status", "open").eq("read", false),
-      ]);
-      setCounts({ reviews: r ?? 0, subscriptions: s ?? 0, contacts: c ?? 0 });
-    };
-    loadCounts();
+    api("/api/admin/counts").then((data) => { if (data) setCounts(data); });
   }, [tab]);
 
   return (
@@ -754,12 +676,9 @@ function Dashboard({ onLogout, onRefresh }: { onLogout: () => void; onRefresh: (
             <span className="text-[12px] tracking-[0.25em] uppercase font-normal text-[#112942]">Bodidoc Admin</span>
           </div>
           <div className="flex items-center gap-4">
-            <button
-              onClick={onRefresh}
-              title="Refresh data"
-              className="text-[11px] tracking-[0.2em] uppercase font-normal text-[#aaa] hover:text-[#112942] transition-colors bg-transparent border-0 cursor-pointer"
-            >Refresh
-              
+            <button onClick={onRefresh} title="Refresh data"
+              className="text-[11px] tracking-[0.2em] uppercase font-normal text-[#aaa] hover:text-[#112942] transition-colors bg-transparent border-0 cursor-pointer">
+              Refresh
             </button>
             <button onClick={onLogout}
               className="text-[11px] tracking-[0.2em] uppercase font-normal text-[#aaa] hover:text-[#112942] transition-colors bg-transparent border-0 cursor-pointer">
@@ -800,28 +719,30 @@ function Dashboard({ onLogout, onRefresh }: { onLogout: () => void; onRefresh: (
 // ─── Root ─────────────────────────────────────────────────────────────────────
 
 export default function AdminPage() {
-  const [unlocked, setUnlocked] = useState(false);
-  const [hydrated, setHydrated] = useState(false);
+  const [state, setState]     = useState<"checking" | "locked" | "unlocked">("checking");
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
-    setHydrated(true);
-    if (sessionStorage.getItem("bodidoc_admin") === "1") setUnlocked(true);
+    fetch("/api/admin/session")
+      .then((r) => r.json())
+      .then(({ ok }) => setState(ok ? "unlocked" : "locked"));
   }, []);
 
-  const unlock = () => {
-    sessionStorage.setItem("bodidoc_admin", "1");
-    setUnlocked(true);
+  const unlock  = () => setState("unlocked");
+  const logout  = async () => {
+    await fetch("/api/admin/logout", { method: "POST" });
+    setState("locked");
   };
 
-  const logout = () => {
-    sessionStorage.removeItem("bodidoc_admin");
-    setUnlocked(false);
-  };
+  if (state === "checking") {
+    return (
+      <div className="min-h-screen bg-[#f8f7f5] flex items-center justify-center">
+        <div className="w-5 h-5 border-2 border-[#112942]/20 border-t-[#112942] rounded-full animate-spin" />
+      </div>
+    );
+  }
 
-  const [refreshKey, setRefreshKey] = useState(0);
-  const onRefresh = () => setRefreshKey((k) => k + 1);
+  if (state === "locked") return <PasswordGate onUnlock={unlock} />;
 
-  if (!hydrated) return null;
-  if (!unlocked) return <PasswordGate onUnlock={unlock} />;
-  return <Dashboard key={refreshKey} onLogout={logout} onRefresh={onRefresh} />;
+  return <Dashboard key={refreshKey} onLogout={logout} onRefresh={() => setRefreshKey((k) => k + 1)} />;
 }
