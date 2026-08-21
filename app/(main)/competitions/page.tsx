@@ -82,7 +82,7 @@ export default function TermsPrivacyPage() {
               <ol className=”list-decimal pl-6 space-y-2 text-[14px] leading-relaxed text-[#333] dark:text-fg-body”>
                 <li>
                   This competition is run by Amka Products (Pty) Ltd
-                  (&ldquo;Amka&rdquo;) on behalf of Bodidoc, a brand of
+                  (&quot;Amka&quot;) on behalf of Bodidoc, a brand of
                   Naturelle Brands (Pty) Ltd.
                 </li>
                 <li>
@@ -230,7 +230,7 @@ export default function TermsPrivacyPage() {
                 </li>
                 <li>
                   Except as provided for in the Consumer Protection Act No. 68
-                  of 2008 South Africa (&ldquo;CPA&rdquo;), the judges&apos;
+                  of 2008 South Africa (&quot;CPA&quot;), the judges&apos;
                   decision on all matters arising out of the competition will be
                   final and binding, and no correspondence will be entered into.
                 </li>
@@ -289,7 +289,7 @@ export default function TermsPrivacyPage() {
                 <li>
                   By participating in this competition and in accordance with
                   the Protection of Personal Information Act No. 4 of 2013
-                  (&ldquo;POPIA&rdquo;), participants consent to (i) the
+                  (&quot;POPIA&quot;), participants consent to (i) the
                   processing of their personal information by Amka, any of
                   their operators, commercial partners, agents and
                   subcontractors (who may be outside South Africa) on the
