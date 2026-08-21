@@ -8,7 +8,7 @@ import ProductGrid, { type GridProduct } from "@/components/ProductGrid";
 import FullWidthBanner from "@/components/FullWidthBanner";
 import Testimonials from "@/components/Testimonials";
 import VideoBanner from "@/components/VideoBanner";
-import HomePageImages from "@/components/HomepageImages";
+import HomePageImages from "@/components/HomePageImages";
 import AutoSubscribeModal from "@/components/AutoSubscribeModal";
 import CookieAlert from "@/components/CookieAlert";
 
