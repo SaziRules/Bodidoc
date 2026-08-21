@@ -585,13 +585,15 @@ export default function Header() {
 
       {/* ── Mobile ── */}
 
-      <div className="lg:hidden bg-[#1a2b3c] h-8.5 flex items-center justify-center w-full">
+      <div className="lg:hidden bg-[#1a2b3c] h-8.5 flex items-center justify-between px-4 w-full">
+        <div className="w-6 shrink-0" />
         <Link
           href="/shop?type=petroleum-jelly"
           className="text-white text-[12px] font-normal tracking-wide no-underline"
         >
           Try our ALL NEW Tissue Oil Jellies
         </Link>
+        <ThemeToggle />
       </div>
 
       <header
