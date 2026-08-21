@@ -220,7 +220,7 @@ function DialDropdown({
 
         {/* List */}
         <div
-          className="bg-white overflow-y-auto"
+          className="bg-white dark:bg-[#1c2a3a] overflow-y-auto"
           style={{ maxHeight: "180px" }}
         >
           {DIAL_CODES.map((d, i) => {
@@ -237,20 +237,20 @@ function DialDropdown({
                   group/row flex items-center gap-2.5 w-full px-3.5 py-2.5
                   bg-transparent border-0 cursor-pointer text-left
                   transition-colors duration-150
-                  ${i !== DIAL_CODES.length - 1 ? "border-b border-[#f0f0f0]" : ""}
-                  ${isActive ? "bg-[#f0f4f8]" : "hover:bg-[#f9f9f9]"}
+                  ${i !== DIAL_CODES.length - 1 ? "border-b border-[#f0f0f0] dark:border-[#253244]" : ""}
+                  ${isActive ? "bg-[#f0f4f8] dark:bg-[#1e3a52]" : "hover:bg-[#f9f9f9] dark:hover:bg-[#1a2535]"}
                 `}
               >
                 <FlagImg iso={d.iso} size={16} />
                 <span
                   className={`flex-1 text-[11.5px] font-light transition-colors
-                  ${isActive ? "text-[#112942] font-medium" : "text-[#444] group-hover/row:text-[#112942]"}`}
+                  ${isActive ? "text-[#112942] dark:text-[#5b9ac8] font-medium" : "text-[#444] dark:text-[#b0c4d8] group-hover/row:text-[#112942] dark:group-hover/row:text-[#5b9ac8]"}`}
                 >
                   {d.name}
                 </span>
                 <span
                   className={`text-[10.5px] font-light tabular-nums shrink-0 transition-colors
-                  ${isActive ? "text-[#112942]/60" : "text-[#bbb] group-hover/row:text-[#888]"}`}
+                  ${isActive ? "text-[#112942]/60 dark:text-[#5b9ac8]/60" : "text-[#bbb] dark:text-[#334d60] group-hover/row:text-[#888] dark:group-hover/row:text-[#6a8fa8]"}`}
                 >
                   {d.code}
                 </span>
@@ -260,11 +260,11 @@ function DialDropdown({
                     height="9"
                     viewBox="0 0 24 24"
                     fill="none"
-                    stroke="#112942"
+                    stroke="currentColor"
                     strokeWidth="2.5"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    className="shrink-0 opacity-50"
+                    className="shrink-0 opacity-50 text-[#112942] dark:text-[#5b9ac8]"
                   >
                     <polyline points="20 6 9 17 4 12" />
                   </svg>

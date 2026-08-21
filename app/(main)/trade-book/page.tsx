@@ -28,18 +28,18 @@ export const metadata: Metadata = {
 
 export default function TradeBookPage() {
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen bg-white dark:bg-page">
       <div className="max-w-[1480px] mx-auto px-4 sm:px-8 md:px-12 py-16 md:py-24">
 
         {/* Heading */}
         <div className="text-center mb-16 md:mb-24">
           <h1
-            className="text-4xl md:text-5xl lg:text-6xl text-[#112942] mb-4"
+            className="text-4xl md:text-5xl lg:text-6xl text-[#112942] dark:text-bd-dark mb-4"
             style={{ fontFamily: "var(--font-display)" }}
           >
             Something for Every Bodi
           </h1>
-          <p className="text-[#112942]/60 text-sm md:text-base max-w-sm mx-auto leading-relaxed"
+          <p className="text-[#112942]/60 dark:text-fg-body text-sm md:text-base max-w-sm mx-auto leading-relaxed"
              style={{ fontFamily: "var(--font-sans)" }}>
             Discover the latest product launches, exciting innovations, and key
             trade material from Bodidoc
@@ -52,13 +52,13 @@ export default function TradeBookPage() {
             src="/docs/trade-book.pdf"
             title="Bodidoc Trade Presenter 2026"
           />
-          <p className="text-center text-sm text-[#112942]/50 mt-4"
+          <p className="text-center text-sm text-[#112942]/50 dark:text-fg-muted mt-4"
              style={{ fontFamily: "var(--font-sans)" }}>
             Bodidoc Trade Presenter 2026
           </p>
         </section>
 
-        <div className="w-24 h-px bg-[#112942]/10 mx-auto my-20 md:my-28" />
+        <div className="w-24 h-px bg-[#112942]/10 dark:bg-[#5b9ac8]/10 mx-auto my-20 md:my-28" />
 
         {/* 2025 Trade Presenter */}
         <section className="mb-6">
@@ -66,7 +66,7 @@ export default function TradeBookPage() {
             src="/docs/trade-book-2025.pdf"
             title="Bodidoc Trade Presenter 2025"
           />
-          <p className="text-center text-sm text-[#112942]/50 mt-4"
+          <p className="text-center text-sm text-[#112942]/50 dark:text-fg-muted mt-4"
              style={{ fontFamily: "var(--font-sans)" }}>
             Bodidoc Trade Presenter 2025
           </p>

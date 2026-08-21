@@ -57,8 +57,8 @@ export default function ShareBar({ url, title, vertical = false }: Props) {
   ];
 
   const btnClass = vertical
-    ? "w-9 h-9 rounded-full border border-[#e0e0e0] flex items-center justify-center text-[#666] hover:bg-[#112942] hover:text-white hover:border-[#112942] transition-all duration-200"
-    : "w-9 h-9 rounded-full border border-[#e0e0e0] flex items-center justify-center text-[#666] hover:bg-[#112942] hover:text-white hover:border-[#112942] transition-all duration-200";
+    ? "w-9 h-9 rounded-full border border-[#e0e0e0] dark:border-[#253244] flex items-center justify-center text-[#666] dark:text-fg-secondary hover:bg-[#112942] hover:text-white hover:border-[#112942] dark:hover:bg-[#5b9ac8] dark:hover:border-[#5b9ac8] transition-all duration-200"
+    : "w-9 h-9 rounded-full border border-[#e0e0e0] dark:border-[#253244] flex items-center justify-center text-[#666] dark:text-fg-secondary hover:bg-[#112942] hover:text-white hover:border-[#112942] dark:hover:bg-[#5b9ac8] dark:hover:border-[#5b9ac8] transition-all duration-200";
 
   const wrapper = vertical ? "flex flex-col items-center gap-3" : "flex items-center gap-3 flex-wrap";
 

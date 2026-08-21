@@ -11,13 +11,13 @@ export default function HomePageImages() {
           alt="Bodidoc product range"
           width={1784}
           height={432}
-          className="w-full h-auto block"
+          className="w-full h-auto block dark:brightness-0 dark:invert"
           sizes="(max-width: 768px) 100vw, 768px"
         />
       </div>
 
       {/* Brand text — hidden on mobile only */}
-      <p className=" md:block text-center text-[13px] font-normal text-[#2f2f2f] leading-relaxed">
+      <p className=" md:block text-center text-[13px] font-normal text-[#2f2f2f] dark:text-fg-body leading-relaxed">
         Bodidoc is a proudly South African skincare brand that prioritises accessibility and
         affordability because good skin shouldn&apos;t cost the earth. Our cruelty-free, functional daily
         skincare products are packed with natural ingredients to enhance skin health, highlight

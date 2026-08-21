@@ -25,7 +25,7 @@ function Stars({ rating, size = 14 }: { rating: number; size?: number }) {
         <span
           key={s}
           style={{ fontSize: size }}
-          className={`leading-none ${s <= rating ? "text-[#112942]" : "text-[#ddd]"}`}
+          className={`leading-none ${s <= rating ? "text-[#112942] dark:text-accent" : "text-[#ddd] dark:text-fg-faint"}`}
         >
           ★
         </span>
@@ -89,22 +89,22 @@ export function ReviewStats({ reviews }: { reviews: Review[] }) {
       {/* Big percentage */}
       <div>
         <p
-          className="font-normal italic text-[#112942] leading-none mb-2"
+          className="font-normal italic text-[#112942] dark:text-bd-dark leading-none mb-2"
           style={{ fontSize: "clamp(40px, 5vw, 42px)" }}
         >
           {pct}%
         </p>
-        <p className="text-[15px] font-normal text-[#2f2f2f] leading-relaxed">
+        <p className="text-[15px] font-normal text-[#2f2f2f] dark:text-fg-body leading-relaxed">
           Customers would recommend this product to a friend.
         </p>
       </div>
 
-      <div className="h-px bg-[#e8e8e8]" />
+      <div className="h-px bg-[#e8e8e8] dark:bg-[#253244]" />
 
       {/* Average stars + count */}
       <div className="flex items-center gap-2 flex-wrap">
         <Stars rating={Math.round(avg * 2) / 2} size={15} />
-        <span className="text-[12px] text-[#999] leading-none">
+        <span className="text-[12px] text-[#999] dark:text-fg-muted leading-none">
           ({reviews.length} Review{reviews.length !== 1 ? "s" : ""})
         </span>
       </div>
@@ -118,8 +118,8 @@ export function ReviewCards({ reviews }: { reviews: Review[] }) {
   if (reviews.length === 0) {
     return (
       <div className="p-8 flex flex-col gap-2">
-        <p className="text-[15px] font-normal text-[#333]">No reviews yet.</p>
-        <p className="text-[15px] font-light text-[#999]">
+        <p className="text-[15px] font-normal text-[#333] dark:text-fg-body">No reviews yet.</p>
+        <p className="text-[15px] font-light text-[#999] dark:text-fg-muted">
           Be the first to share your experience with this product.
         </p>
       </div>
@@ -127,14 +127,14 @@ export function ReviewCards({ reviews }: { reviews: Review[] }) {
   }
 
   return (
-    <div className="divide-y divide-[#e8e8e8]">
+    <div className="divide-y divide-[#e8e8e8] dark:divide-[#253244]">
       {reviews.map((r) => (
         <div key={r.id} className="flex gap-6 py-7 px-6 md:px-8">
 
           {/* Avatar + name */}
           <div className="flex flex-col items-center gap-2 shrink-0 w-28">
             <ReviewAvatar gender={r.gender} name={r.name} />
-            <p className="text-[14px] font-bold text-[#112942] text-center leading-tight wrap-break-word w-full">
+            <p className="text-[14px] font-bold text-[#112942] dark:text-bd-dark text-center leading-tight wrap-break-word w-full">
               {r.name}
             </p>
           </div>
@@ -143,10 +143,10 @@ export function ReviewCards({ reviews }: { reviews: Review[] }) {
           <div className="flex-1 min-w-0">
             {/* Title row: title left, date right */}
             <div className="flex items-start justify-between gap-4 mb-1.5">
-              <p className="text-[15px] font-semibold text-[#112942] leading-snug">
+              <p className="text-[15px] font-semibold text-[#112942] dark:text-bd-dark leading-snug">
                 {r.title}
               </p>
-              <p className="text-[11px] font-light text-[#bbb] shrink-0 mt-0.5">
+              <p className="text-[11px] font-light text-[#bbb] dark:text-fg-faint shrink-0 mt-0.5">
                 {formatDate(r.created_at)}
               </p>
             </div>
@@ -155,14 +155,14 @@ export function ReviewCards({ reviews }: { reviews: Review[] }) {
             <div className="flex items-center gap-2 mb-2.5">
               <Stars rating={r.rating} size={16} />
               {r.recommend === "yes" && (
-                <span className="text-[10px] tracking-[0.08em] uppercase font-medium text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-sm">
+                <span className="text-[10px] tracking-[0.08em] uppercase font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-0.5 rounded-sm">
                   Recommends
                 </span>
               )}
             </div>
 
             {/* Message */}
-            <p className="text-[14px] font-normal text-[#555] leading-relaxed">
+            <p className="text-[14px] font-normal text-[#555] dark:text-fg-body leading-relaxed">
               {r.message}
             </p>
           </div>

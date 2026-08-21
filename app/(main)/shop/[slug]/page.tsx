@@ -149,7 +149,7 @@ function StarRating({ rating = 0, count = 0 }: { rating?: number; count?: number
             <span
               key={star}
               className={`text-[15px] leading-none ${
-                filled ? "text-[#112942]" : half ? "text-[#112942]/60" : "text-[#ccc]"
+                filled ? "text-[#112942] dark:text-accent" : half ? "text-[#112942]/60 dark:text-accent/60" : "text-[#ccc] dark:text-fg-faint"
               }`}
             >
               ★
@@ -157,7 +157,7 @@ function StarRating({ rating = 0, count = 0 }: { rating?: number; count?: number
           );
         })}
       </div>
-      <span className="text-[12px] text-[#999] leading-none">( {count} Reviews )</span>
+      <span className="text-[12px] text-[#999] dark:text-fg-muted leading-none">( {count} Reviews )</span>
     </div>
   );
 }
@@ -201,19 +201,19 @@ export default async function ProductPage({
             {/* Right — Details + interactive buttons (client island) */}
             <div className="flex flex-col gap-4 md:sticky md:top-24 md:self-start">
 
-              <p className="text-[12px] tracking-normal uppercase text-[#112942] font-light">
+              <p className="text-[12px] tracking-normal uppercase text-[#112942] dark:text-fg-muted font-light">
                 {typeName}
               </p>
 
               <h1
-                className="font-display font-normal text-[#112942] leading-tight"
+                className="font-display font-normal text-[#112942] dark:text-bd-dark leading-tight"
                 style={{ fontSize: "clamp(26px, 3.5vw, 38px)" }}
               >
                 {product.name}
               </h1>
 
               {product.size && (
-                <p className="text-[13px] font-light text-[#112942] tracking-normal -mt-1">
+                <p className="text-[13px] font-light text-[#112942] dark:text-fg-body tracking-normal -mt-1">
                   {product.size}
                 </p>
               )}
@@ -224,7 +224,7 @@ export default async function ProductPage({
 
               {/* Full description — Portable Text */}
               {product.description && product.description.length > 0 && (
-                <div className="prose-product text-[13px] md:text-[14px] font-normal text-[#333] leading-relaxed [&_strong]:font-normal [&_strong]:text-[#112942] [&_em]:italic [&_a]:underline [&_a]:text-[#112942] [&_p+p]:mt-3">
+                <div className="prose-product text-[13px] md:text-[14px] font-normal text-[#333] dark:text-fg-body leading-relaxed [&_strong]:font-normal [&_strong]:text-[#112942] dark:[&_strong]:text-bd-dark [&_em]:italic [&_a]:underline [&_a]:text-[#112942] dark:[&_a]:text-[#5b9ac8] [&_p+p]:mt-3">
                   <PortableText value={product.description} />
                 </div>
               )}
@@ -236,7 +236,7 @@ export default async function ProductPage({
       src={urlFor(product.ingredientStripImage).width(900).url()}
       alt="Key ingredients"
       fill
-      className="object-contain object-left"
+      className="object-contain object-left dark:brightness-0 dark:invert"
     />
   </div>
 )}
@@ -257,17 +257,17 @@ export default async function ProductPage({
         </div>
 
         {/* ── 3-Tab nav ── */}
-        <div className="max-w-360 mx-auto px-6 md:px-10 md:py-0 lg:px-16 hidden md:block sticky top-0 z-1 bg-white">
-          <div className="border-b border-[#e8e8e8] flex items-center justify-center md:pl-42">
-            <a href="#description" className="px-8 py-4 text-[14px] tracking-normal uppercase font-medium text-[#aaa] hover:text-[#112942] transition-colors">
+        <div className="max-w-360 mx-auto px-6 md:px-10 md:py-0 lg:px-16 hidden md:block sticky top-0 z-1 bg-white dark:bg-page">
+          <div className="border-b border-[#e8e8e8] dark:border-[#253244] flex items-center justify-center md:pl-42">
+            <a href="#description" className="px-8 py-4 text-[14px] tracking-normal uppercase font-medium text-[#aaa] dark:text-fg-muted hover:text-[#112942] dark:hover:text-bd-dark transition-colors">
               Description
             </a>
-            <span className="text-[#ccc] select-none leading-none">|</span>
-            <a href="#customer-review" className="px-8 py-4 text-[14px] tracking-normal uppercase font-medium text-[#aaa] hover:text-[#112942] transition-colors">
+            <span className="text-[#ccc] dark:text-[#253244] select-none leading-none">|</span>
+            <a href="#customer-review" className="px-8 py-4 text-[14px] tracking-normal uppercase font-medium text-[#aaa] dark:text-fg-muted hover:text-[#112942] dark:hover:text-bd-dark transition-colors">
               Customer Review
             </a>
-            <span className="text-[#ccc] select-none leading-none">|</span>
-            <a href="#learn-more" className="px-8 py-4 text-[14px] tracking-normal uppercase font-medium text-[#aaa] hover:text-[#112942] transition-colors">
+            <span className="text-[#ccc] dark:text-[#253244] select-none leading-none">|</span>
+            <a href="#learn-more" className="px-8 py-4 text-[14px] tracking-normal uppercase font-medium text-[#aaa] dark:text-fg-muted hover:text-[#112942] dark:hover:text-bd-dark transition-colors">
               Learn More
             </a>
           </div>
@@ -285,32 +285,32 @@ export default async function ProductPage({
           <div className="max-w-360 mx-auto px-6 md:px-10 lg:px-16 py-14">
 
             <div className="flex items-center gap-6 mb-10">
-              <div className="h-px flex-1 bg-[#e8e8e8]" />
-              <h2 className="text-[20px] tracking-normal uppercase text-[#112942] font-medium whitespace-nowrap">
+              <div className="h-px flex-1 bg-[#e8e8e8] dark:bg-[#253244]" />
+              <h2 className="text-[20px] tracking-normal uppercase text-[#112942] dark:text-bd-dark font-medium whitespace-nowrap">
                 Customer Review
               </h2>
-              <div className="h-px flex-1 bg-[#e8e8e8]" />
+              <div className="h-px flex-1 bg-[#e8e8e8] dark:bg-[#253244]" />
             </div>
 
             {/* Two-panel grid */}
             <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] ">
-              <div className="border-b md:border-b-0 md:border-r border-[#e8e8e8] p-8 flex flex-col gap-5">
+              <div className="border-b md:border-b-0 md:border-r border-[#e8e8e8] dark:border-[#253244] p-8 flex flex-col gap-5">
                 {reviews.length > 0 ? (
                   <ReviewStats reviews={reviews} />
                 ) : (
                   <div className="flex flex-col gap-4">
                     <div>
                       <p
-                        className="font-display font-normal text-[#112942] leading-none mb-2"
+                        className="font-display font-normal text-[#112942] dark:text-bd-dark leading-none mb-2"
                         style={{ fontSize: "clamp(36px, 5vw, 48px)" }}
                       >
                         0
                       </p>
-                      <p className="text-[13px] font-light text-[#666] leading-relaxed">
+                      <p className="text-[13px] font-light text-[#666] dark:text-fg-body leading-relaxed">
                         No reviews yet. Be the first!
                       </p>
                     </div>
-                    <div className="h-px bg-[#e8e8e8]" />
+                    <div className="h-px bg-[#e8e8e8] dark:bg-[#253244]" />
                     <StarRating rating={0} count={0} />
                   </div>
                 )}
@@ -327,13 +327,13 @@ export default async function ProductPage({
         <div id="learn-more" className="border-none">
           <div className="max-w-360 mx-auto px-6 md:px-10 lg:px-16 py-16 flex flex-col items-center text-center">
             <div className="flex items-center gap-6 w-full mb-8">
-              <div className="h-px flex-1 bg-[#e8e8e8]" />
-              <h2 className="text-[20px] tracking-normal uppercase text-[#112942] font-medium whitespace-nowrap">
+              <div className="h-px flex-1 bg-[#e8e8e8] dark:bg-[#253244]" />
+              <h2 className="text-[20px] tracking-normal uppercase text-[#112942] dark:text-bd-dark font-medium whitespace-nowrap">
                 Learn More
               </h2>
-              <div className="h-px flex-1 bg-[#e8e8e8]" />
+              <div className="h-px flex-1 bg-[#e8e8e8] dark:bg-[#253244]" />
             </div>
-            <p className="text-[14px] font-normal text-[#555] leading-relaxed max-w-xl mb-8">
+            <p className="text-[14px] font-normal text-[#555] dark:text-fg-body leading-relaxed max-w-xl mb-8">
               Discover the full Tissue Oil collection and find the perfect product for your skincare
               needs. Visit our {rangeName} for more details, FAQs, and expert tips.
             </p>
@@ -347,18 +347,18 @@ export default async function ProductPage({
         </div>
 
         {/* ── Back to shop ── */}
-        <div className="border-t border-[#e8e8e8]">
+        <div className="border-t border-[#e8e8e8] dark:border-[#253244]">
           <div className="max-w-360 mx-auto px-6 md:px-10 lg:px-16 py-8 flex items-center justify-between">
             <Link
               href="/shop"
-              className="inline-flex items-center gap-2 text-[11px] tracking-[0.15em] uppercase text-[#112942] font-light hover:gap-3 transition-all duration-200"
+              className="inline-flex items-center gap-2 text-[11px] tracking-[0.15em] uppercase text-[#112942] dark:text-bd-dark font-light hover:gap-3 transition-all duration-200"
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
                 <path d="M19 12H5M12 19l-7-7 7-7" />
               </svg>
               All Products
             </Link>
-            <Link href={rangePage} className="text-[11px] font-light text-[#999] tracking-wide hover:text-[#112942] transition-colors">
+            <Link href={rangePage} className="text-[11px] font-light text-[#999] dark:text-fg-muted tracking-wide hover:text-[#112942] dark:hover:text-bd-dark transition-colors">
               {rangeName}
             </Link>
           </div>

@@ -31,7 +31,7 @@ const lx =
 
 export default function TermsPrivacyPage() {
   return (
-    <div className="w-full bg-white min-h-screen pb-20">
+    <div className="w-full bg-white dark:bg-page min-h-screen pb-20">
       {/* ── Content Container ── */}
       <div className="max-w-300 mx-auto px-6 md:px-10 py-12 md:py-16">
         <div className="w-full mb-12">
@@ -51,13 +51,13 @@ export default function TermsPrivacyPage() {
         </div>
         {/* ── Page Header ── */}
         <div className="mb-10">
-          <h1 className="text-[32px] md:text-[42px] font-display text-[#112942] flex items-center gap-4">
+          <h1 className="text-[32px] md:text-[42px] font-display text-[#112942] dark:text-bd-dark flex items-center gap-4">
             Competitions &amp; Giveaways
           </h1>
         </div>
 
         {/* ── Introduction ── */}
-        <div className="mb-10 text-[14px] leading-relaxed text-[#333] space-y-4 max-w-4xl">
+        <div className="mb-10 text-[14px] leading-relaxed text-[#333] dark:text-fg-body space-y-4 max-w-4xl">
           <p>
             Stay in the loop with our latest competitions. Find entry details,
             prize info, and the official terms and conditions all in one place.
@@ -75,11 +75,11 @@ export default function TermsPrivacyPage() {
         <div className="space-y-12 max-w-4xl">
           {/* Collection of Information */}
           <section>
-            <h2 className="text-[16px] font-bold text-[#112942] mb-4 uppercase tracking-tight">
+            <h2 className="text-[16px] font-bold text-[#112942] dark:text-bd-dark mb-4 uppercase tracking-tight">
               BODIDOC CONSUMER COMPETITION TERMS &amp; CONDITIONS
             </h2>
-            <div className="text-[14px] leading-relaxed text-[#333] space-y-4">
-              <ol className="list-decimal pl-6 space-y-2 text-[14px] leading-relaxed text-[#333]">
+            <div className="text-[14px] leading-relaxed text-[#333] dark:text-fg-body space-y-4">
+              <ol className="list-decimal pl-6 space-y-2 text-[14px] leading-relaxed text-[#333] dark:text-fg-body">
                 <li>
                   This competition is run by Amka Products (Pty) Ltd (“Amka”) on
                   behalf of Bodidoc, a brand of Naturelle Brands (Pty) Ltd.

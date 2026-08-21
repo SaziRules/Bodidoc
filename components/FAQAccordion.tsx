@@ -19,19 +19,19 @@ function FaqItem({ q, a }: FAQItem) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="border-b border-[#112942]/25 group">
+    <div className="border-b border-[#112942]/25 dark:border-[#253244] group">
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-start justify-between py-8 px-8 text-left cursor-pointer bg-transparent border-0 gap-6"
       >
-        <span className="text-[15px] font-normal text-[#112942] leading-relaxed">
+        <span className="text-[15px] font-normal text-[#112942] dark:text-bd-dark leading-relaxed">
           {q}
         </span>
         <span
           className={`mt-0.5 w-5 h-5 shrink-0 rounded-full border flex items-center justify-center text-sm leading-none transition-all duration-300 ${
             open
               ? "bg-[#112942] border-[#112942] text-white rotate-45"
-              : "border-[#112942]/25 text-[#112942] group-hover:border-[#112942]"
+              : "border-[#112942]/25 dark:border-[#5b9ac8]/40 text-[#112942] dark:text-[#5b9ac8] group-hover:border-[#112942] dark:group-hover:border-[#5b9ac8]"
           }`}
         >
           +
@@ -42,7 +42,7 @@ function FaqItem({ q, a }: FAQItem) {
           open ? "max-h-96 pb-5" : "max-h-0"
         }`}
       >
-        <p className="text-[14px] font-normal text-[#2f2f2f] leading-relaxed">{a}</p>
+        <p className="text-[14px] font-normal text-[#2f2f2f] dark:text-fg-body leading-relaxed">{a}</p>
       </div>
     </div>
   );
@@ -52,7 +52,7 @@ function FaqItem({ q, a }: FAQItem) {
 
 export default function FAQAccordion({ faqs }: Props) {
   return (
-    <div className="border-t border-[#112942]/25">
+    <div className="border-t border-[#112942]/25 dark:border-[#253244]">
       {faqs.map((faq) => (
         <FaqItem key={faq.q} q={faq.q} a={faq.a} />
       ))}

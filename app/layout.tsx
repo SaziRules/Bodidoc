@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Open_Sans, Playfair_Display } from "next/font/google";
 import Script from "next/script";
+import ThemeProvider from "@/components/ThemeProvider";
 import "./globals.css";
 
 const GA_IDS = ["G-GK0ERHY660", "G-F67F4F42CK"];
@@ -147,6 +148,7 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${openSans.variable} ${playfairDisplay.variable}`}
+      suppressHydrationWarning
     >
       <body className="antialiased">
         <script
@@ -157,7 +159,9 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
-        {children}
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_IDS[0]}`}
           strategy="afterInteractive"

@@ -62,7 +62,7 @@ export default function BuyOnlineModal({
 
       {/* Panel */}
       <div
-        className="relative z-10 bg-white w-full max-w-md shadow-2xl max-h-[90vh] overflow-y-auto"
+        className="relative z-10 bg-white dark:bg-elevated w-full max-w-md shadow-2xl max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close */}
@@ -90,10 +90,10 @@ export default function BuyOnlineModal({
           {/* ── Shop Online ── */}
           {buyLinks.length > 0 && (
             <div className="mb-7">
-              <p className="font-display text-[27px] font-normal text-[#112942] leading-none mb-1">
+              <p className="font-display text-[27px] font-normal text-[#112942] dark:text-bd-dark leading-none mb-1">
                 Shop <em className="italic">Online</em>
               </p>
-              <p className="text-[13px] font-medium text-[#2f2f2f] mb-4">
+              <p className="text-[13px] font-medium text-[#2f2f2f] dark:text-fg-body mb-4">
                 Get your Bodidoc fix delivered to your door
               </p>
               <div className="flex flex-col gap-2">
@@ -107,10 +107,10 @@ export default function BuyOnlineModal({
           {/* ── Find In-store ── */}
           {inStoreLinks.length > 0 && (
             <div className="mb-2">
-              <p className="font-display text-[27px] font-normal text-[#112942] leading-none mb-1">
+              <p className="font-display text-[27px] font-normal text-[#112942] dark:text-bd-dark leading-none mb-1">
                 Find <em className="italic">In-store</em>
               </p>
-              <p className="text-[13px] font-medium text-[#2f2f2f] mb-4">
+              <p className="text-[13px] font-medium text-[#2f2f2f] dark:text-fg-body mb-4">
                 Get your Bodidoc fix from your nearest store
               </p>
               <div className="flex flex-col gap-2">
@@ -124,14 +124,14 @@ export default function BuyOnlineModal({
           {/* ── No links yet ── */}
           {!hasAnyLinks && (
             <div className="py-8 text-center">
-              <p className="text-[13px] font-light text-[#aaa] mb-5">
+              <p className="text-[13px] font-light text-[#aaa] dark:text-fg-muted mb-5">
                 Stockist information coming soon.
               </p>
               {productSlug && (
                 <Link
                   href={`/shop/${productSlug}`}
                   onClick={onClose}
-                  className="inline-flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase text-[#112942] font-light border border-[#112942]/20 px-5 py-2.5 hover:bg-[#112942] hover:text-white transition-all duration-200"
+                  className="inline-flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase text-[#112942] dark:text-[#5b9ac8] font-light border border-[#112942]/20 dark:border-[#5b9ac8]/30 px-5 py-2.5 hover:bg-[#112942] hover:text-white dark:hover:bg-[#5b9ac8] transition-all duration-200"
                 >
                   View Product
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3">
@@ -174,9 +174,9 @@ function RetailerRow({ link, label }: { link: BuyLink; label: string }) {
       href={link.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex items-center justify-between px-5 py-2 bg-[#ececec] hover:bg-[#112942] group transition-colors duration-200 rounded-full"
+      className="flex items-center justify-between px-5 py-2 bg-[#ececec] dark:bg-[#1a2535] hover:bg-[#112942] group transition-colors duration-200 rounded-full"
     >
-      <span className="text-[13px] tracking-normal uppercase font-light text-[#112942] group-hover:text-white transition-colors whitespace-nowrap shrink-0">
+      <span className="text-[13px] tracking-normal uppercase font-light text-[#112942] dark:text-bd-dark group-hover:text-white transition-colors whitespace-nowrap shrink-0">
         {label}
       </span>
 
@@ -186,12 +186,12 @@ function RetailerRow({ link, label }: { link: BuyLink; label: string }) {
             src={urlFor(link.logo).width(288).height(64).url()}
             alt={link.retailer}
             fill
-            className="object-contain object-right group-hover:brightness-0 group-hover:invert transition-all duration-200"
+            className="object-contain object-right dark:brightness-0 dark:invert group-hover:brightness-0 group-hover:invert transition-all duration-200"
             sizes="144px"
           />
         </div>
       ) : (
-        <span className="font-display text-[15px] font-normal text-[#112942] group-hover:text-white transition-colors">
+        <span className="font-display text-[15px] font-normal text-[#112942] dark:text-bd-dark group-hover:text-white transition-colors">
           {link.retailer}
         </span>
       )}

@@ -42,14 +42,14 @@ export default async function MomentsPage() {
   const rest = posts.filter(p => p._id !== featured?._id);
 
   return (
-    <div className="w-full bg-white font-sans overflow-x-hidden">
+    <div className="w-full bg-white dark:bg-page font-sans overflow-x-hidden">
       
       {/* ── Section: Header ── */}
       <div className="max-w-300 mx-auto px-6 pt-24 pb-16 text-center">
-        <h1 className="font-display italic text-[35px] md:text-[35px] text-[#112942] leading-[1.1] mb-4">
+        <h1 className="font-display italic text-[35px] md:text-[35px] text-[#112942] dark:text-bd-dark leading-[1.1] mb-4">
           Every moment tells a story
         </h1>
-        <p className="text-[15px] font-normal text-[#112942] tracking-normal">
+        <p className="text-[15px] font-normal text-[#112942] dark:text-fg-body tracking-normal">
           Discover how Bodidoc is making an impact, one milestone at a time
         </p>
       </div>
@@ -59,10 +59,10 @@ export default async function MomentsPage() {
         <div className="max-w-300 mx-auto px-6 pb-8">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-20 items-center">
             <div className="md:col-span-5 flex flex-col items-center md:items-end text-center md:text-right">
-              <h2 className="font-display text-[36px] md:text-[27px] text-[#112942] leading-[1.1] mb-6">
+              <h2 className="font-display text-[36px] md:text-[27px] text-[#112942] dark:text-bd-dark leading-[1.1] mb-6">
                 {featured.title}
               </h2>
-              <p className="text-[14px] font-normal text-[#112942] leading-relaxed mb-8 max-w-sm">
+              <p className="text-[14px] font-normal text-[#112942] dark:text-fg-body leading-relaxed mb-8 max-w-sm">
                 {featured.excerpt}
               </p>
               <Link
@@ -90,13 +90,13 @@ export default async function MomentsPage() {
       <AsSeenIn />
 
       {/* ── SECTION: Sustainability (Exact Elementor Match) ── */}
-      <div className="w-full bg-[#f2f2f2] py-14 mt-20">
+      <div className="w-full bg-[#f2f2f2] dark:bg-surface py-14 mt-20">
         <div className="max-w-300 mx-auto px-6 md:px-12 lg:px-20">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-16 items-start">
             {/* Column 1: Intro */}
             <div className="flex flex-col">
-              <h2 className="font-display italic text-[36px] text-[#112942] mb-6">Sustainability</h2>
-              <div className="space-y-5 text-[14px] text-[#112942] font-normal leading-relaxed">
+              <h2 className="font-display italic text-[36px] text-[#112942] dark:text-bd-dark mb-6">Sustainability</h2>
+              <div className="space-y-5 text-[14px] text-[#112942] dark:text-fg-body font-normal leading-relaxed">
                 <p>Good skin shouldn’t cost the earth. At Bodidoc, we’re committed to creating products that care for your skin and the planet.</p>
                 <p>Explore how we embrace eco-friendly practices, from sustainable packaging to reusability, ensuring a future that’s as radiant as your skin.</p>
               </div>
@@ -104,25 +104,25 @@ export default async function MomentsPage() {
             {/* Column 2: Beyond Bin */}
             <Link href={`/moments/${sustainabilityArticle?.slug.current}`} className="flex flex-col group">
             <div className="flex flex-col">
-              <div className="relative aspect-[1.4/1] mb-6 bg-white overflow-hidden ">
+              <div className="relative aspect-[1.4/1] mb-6 bg-white dark:bg-elevated overflow-hidden ">
                 {sustainabilityArticle?.coverImage && (
                   <Image src={urlFor(sustainabilityArticle.coverImage).url()} alt="" fill className="object-cover" />
                 )}
               </div>
-              <h3 className="font-display text-[20px] text-[#112942] leading-tight mb-4">{sustainabilityArticle?.title}</h3>
-              <p className="text-[13px] text-[#2f2f2f] font-normal leading-relaxed line-clamp-4">{sustainabilityArticle?.excerpt}</p>
+              <h3 className="font-display text-[20px] text-[#112942] dark:text-bd-dark leading-tight mb-4">{sustainabilityArticle?.title}</h3>
+              <p className="text-[13px] text-[#2f2f2f] dark:text-fg-body font-normal leading-relaxed line-clamp-4">{sustainabilityArticle?.excerpt}</p>
             </div>
             </Link>
             {/* Column 3: Commitment */}
             <Link href={`/moments/${commitmentArticle?.slug.current}`} className="flex flex-col group">
             <div className="flex flex-col">
-              <div className="relative aspect-[1.4/1] mb-6 bg-white overflow-hidden ">
+              <div className="relative aspect-[1.4/1] mb-6 bg-white dark:bg-elevated overflow-hidden ">
                 {commitmentArticle?.coverImage && (
                   <Image src={urlFor(commitmentArticle.coverImage).url()} alt="" fill className="object-cover" />
                 )}
               </div>
-              <h3 className="font-display text-[20px] text-[#112942] leading-tight mb-4">{commitmentArticle?.title}</h3>
-              <p className="text-[13px] text-[#2f2f2f] font-normal leading-relaxed line-clamp-4">{commitmentArticle?.excerpt}</p>
+              <h3 className="font-display text-[20px] text-[#112942] dark:text-bd-dark leading-tight mb-4">{commitmentArticle?.title}</h3>
+              <p className="text-[13px] text-[#2f2f2f] dark:text-fg-body font-normal leading-relaxed line-clamp-4">{commitmentArticle?.excerpt}</p>
             </div>
             </Link>
           </div>
@@ -132,16 +132,16 @@ export default async function MomentsPage() {
       {/* ── SECTION: What's On (Carousel/Hero Style) ── */}
       <div className="max-w-300 mx-auto px-6 md:px-12 lg:px-20 py-24">
         <div className="mb-6">
-          <h2 className="font-display italic text-[36px] text-[#112942] mb-0">What's On</h2>
-          <p className="text-[15px] text-[#112942] font-normal tracking-normal">Moments that bring us together</p>
+          <h2 className="font-display italic text-[36px] text-[#112942] dark:text-bd-dark mb-0">What's On</h2>
+          <p className="text-[15px] text-[#112942] dark:text-fg-body font-normal tracking-normal">Moments that bring us together</p>
         </div>
 
-        <div className="w-full bg-[#e9e9e9] flex flex-col md:flex-row overflow-hidden min-h-100">
+        <div className="w-full bg-[#e9e9e9] dark:bg-elevated flex flex-col md:flex-row overflow-hidden min-h-100">
           <div className="md:w-1/2 p-12 lg:p-20 flex flex-col justify-center items-start">
-            <h3 className="font-display text-[32px] md:text-[23px] text-[#112942] leading-[1.15] mb-6">
+            <h3 className="font-display text-[32px] md:text-[23px] text-[#112942] dark:text-bd-dark leading-[1.15] mb-6">
               {embracingBodi?.title}
             </h3>
-            <p className="text-[14px] text-[#2f2f2f] font-normal leading-relaxed mb-10 max-w-sm">
+            <p className="text-[14px] text-[#2f2f2f] dark:text-fg-body font-normal leading-relaxed mb-10 max-w-sm">
               {embracingBodi?.excerpt}
             </p>
             <Link 
@@ -151,7 +151,7 @@ export default async function MomentsPage() {
               FULL ARTICLE
             </Link>
           </div>
-          <div className="md:w-1/2 relative min-h-100 bg-[#e5e5e5] m-4">
+          <div className="md:w-1/2 relative min-h-100 bg-[#e5e5e5] dark:bg-[#253244] m-4">
             {embracingBodi?.coverImage && (
               <Image 
                 src={urlFor(embracingBodi.coverImage).url()} 
@@ -168,14 +168,14 @@ export default async function MomentsPage() {
 
       {/* ── SECTION: Read More (Full Fetch) ── */}
       <div className="max-w-300 mx-auto px-6 md:px-12 lg:px-20 pb-32">
-        <h2 className="font-display not-italic text-[36px] text-[#112942] mb-6 pt-2">
-          Read <span className="font-display italic text-[#112942]">more</span>
+        <h2 className="font-display not-italic text-[36px] text-[#112942] dark:text-bd-dark mb-6 pt-2">
+          Read <span className="font-display italic text-[#112942] dark:text-bd-dark">more</span>
         </h2>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-20">
           {rest.map((post) => (
             <Link key={post._id} href={`/moments/${post.slug.current}`} className="group flex flex-col">
-               <div className="relative aspect-4/3 mb-6 overflow-hidden bg-[#f8f8f8]">
+               <div className="relative aspect-4/3 mb-6 overflow-hidden bg-[#f8f8f8] dark:bg-subtle">
                  {post.coverImage && (
                    <Image 
                     src={urlFor(post.coverImage).width(600).url()} 
@@ -185,10 +185,10 @@ export default async function MomentsPage() {
                   />
                  )}
                </div>
-               <h3 className="font-display text-[22px] text-[#112942] leading-tight mb-3">
+               <h3 className="font-display text-[22px] text-[#112942] dark:text-bd-dark leading-tight mb-3">
                  {post.title}
                </h3>
-               <p className="text-[14px] text-[#666] font-light line-clamp-3 mb-6">
+               <p className="text-[14px] text-[#666] dark:text-fg-body font-light line-clamp-3 mb-6">
                  {post.excerpt}
                </p>
                <span className="inline-block w-fit px-8 py-2.5 bg-[#112942] text-white text-[10px] tracking-wide uppercase rounded-full group-hover:bg-[#1a3a5a] transition-colors">

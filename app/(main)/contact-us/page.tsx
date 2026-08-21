@@ -67,8 +67,8 @@ function BoxField({ placeholder, type = "text", value, error, touched, onChange,
   onChange: (v: string) => void; onBlur: () => void; multiline?: boolean;
 }) {
   const hasError = touched && error;
-  const base = `w-full bg-white border text-[13px] text-[#112942] font-light rounded-[5px] outline-none transition-colors duration-200 px-4 py-3 placeholder:text-[#aaa] placeholder:text-[12px] placeholder:tracking-[0.08em] placeholder:uppercase ${
-    hasError ? "border-red-400 focus:border-red-400" : "border-[#dde2e8] focus:border-[#112942]"
+  const base = `w-full bg-white dark:bg-[#1a2535] border text-[13px] text-[#112942] dark:text-bd-dark font-light rounded-[5px] outline-none transition-colors duration-200 px-4 py-3 placeholder:text-[#aaa] dark:placeholder:text-fg-faint placeholder:text-[12px] placeholder:tracking-[0.08em] placeholder:uppercase ${
+    hasError ? "border-red-400 focus:border-red-400" : "border-[#dde2e8] dark:border-[#253244] focus:border-[#112942] dark:focus:border-[#5b9ac8]"
   }`;
   return (
     <div>
@@ -132,20 +132,20 @@ function ContactForm() {
   if (status === "sent") {
     return (
       <div className="flex flex-col items-center gap-4 py-12 text-center">
-        <div className="w-12 h-12 rounded-full bg-[#112942]/10 flex items-center justify-center">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#112942" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+        <div className="w-12 h-12 rounded-full bg-[#112942]/10 dark:bg-[#5b9ac8]/10 flex items-center justify-center">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-[#112942] dark:text-[#5b9ac8]">
             <polyline points="20 6 9 17 4 12"/>
           </svg>
         </div>
-        <h4 className="font-display text-[22px] text-[#112942]">Message received!</h4>
-        <p className="text-[13px] font-light text-[#666]">We&apos;ll be in touch shortly.</p>
+        <h4 className="font-display text-[22px] text-[#112942] dark:text-bd-dark">Message received!</h4>
+        <p className="text-[13px] font-light text-[#666] dark:text-fg-body">We&apos;ll be in touch shortly.</p>
       </div>
     );
   }
 
   return (
     <div className="flex flex-col gap-3">
-      <p className="text-[18px] font-bold tracking-widest uppercase text-[#112942] text-right mb-1">
+      <p className="text-[18px] font-bold tracking-widest uppercase text-[#112942] dark:text-bd-dark text-right mb-1">
         Submit a Query
       </p>
       <BoxField placeholder="Name" value={form.name} error={errors.name} touched={touched.name} onChange={setField("name")} onBlur={touchField("name")} />
@@ -199,10 +199,10 @@ export default function ContactPage() {
       {/* ── Hero ── */}
       <div className="relative w-full overflow-hidden">
         <div className="relative max-w-360 mx-auto px-6 items-center justify-center text-center md:px-10 lg:px-16 py-2 md:py-18 lg:py-15">
-          <h1 className="font-display font-normal text-[#112942] leading-[1.05] mb-1" style={{ fontSize: "clamp(40px, 8vw, 42px)" }}>
+          <h1 className="font-display font-normal text-[#112942] dark:text-bd-dark leading-[1.05] mb-1" style={{ fontSize: "clamp(40px, 8vw, 42px)" }}>
             Let&apos;s Chat
           </h1>
-          <p className="text-[14px] md:text-[15px] font-medium text-[#2f2f2f] max-w-sm mx-auto leading-relaxed">
+          <p className="text-[14px] md:text-[15px] font-medium text-[#2f2f2f] dark:text-fg-body max-w-sm mx-auto leading-relaxed">
             Contact us or find out more about Bodidoc with our FAQs. We&apos;re here to take care of you.
           </p>
         </div>
@@ -222,9 +222,9 @@ export default function ContactPage() {
                 <div className="w-7 h-7 rounded-full bg-[#112942] flex items-center justify-center text-white shrink-0">
                   <PhoneIcon />
                 </div>
-                <p className="text-[18px] font-bold tracking-[0.08em] uppercase text-[#112942]">Contact Us</p>
+                <p className="text-[18px] font-bold tracking-[0.08em] uppercase text-[#112942] dark:text-bd-dark">Contact Us</p>
               </div>
-              <p className="text-[14px] font-light text-[#2f2f2f] leading-relaxed pl-9.5">
+              <p className="text-[14px] font-light text-[#2f2f2f] dark:text-fg-body leading-relaxed pl-9.5">
                 08:00 – 17:00<br />Monday – Friday<br />0860 002 652
               </p>
             </div>
@@ -234,10 +234,10 @@ export default function ContactPage() {
                 <div className="w-7 h-7 rounded-full bg-[#112942] flex items-center justify-center text-white shrink-0">
                   <WhatsAppIcon />
                 </div>
-                <p className="text-[18px] font-bold tracking-[0.08em] uppercase text-[#112942]">WhatsApp</p>
+                <p className="text-[18px] font-bold tracking-[0.08em] uppercase text-[#112942] dark:text-bd-dark">WhatsApp</p>
               </div>
               <a href="https://wa.me/27609966087" target="_blank" rel="noopener noreferrer"
-                className="text-[14px] font-light text-[#2f2f2f] hover:text-[#112942] transition-colors pl-9.5 block">
+                className="text-[14px] font-light text-[#2f2f2f] dark:text-fg-body hover:text-[#112942] dark:hover:text-bd-dark transition-colors pl-9.5 block">
                 +27 (0)60 996 6087
               </a>
             </div>
@@ -247,15 +247,15 @@ export default function ContactPage() {
                 <div className="w-7 h-7 rounded-full bg-[#112942] flex items-center justify-center text-white shrink-0">
                   <LocationIcon />
                 </div>
-                <p className="text-[18px] font-bold tracking-[0.08em] uppercase text-[#112942]">Find Us At</p>
+                <p className="text-[18px] font-bold tracking-[0.08em] uppercase text-[#112942] dark:text-bd-dark">Find Us At</p>
               </div>
-              <p className="text-[14px] font-light text-[#2f2f2f] leading-relaxed pl-9.5">
+              <p className="text-[14px] font-light text-[#2f2f2f] dark:text-fg-body leading-relaxed pl-9.5">
                 14 Ellman Street<br />Sunderland Ridge<br />0157
               </p>
             </div>
 
             <div>
-              <p className="text-[18px] font-bold tracking-[0.08em] uppercase text-[#112942] mb-3">Follow Us On</p>
+              <p className="text-[18px] font-bold tracking-[0.08em] uppercase text-[#112942] dark:text-bd-dark mb-3">Follow Us On</p>
               <div className="flex items-center gap-2">
                 {socialLinks.map(({ href, icon, label }) => (
                   <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
@@ -287,7 +287,7 @@ export default function ContactPage() {
         {/* ── Row 3: FAQ ── */}
         <div>
           <div className="mb-10">
-            <h2 className="font-display text-[28px] md:text-[36px] font-normal text-[#112942]">
+            <h2 className="font-display text-[28px] md:text-[36px] font-normal text-[#112942] dark:text-bd-dark">
               Frequently Asked Questions
             </h2>
           </div>

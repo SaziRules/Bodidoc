@@ -8,30 +8,30 @@ export default function AqueousRangeClient({ faqs }: { faqs: FAQ[] }) {
   const [open, setOpen] = useState<number | null>(null);
 
   return (
-    <div className="max-w-4xl mx-auto flex flex-col divide-y divide-[#e8e8e8] border-t border-b border-[#e8e8e8]">
+    <div className="max-w-4xl mx-auto flex flex-col divide-y divide-[#e8e8e8] dark:divide-[#253244] border-t border-b border-[#e8e8e8] dark:border-[#253244]">
       {faqs.map((faq, i) => (
         <div key={i}>
           <button
             onClick={() => setOpen(open === i ? null : i)}
             className="w-full flex items-center justify-between py-5 text-left gap-6 group"
           >
-            <span className={`text-[15px] font-normal leading-snug transition-colors duration-200 ${open === i ? "text-[#112942]" : "text-[#555] group-hover:text-[#112942]"}`}>
+            <span className={`text-[15px] font-normal leading-snug transition-colors duration-200 ${open === i ? "text-[#112942] dark:text-bd-dark" : "text-[#555] dark:text-fg-body group-hover:text-[#112942] dark:group-hover:text-bd-dark"}`}>
               {faq.q}
             </span>
             <svg
               viewBox="0 0 24 24"
               fill="none"
-              stroke="#112942"
+              stroke="currentColor"
               strokeWidth="1.5"
               strokeLinecap="round"
               strokeLinejoin="round"
-              className={`w-3.5 h-3.5 shrink-0 opacity-30 transition-transform duration-200 ${open === i ? "rotate-180" : ""}`}
+              className={`w-3.5 h-3.5 shrink-0 opacity-30 text-[#112942] dark:text-[#5b9ac8] transition-transform duration-200 ${open === i ? "rotate-180" : ""}`}
             >
               <path d="M6 9l6 6 6-6" />
             </svg>
           </button>
           {open === i && (
-            <p className="pb-5 text-[14px] font-normal text-[#888] leading-relaxed">
+            <p className="pb-5 text-[14px] font-normal text-[#888] dark:text-fg-secondary leading-relaxed">
               {faq.a}
             </p>
           )}

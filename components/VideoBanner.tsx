@@ -34,7 +34,7 @@ export default function VideoBanner({
       </div>
 
       {/* Mobile — static image */}
-      <div className="block md:hidden w-full border-y border-[#112942]/20">
+      <div className="block md:hidden w-full border-y border-[#112942]/20 dark:border-[#5b9ac8]/20">
         <Image
           src={mobileSrc}
           alt={alt}

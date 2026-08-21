@@ -77,7 +77,7 @@ export default function ProductPageClient({
         {/* Buy Online */}
         <button
           onClick={() => setModalOpen(true)}
-          className="w-full sm:flex-1 flex items-center justify-center rounded-full bg-[#112942] text-white text-[12px] tracking-[0.25em] uppercase font-semibold py-3.5 hover:bg-transparent hover:border hover:border-[#112942] hover:text-[#112942] transition-colors duration-200"
+          className="w-full sm:flex-1 flex items-center justify-center rounded-full bg-[#112942] text-white text-[12px] tracking-[0.25em] uppercase font-semibold py-3.5 hover:bg-transparent hover:border hover:border-[#112942] hover:text-[#112942] dark:hover:border-[#5b9ac8] dark:hover:text-[#5b9ac8] transition-colors duration-200"
         >
           Buy Online
         </button>

@@ -49,27 +49,27 @@ const doubled = [...publications, ...publications];
 
 export default function AsSeenIn() {
   return (
-    <div className="w-full py-14 overflow-hidden bg-white">
+    <div className="w-full py-14 overflow-hidden bg-white dark:bg-surface">
       {/* Centered Heading with Lines */}
       <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 mb-10">
         <div className="flex items-center gap-6">
           {/* Left Line */}
-          <div className="flex-1 h-px bg-[#112942]/10" />
-          
-          <p className="text-[12px] md:text-[27px] tracking-normal uppercase text-[#112942] font-display whitespace-nowrap">
+          <div className="flex-1 h-px bg-[#112942]/10 dark:bg-[#5b9ac8]/20" />
+
+          <p className="text-[12px] md:text-[27px] tracking-normal uppercase text-[#112942] dark:text-bd-dark font-display whitespace-nowrap">
             As Seen In
           </p>
-          
+
           {/* Right Line */}
-          <div className="flex-1 h-px bg-[#112942]/10" />
+          <div className="flex-1 h-px bg-[#112942]/10 dark:bg-[#5b9ac8]/20" />
         </div>
       </div>
 
       {/* Marquee track */}
       <div className="relative marquee-container">
-        {/* Fade masks */}
-        <div className="absolute left-0 top-0 bottom-0 w-32 z-10 pointer-events-none bg-linear-to-r from-white to-transparent" />
-        <div className="absolute right-0 top-0 bottom-0 w-32 z-10 pointer-events-none bg-linear-to-l from-white to-transparent" />
+        {/* Fade masks — uses --mask-color which flips between light/dark in globals.css */}
+        <div className="absolute left-0 top-0 bottom-0 w-32 z-10 pointer-events-none" style={{ background: "linear-gradient(to right, rgb(var(--mask-color)), transparent)" }} />
+        <div className="absolute right-0 top-0 bottom-0 w-32 z-10 pointer-events-none" style={{ background: "linear-gradient(to left, rgb(var(--mask-color)), transparent)" }} />
 
         <div className="marquee-track flex items-center" style={{ gap: "80px", width: "max-content" }}>
           {doubled.map((pub, i) => (

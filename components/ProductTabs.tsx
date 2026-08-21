@@ -24,11 +24,11 @@ function TabContent({ product, id }: { product: Product; id: string }) {
             <svg 
               viewBox="0 0 24 24" 
               fill="none" 
-              stroke="#112942" 
-              strokeWidth="3" 
-              strokeLinecap="round" 
-              strokeLinejoin="round" 
-              className="w-5 h-5"
+              stroke="currentColor"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="w-5 h-5 text-[#112942] dark:text-[#5b9ac8]"
             >
               <polyline points="20 6 9 17 4 12" />
             </svg>
@@ -36,12 +36,12 @@ function TabContent({ product, id }: { product: Product; id: string }) {
         )}
         <div>
           {b.heading && (
-            <h4 className="text-[16px] font-semibold text-[#4a4a4a] leading-tight mb-1">
+            <h4 className="text-[16px] font-semibold text-[#4a4a4a] dark:text-fg-body leading-tight mb-1">
               {b.heading}
             </h4>
           )}
           {b.detail && (
-            <p className="text-[13px] font-normal text-[#4a4a4a] leading-5">
+            <p className="text-[13px] font-normal text-[#4a4a4a] dark:text-fg-body leading-5">
               {b.detail}
             </p>
           )}
@@ -52,7 +52,7 @@ function TabContent({ product, id }: { product: Product; id: string }) {
 )}
 
       {id === "for-me" && (
-        <p className="text-[13px] font-normal text-[#2f2f2f] leading-5.25 whitespace-pre-line max-w-2xl">
+        <p className="text-[13px] font-normal text-[#2f2f2f] dark:text-fg-body leading-5.25 whitespace-pre-line max-w-2xl">
           {product.isItForMe ?? "Information coming soon."}
         </p>
       )}
@@ -65,12 +65,12 @@ function TabContent({ product, id }: { product: Product; id: string }) {
               {product.provenResults.map((res, i) => (
                 <div key={i} className="flex flex-col">
                   {res.heading && (
-                    <p className="text-[14px] font-semibold text-[#112942] mb-0.5">
+                    <p className="text-[14px] font-semibold text-[#112942] dark:text-bd-dark mb-0.5">
                       {res.heading}
                     </p>
                   )}
                   {res.detail && (
-                    <p className="text-[13px] font-normal text-[#2f2f2f] leading-5.25">
+                    <p className="text-[13px] font-normal text-[#2f2f2f] dark:text-fg-body leading-5.25">
                       {res.detail}
                     </p>
                   )}
@@ -78,9 +78,9 @@ function TabContent({ product, id }: { product: Product; id: string }) {
               ))}
             </div>
           ) : (
-            <p className="text-[13px] font-normal text-[#2f2f2f]">
-              {typeof product.provenResults === "string" 
-                ? product.provenResults 
+            <p className="text-[13px] font-normal text-[#2f2f2f] dark:text-fg-body">
+              {typeof product.provenResults === "string"
+                ? product.provenResults
                 : "Information coming soon."}
             </p>
           )}
@@ -88,7 +88,7 @@ function TabContent({ product, id }: { product: Product; id: string }) {
       )}
 
       {id === "ingredients" && (
-        <p className="text-[13px] font-normal text-[#2f2f2f] leading-loose max-w-2xl">
+        <p className="text-[13px] font-normal text-[#2f2f2f] dark:text-fg-body leading-loose max-w-2xl">
           {product.ingredients ?? "Information coming soon."}
         </p>
       )}
@@ -106,16 +106,16 @@ export default function ProductTabs({ product }: { product: Product }) {
   return (
     <>
       {/* ── Mobile: accordion ── */}
-      <div className="block md:hidden border-t border-[#121212]/30">
+      <div className="block md:hidden border-t border-[#121212]/30 dark:border-[#253244]">
         {tabs.map((tab) => {
           const isOpen = openAccordion === tab.id;
           return (
-            <div key={tab.id} className="border-b border-[#121212]/30">
+            <div key={tab.id} className="border-b border-[#121212]/30 dark:border-[#253244]">
               <button
                 onClick={() => toggleAccordion(tab.id)}
                 className="w-full flex items-center justify-between py-6 text-[22px] tracking-widest uppercase bg-transparent border-0 cursor-pointer text-left"
               >
-                <span className={isOpen ? "font-bold text-[#112942]" : "font-medium text-[#aaa]"}>
+                <span className={isOpen ? "font-bold text-[#112942] dark:text-bd-dark" : "font-medium text-[#aaa] dark:text-fg-muted"}>
                   {tab.label}
                 </span>
                 <svg
@@ -143,15 +143,15 @@ export default function ProductTabs({ product }: { product: Product }) {
 
       {/* ── Desktop: sidebar layout ── */}
       <div className="hidden md:flex gap-0">
-        <div className="flex flex-col shrink-0 w-48 border-r border-[#e8e8e8] pt-6 pr-6">
+        <div className="flex flex-col shrink-0 w-48 border-r border-[#e8e8e8] dark:border-[#253244] pt-6 pr-6">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActive(tab.id)}
               className={`text-left py-3 text-[12px] tracking-normal uppercase transition-colors duration-150 bg-transparent border-0 cursor-pointer ${
                 active === tab.id
-                  ? "font-bold text-[#112942]"
-                  : "font-medium text-[#aaa] hover:text-[#112942]"
+                  ? "font-bold text-[#112942] dark:text-bd-dark"
+                  : "font-medium text-[#aaa] dark:text-fg-muted hover:text-[#112942] dark:hover:text-bd-dark"
               }`}
             >
               {tab.label}

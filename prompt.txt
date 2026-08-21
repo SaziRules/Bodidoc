@@ -1,56 +1,780 @@
-PROJECT: Bodidoc.com SEO Readiness
+Bodidoc Dark Mode Implementation
 
-GOAL: Implement comprehensive SEO optimization across the entire website without altering any UI, content, or functional behavior.
+You are working inside the existing **Bodidoc Next.js production codebase**.
 
-PRIORITIES:
-1. **Meta Optimization**
-   - Generate competitive meta titles, image alt text and descriptions for each page.
-   - Ensure answerability strength: meta descriptions should clearly answer likely user questions.
-   - Apply consistent, keyword-rich, and localized content where relevant.
+Your task is to implement a complete, production-grade **dark mode for the entire website**.
 
-2. **Schema & Structured Data**
-   - Implement all relevant schema types:
-     - LocalBusiness schema (accurate NAP, geolocation, service areas)
-     - Organization schema
-     - Product schema (for product pages)
-     - FAQ schema
-     - Review schema
-     - JSON-LD for rich results
-   - Ensure schema is valid and compliant with Google standards.
-   - Include geolocation, business hours, and contact info for maximum local SEO impact.
+Approach this as a **Senior UX/UI Developer with 10+ years of production experience**, working on an established website where regression prevention, visual fidelity, accessibility, maintainability, and restraint are more important than rewriting code.
 
-3. **Sitemap & Robots**
-   - Create or update XML sitemap with all pages, including canonical URLs.
-   - Ensure robots.txt allows crawling of all relevant pages.
-   - Verify proper hreflang tags if multi-language pages exist.
+## PRIMARY OBJECTIVE
 
-4. **Programmatic SEO**
-   - Review dynamic routes (Next.js app router) and ensure they generate proper meta tags per route.
-   - Auto-generate SEO-friendly URLs where missing.
-   - Ensure all dynamic content pages have proper schema, meta, and canonical links.
+Implement a polished dark mode across the entire Bodidoc website, controlled by a **moon/sun theme toggle placed inside the existing header announcement bar**.
 
-5. **Performance & PSI Principles**
-   - Audit pages for Core Web Vitals: LCP, CLS, FID.
-   - Minimize render-blocking resources.
-   - Ensure images are optimized with proper srcset, sizes, alt tags, and next/image integration.
-   - Verify server-side rendering (SSR) or static generation for SEO-critical pages.
+The existing website is the source of truth.
 
-6. **Content Integrity**
-   - Do **not** change existing text, images, or layout.
-   - Do **not** modify functional components.
-   - Only add meta, schema, structured data, sitemap, or programmatic SEO improvements.
+**Do not redesign Bodidoc.**
 
-7. **Validation**
-   - Run Google Rich Results Test and Structured Data Testing Tool on each updated page.
-   - Confirm all meta, schema, and sitemap updates are error-free.
+Dark mode must feel like the existing Bodidoc design system translated professionally into a dark environment.
 
-DELIVERABLES:
-- A list of all SEO additions/changes made per page.
-- Full updated files or code snippets ready to merge without breaking UI.
-- Sitemap and robots.txt.
-- Validation reports for schema and performance checks.
+The implementation must introduce **no breaking changes**.
 
-ADDITIONAL INSTRUCTIONS:
-- Prioritize GEO/AI programmatic optimization (location + structured schema) for Bodidoc’s South African audience.
-- Ensure competitive edge by comparing meta and schema against top skincare competitors.
-- Make the site top-tier SEO ready while preserving all visual and functional aspects.
+When light mode is active, the website must remain visually and functionally identical to its current state.
+
+---
+
+## NON-NEGOTIABLE RULE
+
+Before editing anything:
+
+**Inspect the entire codebase.**
+
+Understand:
+
+* Next.js architecture
+* App Router/layout structure
+* Tailwind implementation
+* `globals.css`
+* shared components
+* page-specific components
+* header architecture
+* announcement bar
+* desktop navigation
+* mobile navigation
+* footer
+* product cards
+* product grids
+* product pages
+* filters
+* forms
+* inputs
+* modals
+* dropdowns
+* accordions
+* FAQ components
+* newsletter
+* buttons
+* Moments/blog templates
+* range pages
+* contact components
+* SVGs
+* icons
+* images
+* gradients
+* overlays
+* hover states
+* focus states
+* active states
+* responsive behaviour
+* animations and transitions
+
+Do not begin by blindly replacing colours.
+
+Build a mental model of the project first.
+
+---
+
+# CURRENT AUDIT INFORMATION
+
+The project currently has **zero dark-mode support**.
+
+Known state:
+
+* Tailwind v4 is configured through CSS.
+* There is currently no dark-mode implementation.
+* `next-themes` is not currently installed.
+* There is no theme provider.
+* There are no dark-mode CSS variables.
+* Approximately 37 components contain colour styling.
+* There are approximately 500+ hardcoded colour references.
+
+Frequently occurring colours include:
+
+* `#112942` — Bodidoc navy
+* `#ffffff` / `bg-white`
+* `#e8e8e8`
+* `#333333`
+* `#2f2f2f`
+* `#999999`
+* `#888888`
+* `#666666`
+
+There are also opacity variants, gradients, borders, cards, forms, icons and other contextual uses of these colours.
+
+This audit is guidance only.
+
+**Verify everything yourself before implementation.**
+
+---
+
+# TAILWIND V4
+
+This project uses **Tailwind CSS v4**.
+
+Do not introduce legacy Tailwind configuration patterns unnecessarily.
+
+In particular:
+
+**Do not create `tailwind.config.ts` merely to enable dark mode.**
+
+Use the appropriate Tailwind v4 CSS-native architecture for the dark selector/theme system.
+
+The implementation should fit naturally into the architecture that already exists.
+
+---
+
+# IMPLEMENTATION PHILOSOPHY
+
+Do not solve dark mode by scattering hundreds of arbitrary declarations such as:
+
+`dark:bg-[#111111]`
+
+throughout the application.
+
+Instead, establish a small, coherent semantic theme system.
+
+Think in roles such as:
+
+* page background
+* surface
+* elevated surface
+* foreground
+* body text
+* secondary text
+* muted text
+* border
+* strong border
+* input
+* brand
+* accent
+* text-on-brand
+
+Then map existing components onto those semantic roles.
+
+Use component-specific dark overrides only where the design genuinely requires them.
+
+---
+
+# CRITICAL: DO NOT BLINDLY REPLACE COLORS
+
+The same hexadecimal colour may represent different semantic roles.
+
+For example, `#112942` may currently represent:
+
+* primary heading text
+* button background
+* Bodidoc branding
+* decorative accent
+* icon colour
+* navigation colour
+* border
+* header background
+
+Those are **not equivalent**.
+
+Do not globally replace every occurrence of `#112942`.
+
+Classify colours according to their **purpose within the component**.
+
+Brand colours that remain appropriate in dark mode should remain brand colours.
+
+The goal is not:
+
+> replace light colours with dark colours.
+
+The goal is:
+
+> translate the existing visual hierarchy into a dark theme while preserving Bodidoc's identity.
+
+---
+
+# LIGHT MODE IS LOCKED
+
+This is one of the most important requirements.
+
+The existing light theme is approved and must remain intact.
+
+Do not:
+
+* alter existing spacing
+* alter layout
+* alter typography
+* alter font sizes
+* alter font weights
+* alter breakpoints
+* alter component dimensions
+* alter grid structures
+* alter navigation behaviour
+* alter animations
+* alter border radii
+* alter imagery
+* alter content
+* alter product photography
+* alter branding
+* alter CTA placement
+* alter page structure
+* "clean up" unrelated code
+* redesign existing components
+
+If something does not need to change to implement dark mode, **leave it alone**.
+
+Dark mode is an addition, not an excuse for a refactor of unrelated functionality.
+
+---
+
+# THEME TOGGLE
+
+The theme control must be placed inside the existing **header announcement bar**.
+
+It must use:
+
+* moon icon for switching to dark mode
+* sun icon for switching to light mode
+
+The implementation must feel native to the existing header.
+
+Do not introduce a large switch, labelled control, pill or visually intrusive UI unless the existing design specifically requires it.
+
+The icon control should be elegant and restrained.
+
+It must work correctly across the announcement bar's responsive states.
+
+Preserve all existing announcement-bar content and functionality.
+
+Do not shift or break existing header alignment.
+
+The control must include appropriate:
+
+* hover state
+* focus-visible state
+* keyboard accessibility
+* pointer target
+* ARIA labelling
+* responsive sizing
+
+Use proper vector/component icons where possible.
+
+---
+
+# THEME PERSISTENCE
+
+Use a robust production-grade approach such as `next-themes` if it integrates safely with the current architecture.
+
+The user's theme selection must persist between:
+
+* route changes
+* refreshes
+* sessions
+
+The implementation must avoid:
+
+* hydration mismatch
+* initial white flash when dark mode is selected
+* incorrect icon during hydration
+* server/client rendering problems
+
+If system theme detection can be supported cleanly, first-time visitors may follow system preference, while explicit user selection must override it persistently.
+
+Do not sacrifice reliability for unnecessary complexity.
+
+---
+
+# DARK MODE VISUAL DIRECTION
+
+The dark theme should feel:
+
+* premium
+* restrained
+* clean
+* modern
+* highly legible
+* consistent with Bodidoc
+* comfortable for prolonged viewing
+
+Avoid a simplistic:
+
+`white → black`
+
+conversion.
+
+Use appropriate tonal separation between:
+
+* page background
+* cards
+* elevated surfaces
+* inputs
+* overlays
+* modals
+* dropdowns
+
+Avoid excessive pure black.
+
+Avoid excessive pure white text.
+
+Maintain hierarchy through subtle tonal differences.
+
+Existing Bodidoc brand colours should remain recognizable.
+
+---
+
+# HEADER AND FOOTER
+
+Do not assume the existing dark/navy header or footer needs to change simply because dark mode is enabled.
+
+If an existing section already functions correctly as a dark branded surface, preserve it unless surrounding dark-mode context creates a genuine contrast problem.
+
+Do not change something merely because dark mode exists.
+
+Evaluate it visually and semantically.
+
+---
+
+# ICONS
+
+Perform a dedicated icon audit.
+
+Every UI icon that is currently dark because it appears on a light background must remain visible in dark mode.
+
+Preferred order:
+
+1. SVG/component icon using `currentColor`
+2. Tailwind-controlled vector icon
+3. CSS-generated icon using inherited colour
+4. Carefully scoped CSS treatment for genuinely monochrome raster assets
+
+Do not globally invert images.
+
+Never apply broad rules such as:
+
+`.dark img { filter: invert(1); }`
+
+Product photography and branded imagery must remain untouched.
+
+---
+
+# IMAGE INTEGRITY
+
+Do not alter:
+
+* product packaging
+* product labels
+* product photography
+* campaign photography
+* lifestyle imagery
+* skin imagery
+* logos containing intentional colours
+* promotional artwork
+* branded graphics
+* flags
+* photographs
+
+Dark mode applies to the **interface**, not the photography.
+
+Where product imagery currently appears within a white image container, evaluate the surrounding surface rather than modifying the actual product image.
+
+---
+
+# COMPONENT COVERAGE
+
+Dark mode must be complete.
+
+Audit and implement all shared and page-specific components, including but not limited to:
+
+* announcement bar
+* header
+* desktop navigation
+* mobile navigation
+* dropdowns
+* menus
+* search
+* overlays
+* footer
+* newsletter
+* buttons
+* links
+* product cards
+* product grids
+* product listing pages
+* filters
+* filter drawers
+* product detail pages
+* tabs
+* accordions
+* FAQ
+* ratings
+* reviews
+* related products
+* range pages
+* homepage sections
+* Moments listing
+* Moments article templates
+* About
+* Contact
+* forms
+* text inputs
+* textareas
+* selects
+* checkboxes
+* radio controls
+* modals
+* cards
+* pagination
+* breadcrumbs
+* badges
+* tooltips
+* separators
+* borders
+* empty states
+* loading states
+* validation states
+
+Do not assume that changing global body colours constitutes complete dark-mode support.
+
+---
+
+# STATES
+
+For every interactive component, verify:
+
+* default
+* hover
+* focus
+* focus-visible
+* active
+* selected
+* disabled
+* expanded
+* collapsed
+* error
+* success
+
+where applicable.
+
+A component is not considered dark-mode complete simply because its resting state looks correct.
+
+---
+
+# FORMS
+
+Forms require deliberate dark-mode treatment.
+
+Check:
+
+* background
+* text
+* labels
+* placeholders
+* borders
+* focus rings
+* autofill
+* disabled fields
+* validation
+* error messages
+* select menus
+* checkboxes
+* radio controls
+
+Maintain sufficient contrast and accessibility.
+
+Do not allow native browser behaviour to create glaring white controls inside an otherwise dark interface.
+
+---
+
+# GRADIENTS AND OVERLAYS
+
+Audit every existing:
+
+* gradient
+* background gradient
+* image overlay
+* shadow
+* transparency
+* backdrop
+* pseudo-element
+
+Do not automatically replace them.
+
+Some may already work in both themes.
+
+Others may require explicit dark-mode treatment.
+
+Maintain the original design intention.
+
+---
+
+# ACCESSIBILITY
+
+Treat accessibility as part of implementation quality.
+
+Dark mode must maintain strong contrast for:
+
+* body copy
+* headings
+* muted text
+* links
+* buttons
+* form labels
+* placeholders
+* borders where visually meaningful
+* focus indicators
+
+The theme toggle must be keyboard accessible and screen-reader understandable.
+
+Do not sacrifice usability for aesthetics.
+
+---
+
+# RESPONSIVE REQUIREMENTS
+
+Dark mode must work at every existing breakpoint.
+
+Verify at minimum:
+
+* mobile
+* tablet
+* desktop
+* wide desktop
+
+Pay particular attention to:
+
+* announcement bar
+* theme toggle
+* mobile menu
+* dropdowns
+* product grids
+* filters
+* modals
+* newsletter
+* forms
+* footer
+
+Do not introduce horizontal overflow or layout shifts.
+
+---
+
+# TRANSITIONS
+
+Theme switching should feel polished but restrained.
+
+Transitions may be used for:
+
+* background colour
+* text colour
+* border colour
+* icon colour
+
+Avoid globally applying `transition-all`.
+
+Do not create theme-switch animations that interfere with:
+
+* layout
+* transforms
+* sliders
+* menus
+* existing animations
+* product interactions
+
+---
+
+# WORKING METHOD
+
+Proceed systematically.
+
+### Phase 1 — Audit
+
+Inspect the repository.
+
+Identify:
+
+* global theme entry points
+* every hardcoded colour
+* semantic purpose of recurring colours
+* shared components
+* page-specific exceptions
+* icons requiring treatment
+* raster assets requiring special handling
+* gradients
+* forms
+* overlays
+* existing dark/navy components
+
+Do not modify code until you understand the architecture.
+
+### Phase 2 — Theme Foundation
+
+Implement the minimum reliable theme infrastructure.
+
+Establish:
+
+* class-based dark theme
+* semantic colour tokens
+* theme persistence
+* hydration-safe provider
+* root theme handling
+* announcement-bar toggle
+
+Do not redesign anything.
+
+### Phase 3 — Shared Components
+
+Convert the highest-leverage shared components first.
+
+Prioritize:
+
+* header
+* announcement bar
+* navigation
+* mobile navigation
+* footer
+* buttons
+* inputs
+* cards
+* FAQ
+* newsletter
+* modal primitives
+
+### Phase 4 — Page Components
+
+Work through every route and template.
+
+Do not leave partial dark-mode support.
+
+### Phase 5 — Icons and Assets
+
+Perform a dedicated icon/asset pass after the primary surfaces are correct.
+
+### Phase 6 — Regression QA
+
+Test every relevant route in:
+
+**LIGHT MODE**
+
+and:
+
+**DARK MODE**
+
+Light mode must match the original website.
+
+Dark mode must have no:
+
+* unreadable text
+* dark-on-dark icons
+* white-on-white elements
+* rogue white cards
+* incorrect borders
+* invisible controls
+* broken hover states
+* broken dropdowns
+* broken modals
+* incorrect gradients
+* inverted photography
+* layout shifts
+* hydration warnings
+* console errors
+
+### Phase 7 — Responsive QA
+
+Repeat critical testing on mobile and desktop.
+
+---
+
+# REGRESSION PROTECTION
+
+This is an established project.
+
+Be conservative.
+
+Before changing an existing component, understand why its current styling exists.
+
+Do not perform broad automated replacements unless the semantic meaning is guaranteed.
+
+Do not rename components unnecessarily.
+
+Do not move files unnecessarily.
+
+Do not modify business logic.
+
+Do not change APIs.
+
+Do not alter data fetching.
+
+Do not alter routing.
+
+Do not change content.
+
+Do not upgrade unrelated dependencies.
+
+Do not rewrite working components simply to make them "cleaner."
+
+Do not remove existing functionality.
+
+Do not introduce a UI library.
+
+Do not introduce a new design system unrelated to the existing Bodidoc aesthetic.
+
+Make the smallest high-quality set of changes necessary to implement dark mode properly.
+
+---
+
+# BUILD VALIDATION
+
+Before considering the task complete:
+
+Run the project's existing:
+
+* linting
+* type checking
+* production build
+* relevant tests
+
+Fix any issue introduced by your implementation.
+
+Do not suppress legitimate errors merely to obtain a successful build.
+
+Check the browser console for:
+
+* hydration warnings
+* React warnings
+* missing keys
+* asset errors
+* theme-related errors
+
+---
+
+# DEFINITION OF DONE
+
+This task is complete only when:
+
+1. The entire Bodidoc website has a coherent dark mode.
+2. The toggle is located in the existing header announcement bar.
+3. Moon and sun icons correctly communicate theme switching.
+4. Theme selection persists.
+5. Theme initialization does not visibly flash the wrong theme.
+6. Every relevant route supports dark mode.
+7. Every UI icon remains visible.
+8. Product and branded imagery remains untouched.
+9. Forms, menus, dropdowns, modals and interactive states work correctly.
+10. Mobile dark mode is complete.
+11. Desktop dark mode is complete.
+12. Accessibility and contrast remain strong.
+13. There are no hydration or console errors introduced.
+14. Production build succeeds.
+15. Existing functionality remains intact.
+16. **Light mode remains visually faithful to the website as it existed before this task.**
+
+---
+
+# FINAL PRINCIPLE
+
+Work as though this is a live production website with real customers and a strict regression budget.
+
+Do not chase cleverness.
+
+Do not redesign.
+
+Do not over-engineer.
+
+Do not make unrelated improvements.
+
+Understand the existing system, introduce a clean theme layer, carefully migrate visual roles, verify every component, and preserve everything that already works.
+
+**The only feature being added is a professionally executed, site-wide dark mode controlled by moon/sun icons in the existing header announcement bar. Everything else must continue working exactly as before.**

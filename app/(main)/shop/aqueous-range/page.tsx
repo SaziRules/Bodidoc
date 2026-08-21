@@ -103,12 +103,12 @@ export default async function AqueousRangePage() {
   const products = allProducts.filter((p) => p.range === "aqueous");
 
   return (
-    <div className="w-full bg-white -mt-16 md:-mt-22.5 lg:-mt-32.5">
+    <div className="w-full bg-white dark:bg-page -mt-16 md:-mt-22.5 lg:-mt-32.5">
       <AqueousFAQSchema />
 
       {/* ── 1. Full-screen hero ── */}
       {rangePage?.heroImage && (
-        <section aria-label="Aqueous Range hero" className="w-full bg-white">
+        <section aria-label="Aqueous Range hero" className="w-full bg-white dark:bg-page">
 
   {/* Nav-height spacer — mirrors the wrapper negative margin */}
   <div className="h-16 md:h-22.5 lg:h-32.5" />
@@ -147,7 +147,7 @@ export default async function AqueousRangePage() {
       )}
 
       {/* ── 2. Product intro + benefits carousel ── */}
-      <section className="bg-white">
+      <section className="bg-white dark:bg-page">
   <div className="max-w-300 mx-auto py-12 md:py-20 px-6">
     {/* Grid with custom column split to match reference proportions */}
     <div className="grid grid-cols-1 md:grid-cols-[45%_55%] gap-8 md:gap-2 items-center">
@@ -169,7 +169,7 @@ export default async function AqueousRangePage() {
       <div className="flex flex-col justify-center">
         <div className="max-w-170 md:-pl-10"> {/* This max-width is the key to the vertical height */}
           <h2
-            className="font-display font-normal text-[#112942] leading-[1.15] mb-4"
+            className="font-display font-normal text-[#112942] dark:text-bd-dark leading-[1.15] mb-4"
             style={{ 
               fontSize: "clamp(24px, 2.2vw, 27px)", 
               textTransform: "uppercase", 
@@ -180,7 +180,7 @@ export default async function AqueousRangePage() {
           </h2>
           
           <p 
-            className="text-[14px] md:text-[15px] font-normal text-[#2f2f2f] leading-5.25 mb-6" 
+            className="text-[14px] md:text-[15px] font-normal text-[#2f2f2f] dark:text-fg-body leading-5.25 mb-6"
             style={{ textAlign: "left" }}
           >
             Discover the ultimate solution for your skin's everyday needs with Bodidoc Aqueous Cream. Perfectly formulated for all skin types, this gentle cream is safe for the whole family, including babies. It offers 24-hour moisture and soothing care for sensitive skin. Dermatologically tested and free from harsh chemicals, it's the versatile, go-to product your skin deserves.
@@ -259,11 +259,11 @@ export default async function AqueousRangePage() {
       <section>
         <div className="max-w-4xl mx-auto px-10 py-16 md:py-20">
           <div className="mb-10">
-            <h2 className="font-display font-medium text-[#112942] leading-snug mb-1" style={{ fontSize: "clamp(24px, 3vw, 32px)" }}>
+            <h2 className="font-display font-medium text-[#112942] dark:text-bd-dark leading-snug mb-1" style={{ fontSize: "clamp(24px, 3vw, 32px)" }}>
               Frequently Asked{" "}
               <em className="italic">Questions</em>
             </h2>
-            <p className="text-[14px] font-normal text-[#888]">
+            <p className="text-[14px] font-normal text-[#888] dark:text-fg-muted">
               Find out more about Bodidoc Aqueous Cream
             </p>
           </div>
@@ -272,11 +272,11 @@ export default async function AqueousRangePage() {
       </section>
 
       {/* ── 7. Bottom nav ── */}
-      <div className="border-t border-[#e8e8e8]">
+      <div className="border-t border-[#e8e8e8] dark:border-[#253244]">
         <div className="max-w-360 mx-auto px-6 md:px-10 lg:px-16 py-8 flex items-center justify-between">
           <Link
             href="/shop"
-            className="inline-flex items-center gap-2 text-[11px] tracking-[0.15em] uppercase text-[#112942] font-light hover:gap-3 transition-all duration-200"
+            className="inline-flex items-center gap-2 text-[11px] tracking-[0.15em] uppercase text-[#112942] dark:text-bd-dark font-light hover:gap-3 transition-all duration-200"
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
               <path d="M19 12H5M12 19l-7-7 7-7" />
@@ -285,7 +285,7 @@ export default async function AqueousRangePage() {
           </Link>
           <Link
             href="/shop/tissue-oil-range"
-            className="text-[11px] font-light text-[#999] tracking-wide hover:text-[#112942] transition-colors"
+            className="text-[11px] font-light text-[#999] dark:text-fg-muted tracking-wide hover:text-[#112942] dark:hover:text-bd-dark transition-colors"
           >
             Tissue Oil Range →
           </Link>

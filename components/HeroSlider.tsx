@@ -140,8 +140,8 @@ export default function HeroSlider({ slides = fallbackSlides }: Props) {
             className={`
               w-2.5 h-2.5 rounded-full border transition-all duration-300 cursor-pointer p-0
               ${i === current
-                ? "bg-[#112942] border-[#112942] scale-110"
-                : "bg-transparent border-[#112942]/40 hover:border-[#112942]/70"
+                ? "bg-[#112942] dark:bg-accent border-[#112942] dark:border-accent scale-110"
+                : "bg-transparent border-[#112942]/40 dark:border-[#5b9ac8]/40 hover:border-[#112942]/70 dark:hover:border-[#5b9ac8]/70"
               }
             `}
           />

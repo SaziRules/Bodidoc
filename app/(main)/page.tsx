@@ -8,7 +8,7 @@ import ProductGrid, { type GridProduct } from "@/components/ProductGrid";
 import FullWidthBanner from "@/components/FullWidthBanner";
 import Testimonials from "@/components/Testimonials";
 import VideoBanner from "@/components/VideoBanner";
-import HomePageImages from "@/components/HomePageImages";
+import HomePageImages from "@/components/HomepageImages";
 import AutoSubscribeModal from "@/components/AutoSubscribeModal";
 import CookieAlert from "@/components/CookieAlert";
 
@@ -206,12 +206,12 @@ export default async function Home() {
       />
       <HomePageImages />
       {/* ── Footer Curve Divider ── */}
-<div className="relative w-full -mb-1 overflow-hidden leading-0 bg-[#112942]"> {/* Dark Background */}
-  <svg 
-    viewBox="0 0 1000 100" 
-    preserveAspectRatio="none" 
-    className="relative block w-[calc(100%+1.3px)] h-10 md:h-25 lg:h-35"
-    fill="#ffffff" // <── White Path cuts into the dark background
+<div className="relative w-full -mb-1 overflow-hidden leading-0 bg-[#112942]">
+  <svg
+    viewBox="0 0 1000 100"
+    preserveAspectRatio="none"
+    className="relative block w-[calc(100%+1.3px)] h-10 md:h-25 lg:h-35 text-white dark:text-[#111827]"
+    fill="currentColor"
   >
     <path d="M1000,4.3V0H0v4.3C0.9,23.1,126.7,99.2,500,100S1000,22.7,1000,4.3z"></path>
   </svg>

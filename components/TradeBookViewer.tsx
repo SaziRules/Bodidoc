@@ -253,8 +253,8 @@ export default function TradeBookViewer({ src, title, isLightbox = false, onClos
 
       {status === "loading" && (
         <div className="flex flex-col items-center justify-center py-32 gap-4">
-          <div className="w-9 h-9 border-[3px] border-[#112942]/15 border-t-[#112942]/60 rounded-full animate-spin" />
-          <p className="text-sm text-[#112942]/40">Loading…</p>
+          <div className="w-9 h-9 border-[3px] border-[#112942]/15 dark:border-[#5b9ac8]/15 border-t-[#112942]/60 dark:border-t-[#5b9ac8]/60 rounded-full animate-spin" />
+          <p className="text-sm text-[#112942]/40 dark:text-fg-muted">Loading…</p>
         </div>
       )}
 
@@ -273,7 +273,7 @@ export default function TradeBookViewer({ src, title, isLightbox = false, onClos
                 hidden md:flex items-center justify-center disabled:opacity-20 transition-all cursor-pointer
                 ${isLightbox
                   ? "bg-white/15 hover:bg-white/30 border border-white/30 text-white"
-                  : "bg-[#112942]/6 hover:bg-[#112942]/14 border border-[#112942]/10 text-[#112942]"
+                  : "bg-[#112942]/6 hover:bg-[#112942]/14 dark:bg-[#5b9ac8]/6 dark:hover:bg-[#5b9ac8]/14 border border-[#112942]/10 dark:border-[#5b9ac8]/15 text-[#112942] dark:text-[#5b9ac8]"
                 }`}>
               <ChevL />
             </button>
@@ -334,7 +334,7 @@ export default function TradeBookViewer({ src, title, isLightbox = false, onClos
                 hidden md:flex items-center justify-center disabled:opacity-20 transition-all cursor-pointer
                 ${isLightbox
                   ? "bg-white/15 hover:bg-white/30 border border-white/30 text-white"
-                  : "bg-[#112942]/6 hover:bg-[#112942]/14 border border-[#112942]/10 text-[#112942]"
+                  : "bg-[#112942]/6 hover:bg-[#112942]/14 dark:bg-[#5b9ac8]/6 dark:hover:bg-[#5b9ac8]/14 border border-[#112942]/10 dark:border-[#5b9ac8]/15 text-[#112942] dark:text-[#5b9ac8]"
                 }`}>
               <ChevR />
             </button>
@@ -372,24 +372,24 @@ export default function TradeBookViewer({ src, title, isLightbox = false, onClos
 
           {/* Toolbar — inline mode only */}
           {!isLightbox && (
-          <div className="border-t border-[#112942]/8">
+          <div className="border-t border-[#112942]/8 dark:border-[#5b9ac8]/10">
             {/* Mobile nav row */}
-            <div className="flex md:hidden items-center justify-between px-4 py-3 border-b border-[#112942]/6">
+            <div className="flex md:hidden items-center justify-between px-4 py-3 border-b border-[#112942]/6 dark:border-[#5b9ac8]/10">
               <button onClick={flipPrev} disabled={isFirst}
-                className="w-9 h-9 rounded-full bg-[#112942]/6 hover:bg-[#112942]/12 border border-[#112942]/10
-                           flex items-center justify-center text-[#112942] disabled:opacity-25 transition-all cursor-pointer">
+                className="w-9 h-9 rounded-full bg-[#112942]/6 hover:bg-[#112942]/12 dark:bg-[#5b9ac8]/6 dark:hover:bg-[#5b9ac8]/12 border border-[#112942]/10 dark:border-[#5b9ac8]/15
+                           flex items-center justify-center text-[#112942] dark:text-[#5b9ac8] disabled:opacity-25 transition-all cursor-pointer">
                 <ChevL />
               </button>
-              <span className="text-xs tabular-nums text-[#112942]/45">{dispL} of {numPages}</span>
+              <span className="text-xs tabular-nums text-[#112942]/45 dark:text-fg-muted">{dispL} of {numPages}</span>
               <button onClick={flipNext} disabled={isLast}
-                className="w-9 h-9 rounded-full bg-[#112942]/6 hover:bg-[#112942]/12 border border-[#112942]/10
-                           flex items-center justify-center text-[#112942] disabled:opacity-25 transition-all cursor-pointer">
+                className="w-9 h-9 rounded-full bg-[#112942]/6 hover:bg-[#112942]/12 dark:bg-[#5b9ac8]/6 dark:hover:bg-[#5b9ac8]/12 border border-[#112942]/10 dark:border-[#5b9ac8]/15
+                           flex items-center justify-center text-[#112942] dark:text-[#5b9ac8] disabled:opacity-25 transition-all cursor-pointer">
                 <ChevR />
               </button>
             </div>
             {/* Actions row */}
             <div className="flex items-center justify-between px-2 py-2.5">
-              <span className="hidden md:block text-xs tabular-nums text-[#112942]/45 min-w-[90px]">
+              <span className="hidden md:block text-xs tabular-nums text-[#112942]/45 dark:text-fg-muted min-w-[90px]">
                 {showRange ? `${dispL} – ${dispR} of ${numPages}` : `${dispL} of ${numPages}`}
               </span>
               <div className="flex items-center gap-0.5 w-full md:w-auto justify-end">
@@ -402,6 +402,7 @@ export default function TradeBookViewer({ src, title, isLightbox = false, onClos
                   <button key={label} onClick={action} title={label}
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded
                                text-[#112942]/55 hover:text-[#112942] hover:bg-[#112942]/6
+                               dark:text-fg-muted dark:hover:text-[#5b9ac8] dark:hover:bg-[#5b9ac8]/6
                                transition-colors cursor-pointer text-xs">
                     {icon}
                     <span className="hidden sm:inline">{label}</span>

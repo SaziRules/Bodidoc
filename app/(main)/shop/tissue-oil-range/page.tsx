@@ -114,7 +114,7 @@ export default async function TissueOilRangePage() {
   });
 
   return (
-    <div className="w-full bg-white -mt-16 md:-mt-22.5 lg:-mt-32.5">
+    <div className="w-full bg-white dark:bg-page -mt-16 md:-mt-22.5 lg:-mt-32.5">
       <TissueOilFAQSchema />
 
       {/* ── 1. Hero banner ──
@@ -123,7 +123,7 @@ export default async function TissueOilRangePage() {
            actual image starts right below the nav on every breakpoint.
            Spacer: mobile 64px | md 90px | lg 130px (nav + topbar)          */}
       {rangePage?.heroImage && (
-        <section aria-label="Tissue Oil Range hero" className="w-full bg-white">
+        <section aria-label="Tissue Oil Range hero" className="w-full bg-white dark:bg-page">
 
           {/* Nav-height spacer — white background blends seamlessly behind nav */}
           <div className="h-16 md:h-22.5 lg:h-32.5" />
@@ -167,12 +167,12 @@ export default async function TissueOilRangePage() {
         <div className="max-w-360 mx-auto px-6 md:px-10 lg:px-16 mb-12">
           <div className="max-w-2xl mx-auto text-center">
             <h2
-              className="font-display font-medium text-[#112942] leading-tight mb-4 uppercase"
+              className="font-display font-medium text-[#112942] dark:text-bd-dark leading-tight mb-4 uppercase"
               style={{ fontSize: "clamp(17px, 1.4vw, 27px)", letterSpacing: "0.1em" }}
             >
               Enriched with Tissue Oil.
             </h2>
-            <p className="text-[13px] font-normal text-[#444] leading-relaxed">
+            <p className="text-[13px] font-normal text-[#444] dark:text-fg-body leading-relaxed">
               Enriched with a specialised formulation of ingredients, including avocado oil, vitamin E, and evening
               primrose oil, each product is designed with a light, easily absorbed texture to give the skin a natural
               glow. Bodidoc's dermatologically tested Tissue Oil range is formulated to help moisturise the skin,
@@ -230,13 +230,13 @@ export default async function TissueOilRangePage() {
         <div className="max-w-4xl mx-auto px-10 py-16 md:py-20">
           <div className="mb-10">
             <h2
-              className="font-display font-medium text-[#112942] leading-snug mb-1"
+              className="font-display font-medium text-[#112942] dark:text-bd-dark leading-snug mb-1"
               style={{ fontSize: "clamp(24px, 3vw, 32px)" }}
             >
               Frequently Asked{" "}
               <em className="italic">Questions</em>
             </h2>
-            <p className="text-[14px] font-normal text-[#888]">
+            <p className="text-[14px] font-normal text-[#888] dark:text-fg-muted">
               Find out more about Bodidoc Tissue Oil Range
             </p>
           </div>
@@ -245,11 +245,11 @@ export default async function TissueOilRangePage() {
       </section>
 
       {/* ── 7. Bottom nav ── */}
-      <div className="border-t border-[#e8e8e8]">
+      <div className="border-t border-[#e8e8e8] dark:border-[#253244]">
         <div className="max-w-360 mx-auto px-6 md:px-10 lg:px-16 py-8 flex items-center justify-between">
           <Link
             href="/shop"
-            className="inline-flex items-center gap-2 text-[11px] tracking-[0.15em] uppercase text-[#112942] font-light hover:gap-3 transition-all duration-200"
+            className="inline-flex items-center gap-2 text-[11px] tracking-[0.15em] uppercase text-[#112942] dark:text-bd-dark font-light hover:gap-3 transition-all duration-200"
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
               <path d="M19 12H5M12 19l-7-7 7-7" />
@@ -258,7 +258,7 @@ export default async function TissueOilRangePage() {
           </Link>
           <Link
             href="/shop/aqueous-range"
-            className="text-[11px] font-light text-[#999] tracking-wide hover:text-[#112942] transition-colors"
+            className="text-[11px] font-light text-[#999] dark:text-fg-muted tracking-wide hover:text-[#112942] dark:hover:text-bd-dark transition-colors"
           >
             Aqueous Range →
           </Link>

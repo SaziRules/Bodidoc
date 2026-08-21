@@ -40,26 +40,26 @@ export function TissueOilIngredients() {
 
         {/* --- Left Header --- */}
         <div className="md:w-56 shrink-0 flex flex-col gap-0 md:pr-8">
-          <span className="font-display italic text-[#112942] leading-none" style={{ fontSize: "clamp(52px, 5.5vw, 72px)" }}>
+          <span className="font-display italic text-[#112942] dark:text-bd-dark leading-none" style={{ fontSize: "clamp(52px, 5.5vw, 72px)" }}>
             Key
           </span>
-          <span className="text-[14px] font-light text-[#112942] tracking-wide mt-1">ingredients</span>
+          <span className="text-[14px] font-light text-[#112942] dark:text-bd-dark tracking-wide mt-1">ingredients</span>
           <div className="mt-4 flex flex-col gap-0">
             {["formulated", "with 5", "beneficial", "oils!"].map((line) => (
-              <span key={line} className="font-display font-normal text-[#112942] text-[17px] leading-snug">{line}</span>
+              <span key={line} className="font-display font-normal text-[#112942] dark:text-bd-dark text-[17px] leading-snug">{line}</span>
             ))}
           </div>
         </div>
 
-        <div className="hidden md:block w-px bg-[#c8d4dc] self-stretch mx-2" />
+        <div className="hidden md:block w-px bg-[#c8d4dc] dark:bg-[#253244] self-stretch mx-2" />
 
         {/* --- Right Content --- */}
         <div className="flex-1 md:pl-12 flex flex-col gap-6">
           <div className="min-h-35 md:min-h-30">
-            <h3 className="font-display  font-medium text-[#112942] leading-snug mb-3" style={{ fontSize: "clamp(18px, 1.8vw, 27px)" }}>
+            <h3 className="font-display font-medium text-[#112942] dark:text-bd-dark leading-snug mb-3" style={{ fontSize: "clamp(18px, 1.8vw, 27px)" }}>
               {current.name}
             </h3>
-            <p className="text-[14px] font-normal text-[#112942] leading-relaxed">
+            <p className="text-[14px] font-normal text-[#112942] dark:text-fg-body leading-relaxed">
               {current.description}
             </p>
           </div>
@@ -78,7 +78,7 @@ export function TissueOilIngredients() {
                 <img 
                   src={ing.icon} 
                   alt="" 
-                  className="w-11 h-11" 
+                  className="w-11 h-11 dark:brightness-0 dark:invert"
                 />
               </button>
             ))}

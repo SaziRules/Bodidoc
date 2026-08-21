@@ -78,7 +78,6 @@ function PhoneField({
   const wrapRef = useRef<HTMLDivElement>(null);
   const selected = DIAL_CODES.find((d) => d.code === dialCode) ?? DIAL_CODES[0];
 
-  // Close on outside click
   useEffect(() => {
     if (!open) return;
     const handler = (e: MouseEvent) => {
@@ -102,7 +101,7 @@ function PhoneField({
           aria-expanded={open}
         >
           <FlagImg iso={selected.iso} size={18} />
-          <span className="text-[12px] font-light tracking-wide text-[#888] group-hover:text-[#112942] transition-colors">
+          <span className="text-[12px] font-light tracking-wide text-[#888] dark:text-fg-secondary group-hover:text-[#112942] dark:group-hover:text-bd-dark transition-colors">
             {selected.code}
           </span>
           <svg
@@ -114,7 +113,7 @@ function PhoneField({
           </svg>
         </button>
 
-        <div className="w-px h-4 bg-[#e0e0e0] shrink-0" />
+        <div className="w-px h-4 bg-[#e0e0e0] dark:bg-[#253244] shrink-0" />
 
         <input
           type="tel"
@@ -153,7 +152,7 @@ function PhoneField({
 
         {/* Country list */}
         <div
-          className="bg-white overflow-y-auto"
+          className="bg-white dark:bg-[#1c2a3a] overflow-y-auto"
           style={{ maxHeight: "196px" }}
         >
           {DIAL_CODES.map((d, i) => {
@@ -167,21 +166,21 @@ function PhoneField({
                   group/row flex items-center gap-3 w-full px-4 py-2.5
                   bg-transparent border-0 cursor-pointer text-left
                   transition-colors duration-150
-                  ${i !== DIAL_CODES.length - 1 ? "border-b border-[#f0f0f0]" : ""}
-                  ${isActive ? "bg-[#f0f4f8]" : "hover:bg-[#f9f9f9]"}
+                  ${i !== DIAL_CODES.length - 1 ? "border-b border-[#f0f0f0] dark:border-[#253244]" : ""}
+                  ${isActive ? "bg-[#f0f4f8] dark:bg-[#1e3a52]" : "hover:bg-[#f9f9f9] dark:hover:bg-[#1a2535]"}
                 `}
               >
                 <FlagImg iso={d.iso} size={18} />
                 <span className={`flex-1 text-[12px] tracking-wide font-light transition-colors
-                  ${isActive ? "text-[#112942] font-medium" : "text-[#444] group-hover/row:text-[#112942]"}`}>
+                  ${isActive ? "text-[#112942] dark:text-[#5b9ac8] font-medium" : "text-[#444] dark:text-[#b0c4d8] group-hover/row:text-[#112942] dark:group-hover/row:text-[#5b9ac8]"}`}>
                   {d.name}
                 </span>
                 <span className={`text-[11px] font-light tabular-nums shrink-0 transition-colors
-                  ${isActive ? "text-[#112942]/60" : "text-[#bbb] group-hover/row:text-[#888]"}`}>
+                  ${isActive ? "text-[#112942]/60 dark:text-[#5b9ac8]/60" : "text-[#bbb] dark:text-[#334d60] group-hover/row:text-[#888] dark:group-hover/row:text-[#6a8fa8]"}`}>
                   {d.code}
                 </span>
                 {isActive && (
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#112942" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 opacity-50">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 opacity-50 text-[#112942] dark:text-[#5b9ac8]">
                     <polyline points="20 6 9 17 4 12" />
                   </svg>
                 )}
@@ -354,14 +353,14 @@ export default function SubscriptionModal({ onClose }: Props) {
     if (e.key === "Enter") handleUpsell();
   };
 
-  const arrowBtn = "px-4 py-3 text-[#bbb] hover:text-[#112942] transition-colors bg-transparent border-0 cursor-pointer shrink-0 disabled:opacity-40";
+  const arrowBtn = "px-4 py-3 text-[#bbb] hover:text-[#112942] dark:hover:text-bd-dark transition-colors bg-transparent border-0 cursor-pointer shrink-0 disabled:opacity-40";
   const arrow = (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
       <path d="M5 12h14M12 5l7 7-7 7" />
     </svg>
   );
-  const fieldWrap = "flex items-center border border-[#d8d8d8] focus-within:border-[#112942] transition-colors duration-200";
-  const inputClass = "flex-1 px-4 py-3 text-[12px] tracking-widest uppercase placeholder:text-[#bbb] text-[#112942] bg-transparent border-0 outline-none font-light";
+  const fieldWrap = "flex items-center border border-[#d8d8d8] dark:border-[#3d5a7a] dark:bg-[#1a2535] focus-within:border-[#112942] dark:focus-within:border-[#5b9ac8] transition-colors duration-200";
+  const inputClass = "flex-1 px-4 py-3 text-[12px] tracking-widest uppercase placeholder:text-[#bbb] dark:placeholder:text-fg-faint text-[#112942] dark:text-bd-dark bg-transparent border-0 outline-none font-light";
 
   return (
     <div
@@ -371,7 +370,7 @@ export default function SubscriptionModal({ onClose }: Props) {
       <div className="absolute inset-0 bg-black/50 backdrop-blur-[3px]" />
 
       <div
-        className="relative z-10 bg-white w-full max-w-3xl shadow-2xl flex overflow-hidden max-h-[90vh]"
+        className="relative z-10 bg-white dark:bg-elevated w-full max-w-3xl shadow-2xl flex overflow-hidden max-h-[90vh]"
         onClick={(e) => e.stopPropagation()}
         style={{ minHeight: "400px" }}
       >
@@ -379,7 +378,7 @@ export default function SubscriptionModal({ onClose }: Props) {
         <button
           onClick={onClose}
           aria-label="Close"
-          className="absolute top-4 right-4 w-7 h-7 flex items-center justify-center sm:text-white hover:text-[#112942] transition-colors z-10 bg-transparent border-0 cursor-pointer"
+          className="absolute top-4 right-4 w-7 h-7 flex items-center justify-center sm:text-white hover:text-[#112942] dark:hover:text-bd-dark transition-colors z-10 bg-transparent border-0 cursor-pointer"
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="w-4 h-4">
             <path d="M18 6L6 18M6 6l12 12" />
@@ -392,10 +391,10 @@ export default function SubscriptionModal({ onClose }: Props) {
           {/* ── Stage: form ── */}
           {stage === "form" && (
             <>
-              <h2 className="font-display text-[28px] md:text-[27px] font-semibold text-[#112942] leading-6.25 text-center mb-3">
+              <h2 className="font-display text-[28px] md:text-[27px] font-semibold text-[#112942] dark:text-bd-dark leading-6.25 text-center mb-3">
                 Down for more?<br />We got you!
               </h2>
-              <p className="text-[14px] font-normal text-[#112942] text-center leading-5.25 mb-8 italic">
+              <p className="text-[14px] font-normal text-[#112942] dark:text-fg-secondary text-center leading-5.25 mb-8 italic">
                 Subscribe for all the latest product drops,<br />
                 limited offers and in-store event info
               </p>
@@ -432,7 +431,7 @@ export default function SubscriptionModal({ onClose }: Props) {
 
               {error && <p className="text-[11.5px] text-red-400 text-center mt-3">{error}</p>}
 
-              <p className="text-[12px] font-light text-[#aaa] text-center leading-4 mt-5 max-w-xs mx-auto">
+              <p className="text-[12px] font-light text-[#aaa] dark:text-fg-muted text-center leading-4 mt-5 max-w-xs mx-auto">
                 If you subscribe to Bodidoc, please note that you are agreeing to receive recurring promotional and marketing messages from us. These messages are automated, including email and text. Consent is not a condition of any purchase. Please view our{" "}
                 <a href="/terms-conditions-privacy-policy" onClick={onClose} className="text-[#db73b6] underline underline-offset-2 hover:opacity-70 transition-opacity">
                   Terms of Use and Privacy Policy
@@ -445,8 +444,8 @@ export default function SubscriptionModal({ onClose }: Props) {
           {/* ── Stage: upsell ── */}
           {stage === "upsell" && (
             <div className="text-center">
-              <p className="font-display text-[26px] font-medium text-[#112942] mb-2">You&apos;re in!</p>
-              <p className="text-[13.5px] font-light text-[#555] leading-relaxed mb-7">
+              <p className="font-display text-[26px] font-medium text-[#112942] dark:text-bd-dark mb-2">You&apos;re in!</p>
+              <p className="text-[13.5px] font-light text-[#555] dark:text-fg-body leading-relaxed mb-7">
                 {upsellField === "phone"
                   ? "Want to also get SMS updates? Drop your number and we'll keep you in the loop."
                   : "Want email updates too? Add your address and never miss a drop."}
@@ -486,7 +485,7 @@ export default function SubscriptionModal({ onClose }: Props) {
 
               <button
                 onClick={() => setStage("done")}
-                className="text-[11.5px] text-[#bbb] hover:text-[#112942] underline underline-offset-2 transition-colors bg-transparent border-0 cursor-pointer mt-1"
+                className="text-[11.5px] text-[#bbb] hover:text-[#112942] dark:hover:text-bd-dark underline underline-offset-2 transition-colors bg-transparent border-0 cursor-pointer mt-1"
               >
                 No thanks, I&apos;m good
               </button>
@@ -496,8 +495,8 @@ export default function SubscriptionModal({ onClose }: Props) {
           {/* ── Stage: done ── */}
           {stage === "done" && (
             <div className="text-center py-8">
-              <p className="font-display text-[26px] font-medium text-[#112942] mb-3">All set!</p>
-              <p className="text-[13px] font-light text-[#777] leading-relaxed">
+              <p className="font-display text-[26px] font-medium text-[#112942] dark:text-bd-dark mb-3">All set!</p>
+              <p className="text-[13px] font-light text-[#777] dark:text-fg-secondary leading-relaxed">
                 Thanks for subscribing. Watch this space for<br />
                 product drops, offers, and event news.
               </p>

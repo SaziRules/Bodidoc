@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useTheme } from "next-themes";
 import SubscriptionModal from "@/components/SubscriptionModal";
 import { usePathname } from "next/navigation";
 
@@ -37,7 +38,7 @@ const TwitterIcon = () => (
 const YouTubeIcon = () => (
   <svg width="13" height="9" viewBox="0 0 24 17" fill="currentColor">
     <path d="M23.5 2.5a3 3 0 0 0-2.1-2.1C19.5 0 12 0 12 0S4.5 0 2.6.4A3 3 0 0 0 .5 2.5 31 31 0 0 0 0 8.5a31 31 0 0 0 .5 6 3 3 0 0 0 2.1 2.1C4.5 17 12 17 12 17s7.5 0 9.4-.4a3 3 0 0 0 2.1-2.1 31 31 0 0 0 .5-6 31 31 0 0 0-.5-6z" />
-    <polygon points="9.75 12.5 15.5 8.5 9.75 4.5" fill="#112942" />
+    <polygon points="9.75 12.5 15.5 8.5 9.75 4.5" fill="white" />
   </svg>
 );
 
@@ -79,6 +80,56 @@ const ChevronDownIcon = ({ open }: { open: boolean }) => (
     <polyline points="6 9 12 15 18 9" />
   </svg>
 );
+
+const MoonIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+  </svg>
+);
+
+const SunIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="5" />
+    <line x1="12" y1="1" x2="12" y2="3" />
+    <line x1="12" y1="21" x2="12" y2="23" />
+    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+    <line x1="1" y1="12" x2="3" y2="12" />
+    <line x1="21" y1="12" x2="23" y2="12" />
+    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+  </svg>
+);
+
+// ─── Theme Toggle ─────────────────────────────────────────────────────────────
+
+function ThemeToggle() {
+  const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) {
+    return (
+      <div
+        className="w-6 h-6 rounded-full shrink-0"
+        aria-hidden="true"
+      />
+    );
+  }
+
+  const isDark = resolvedTheme === "dark";
+
+  return (
+    <button
+      onClick={() => setTheme(isDark ? "light" : "dark")}
+      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+      className="w-6 h-6 rounded-full flex items-center justify-center text-white bg-white/15 hover:bg-white/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white/60 transition-colors duration-200 cursor-pointer border-0 shrink-0"
+    >
+      {isDark ? <SunIcon /> : <MoonIcon />}
+    </button>
+  );
+}
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -156,17 +207,19 @@ function AnnouncementBar({ onSubscribeClick }: { onSubscribeClick: () => void })
               <MailIcon />
             </button>
           </div>
+          {/* ── Theme toggle ── */}
+          <ThemeToggle />
           <div className="flex items-center bg-white/10 rounded-full overflow-hidden w-65">
             <form action="/search" method="GET" className="flex items-center w-full">
-            <input
-              type="text"
-              name="q"
-              placeholder="Search"
-              className="bg-transparent border-0 outline-none text-white text-[12px] font-light tracking-wide placeholder:text-white/50 w-full px-3 py-1.5"
-            />
-            <button type="submit" className="flex items-center justify-center w-7 h-full px-1.5 py-1.5 rounded-full mr-0.5 bg-white/15 hover:bg-white/25 text-white border-0 shrink-0">
-              <SearchIcon />
-            </button>
+              <input
+                type="text"
+                name="q"
+                placeholder="Search"
+                className="bg-transparent border-0 outline-none text-white text-[12px] font-light tracking-wide placeholder:text-white/50 w-full px-3 py-1.5"
+              />
+              <button type="submit" className="flex items-center justify-center w-7 h-full px-1.5 py-1.5 rounded-full mr-0.5 bg-white/15 hover:bg-white/25 text-white border-0 shrink-0">
+                <SearchIcon />
+              </button>
             </form>
           </div>
         </div>
@@ -175,7 +228,7 @@ function AnnouncementBar({ onSubscribeClick }: { onSubscribeClick: () => void })
   );
 }
 
-// ─── Perfected Mega Menu Components ───────────────────────────────────────────
+// ─── Mega Menu Components ──────────────────────────────────────────────────────
 
 function ProductsMegaMenu({ onLinkClick }: { onLinkClick: () => void }) {
   return (
@@ -192,7 +245,7 @@ function ProductsMegaMenu({ onLinkClick }: { onLinkClick: () => void }) {
             { label: "Tissue Oil Range", href: "/shop/tissue-oil-range" },
           ].map(({ label, href }) => (
             <li key={label}>
-              <Link href={href} onClick={onLinkClick} className="text-[14px] font-normal text-[#888] hover:text-bd-dark transition-colors duration-200 no-underline">
+              <Link href={href} onClick={onLinkClick} className="text-[14px] font-normal text-[#888] dark:text-[#6a8fa8] hover:text-bd-dark transition-colors duration-200 no-underline">
                 {label}
               </Link>
             </li>
@@ -200,22 +253,22 @@ function ProductsMegaMenu({ onLinkClick }: { onLinkClick: () => void }) {
         </ul>
       </div>
 
-      <div className="bg-[#eee] self-stretch" />
+      <div className="bg-[#eee] dark:bg-[#253244] self-stretch" />
 
       {/* Column 2: New Item */}
       <div className="px-12">
         <p className="text-[15px] font-bold tracking-normal text-bd-dark uppercase mb-2">NEW!</p>
         <Link href="/shop?type=petroleum-jelly" onClick={onLinkClick} className="block no-underline group">
-          <div className="relative w-full aspect-16/8.5 overflow-hidden rounded-sm bg-gray-50 mb-5">
+          <div className="relative w-full aspect-16/8.5 overflow-hidden rounded-sm bg-gray-50 dark:bg-subtle mb-5">
             <Image src="/images/mega-menu-new.webp" alt="Bodidoc Tissue Oil Jellies" fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
           </div>
-          <p className="text-[13px] text-[#2f2f2f] leading-5 m-0 font-semibold">
+          <p className="text-[13px] text-[#2f2f2f] dark:text-fg-body leading-5 m-0 font-semibold">
             Discover our newest addition to your daily body care must haves: Bodidoc Tissue Oil Jellies
           </p>
         </Link>
       </div>
 
-      <div className="bg-[#eee] self-stretch" />
+      <div className="bg-[#eee] dark:bg-[#253244] self-stretch" />
 
       {/* Column 3: Bestseller */}
       <div className="pl-12">
@@ -223,7 +276,7 @@ function ProductsMegaMenu({ onLinkClick }: { onLinkClick: () => void }) {
           OUR #1 BESTSELLER
         </p>
         <Link href="/shop/bodidoc-tissue-oil-cream-for-normal-skin" onClick={onLinkClick} className="block no-underline group">
-          <div className="relative w-full aspect-16/9.5 overflow-hidden rounded-sm bg-gray-50">
+          <div className="relative w-full aspect-16/9.5 overflow-hidden rounded-sm bg-gray-50 dark:bg-subtle">
             <Image src="/images/mega-menu-bestseller.webp" alt="Bodidoc Tissue Oil Cream" fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
           </div>
         </Link>
@@ -237,35 +290,35 @@ function MomentsMegaMenu({ onLinkClick }: { onLinkClick: () => void }) {
     <div className="max-w-300 mx-auto px-10 py-10 grid grid-cols-[1.5fr_1px_1.5fr_1px_1.5fr] min-h-80">
       <div className="pr-12">
         <Link href="/moments/transform-dry-uneven-skin-with-the-award-winning-bodidoc-tissue-oil-cream-with-urea" onClick={onLinkClick} className="block no-underline group">
-          <div className="relative w-full aspect-16/10 overflow-hidden rounded-sm bg-gray-50 mb-5">
+          <div className="relative w-full aspect-16/10 overflow-hidden rounded-sm bg-gray-50 dark:bg-subtle mb-5">
             <Image src="/images/moments-award.png" alt="Award Winning" fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
           </div>
           <p className="text-[15px] font-medium text-bd-dark leading-3.75 mb-2.5 group-hover:text-bd-muted transition-colors">
             Voted The #1 Smoothing Cream With Urea
           </p>
-          <p className="text-[13px] text-[#2f2f2f] leading-relaxed m-0">
+          <p className="text-[13px] text-[#2f2f2f] dark:text-fg-body leading-relaxed m-0">
             It&apos;s easy to see why Bodidoc Tissue Oil Cream with Urea for Dry Skin won ...
           </p>
         </Link>
       </div>
 
-      <div className="bg-[#eee] self-stretch" />
+      <div className="bg-[#eee] dark:bg-[#253244] self-stretch" />
 
       <div className="px-12">
         <Link href="/moments/our-commitment-to-sustainable-packaging" onClick={onLinkClick} className="block no-underline group">
-          <div className="relative w-full aspect-16/10 overflow-hidden rounded-sm bg-gray-50 mb-5">
+          <div className="relative w-full aspect-16/10 overflow-hidden rounded-sm bg-gray-50 dark:bg-subtle mb-5">
             <Image src="/images/moments-sustainability.png" alt="Sustainability" fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
           </div>
           <p className="text-[15px] font-medium text-bd-dark leading-3.75 mb-2.5 group-hover:text-bd-muted transition-colors">
             Our Commitment to Sustainable Packaging
           </p>
-          <p className="text-[13px] text-[#2f2f2f] leading-relaxed m-0">
+          <p className="text-[13px] text-[#2f2f2f] dark:text-fg-body leading-relaxed m-0">
             At Bodidoc, we believe that taking care of your skin shouldn&apos;t cost the earth.
           </p>
         </Link>
       </div>
 
-      <div className="bg-[#eee] self-stretch" />
+      <div className="bg-[#eee] dark:bg-[#253244] self-stretch" />
 
       <div className="pl-12">
         <p className="text-[15px] font-bold tracking-normal text-bd-dark uppercase mb-2">LEARN MORE</p>
@@ -276,7 +329,7 @@ function MomentsMegaMenu({ onLinkClick }: { onLinkClick: () => void }) {
             { label: "Beyond The Bin: Give Your Bodidoc Packaging A Second Life", href: "/moments/beyond-the-bin-give-your-bodidoc-packaging-a-second-life" },
           ].map(({ label, href }) => (
             <li key={href}>
-              <Link href={href} onClick={onLinkClick} className="text-[14px] font-normal text-[#888] hover:text-bd-dark transition-colors duration-200 no-underline leading-normal block">
+              <Link href={href} onClick={onLinkClick} className="text-[14px] font-normal text-[#888] dark:text-[#6a8fa8] hover:text-bd-dark transition-colors duration-200 no-underline leading-normal block">
                 {label}
               </Link>
             </li>
@@ -287,7 +340,7 @@ function MomentsMegaMenu({ onLinkClick }: { onLinkClick: () => void }) {
   );
 }
 
-// ─── Mobile Drawer (Original) ───────────────────────────────────────────────────
+// ─── Mobile Drawer ─────────────────────────────────────────────────────────────
 
 function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [productsOpen, setProductsOpen] = useState(false);
@@ -322,33 +375,33 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
 
       <nav
         aria-label="Mobile navigation"
-        className={`fixed top-0 right-0 w-80 max-w-full h-dvh bg-white z-201 overflow-y-auto shadow-[-4px_0_24px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-in-out ${open ? "translate-x-0" : "translate-x-full"}`}
+        className={`fixed top-0 right-0 w-80 max-w-full h-dvh bg-white dark:bg-elevated z-201 overflow-y-auto shadow-[-4px_0_24px_rgba(0,0,0,0.12)] dark:shadow-[-4px_0_24px_rgba(0,0,0,0.4)] transition-transform duration-300 ease-in-out ${open ? "translate-x-0" : "translate-x-full"}`}
       >
         <button onClick={onClose} aria-label="Close menu" className="absolute top-3.5 right-3.5 p-1.5 text-bd-dark bg-transparent border-0 cursor-pointer flex items-center">
           <CloseIcon />
         </button>
 
         <div className="pt-13 pb-8">
-          <ul className="list-none p-0 m-0 border-t border-[#e8e8e8]">
-            <li className="border-b border-[#e8e8e8]">
-              <Link href="/" onClick={onClose} className="flex items-center justify-between w-full px-6 py-4.25 text-[12.5px] font-medium tracking-[0.08em] text-bd-dark uppercase no-underline hover:bg-gray-50 transition-colors duration-150">
+          <ul className="list-none p-0 m-0 border-t border-[#e8e8e8] dark:border-[#253244]">
+            <li className="border-b border-[#e8e8e8] dark:border-[#253244]">
+              <Link href="/" onClick={onClose} className="flex items-center justify-between w-full px-6 py-4.25 text-[12.5px] font-medium tracking-[0.08em] text-bd-dark uppercase no-underline hover:bg-gray-50 dark:hover:bg-subtle transition-colors duration-150">
                 HOME
               </Link>
             </li>
 
-            <li className="border-b border-[#e8e8e8]">
+            <li className="border-b border-[#e8e8e8] dark:border-[#253244]">
               <button
                 onClick={() => setProductsOpen(!productsOpen)}
                 aria-expanded={productsOpen}
-                className="flex items-center justify-between w-full px-6 py-4.25 text-[12.5px] font-medium tracking-[0.08em] text-bd-dark uppercase bg-transparent border-0 cursor-pointer text-left hover:bg-gray-50 transition-colors duration-150"
+                className="flex items-center justify-between w-full px-6 py-4.25 text-[12.5px] font-medium tracking-[0.08em] text-bd-dark uppercase bg-transparent border-0 cursor-pointer text-left hover:bg-gray-50 dark:hover:bg-subtle transition-colors duration-150"
               >
                 PRODUCTS <ChevronDownIcon open={productsOpen} />
               </button>
-              <div className={`overflow-hidden bg-gray-50 transition-all duration-300 ${productsOpen ? "max-h-75" : "max-h-0"}`}>
+              <div className={`overflow-hidden bg-gray-50 dark:bg-subtle transition-all duration-300 ${productsOpen ? "max-h-75" : "max-h-0"}`}>
                 <ul className="list-none p-0 m-0 py-1 pb-2">
                   {subLinks.products.map(({ label, href }) => (
                     <li key={href}>
-                      <Link href={href} onClick={onClose} className="block px-6 py-2.5 pl-9 text-[11.5px] font-normal tracking-[0.06em] text-[#666] uppercase no-underline hover:text-bd-dark transition-colors duration-150">
+                      <Link href={href} onClick={onClose} className="block px-6 py-2.5 pl-9 text-[11.5px] font-normal tracking-[0.06em] text-[#666] dark:text-[#6a8fa8] uppercase no-underline hover:text-bd-dark transition-colors duration-150">
                         {label}
                       </Link>
                     </li>
@@ -357,19 +410,19 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
               </div>
             </li>
 
-            <li className="border-b border-[#e8e8e8]">
+            <li className="border-b border-[#e8e8e8] dark:border-[#253244]">
               <button
                 onClick={() => setMomentsOpen(!momentsOpen)}
                 aria-expanded={momentsOpen}
-                className="flex items-center justify-between w-full px-6 py-4.25 text-[12.5px] font-medium tracking-[0.08em] text-bd-dark uppercase bg-transparent border-0 cursor-pointer text-left hover:bg-gray-50 transition-colors duration-150"
+                className="flex items-center justify-between w-full px-6 py-4.25 text-[12.5px] font-medium tracking-[0.08em] text-bd-dark uppercase bg-transparent border-0 cursor-pointer text-left hover:bg-gray-50 dark:hover:bg-subtle transition-colors duration-150"
               >
                 MOMENTS <ChevronDownIcon open={momentsOpen} />
               </button>
-              <div className={`overflow-hidden bg-gray-50 transition-all duration-300 ${momentsOpen ? "max-h-75" : "max-h-0"}`}>
+              <div className={`overflow-hidden bg-gray-50 dark:bg-subtle transition-all duration-300 ${momentsOpen ? "max-h-75" : "max-h-0"}`}>
                 <ul className="list-none p-0 m-0 py-1 pb-2">
                   {subLinks.moments.map(({ label, href }) => (
                     <li key={href}>
-                      <Link href={href} onClick={onClose} className="block px-6 py-2.5 pl-9 text-[11.5px] font-normal tracking-[0.06em] text-[#666] no-underline hover:text-bd-dark transition-colors duration-150 leading-snug">
+                      <Link href={href} onClick={onClose} className="block px-6 py-2.5 pl-9 text-[11.5px] font-normal tracking-[0.06em] text-[#666] dark:text-[#6a8fa8] no-underline hover:text-bd-dark transition-colors duration-150 leading-snug">
                         {label}
                       </Link>
                     </li>
@@ -378,8 +431,8 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
               </div>
             </li>
 
-            <li className="border-b border-[#e8e8e8]">
-              <Link href="/contact-us" onClick={onClose} className="flex items-center justify-between w-full px-6 py-4.25 text-[12.5px] font-medium tracking-[0.08em] text-bd-dark uppercase no-underline hover:bg-gray-50 transition-colors duration-150">
+            <li className="border-b border-[#e8e8e8] dark:border-[#253244]">
+              <Link href="/contact-us" onClick={onClose} className="flex items-center justify-between w-full px-6 py-4.25 text-[12.5px] font-medium tracking-[0.08em] text-bd-dark uppercase no-underline hover:bg-gray-50 dark:hover:bg-subtle transition-colors duration-150">
                 CONTACT US
               </Link>
             </li>
@@ -389,22 +442,22 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
             <p className="text-[11px] font-bold tracking-widest text-bd-dark uppercase mb-3">
               NEW!
             </p>
-            <Link href="/shop?type=petroleum-jelly" onClick={onClose} className="block relative w-full h-37.5 rounded overflow-hidden bg-[#f0f4f8]">
-  <Image src="/images/mega-menu-new.webp" alt="Bodidoc Tissue Oil Cream" fill className="object-cover object-center" />
-</Link>
-<p className="text-[11px] font-semibold text-[#2f2f2f] leading-4 mt-2">
-  Discover our newest addition to your daily body care must haves: Bodidoc Tissue Oil Jellies
-</p>
+            <Link href="/shop?type=petroleum-jelly" onClick={onClose} className="block relative w-full h-37.5 rounded overflow-hidden bg-[#f0f4f8] dark:bg-subtle">
+              <Image src="/images/mega-menu-new.webp" alt="Bodidoc Tissue Oil Cream" fill className="object-cover object-center" />
+            </Link>
+            <p className="text-[11px] font-semibold text-[#2f2f2f] dark:text-fg-body leading-4 mt-2">
+              Discover our newest addition to your daily body care must haves: Bodidoc Tissue Oil Jellies
+            </p>
           </div>
 
-          <ul className="list-none p-0 m-0 mt-6 pt-5 border-t border-[#e8e8e8]">
+          <ul className="list-none p-0 m-0 mt-6 pt-5 border-t border-[#e8e8e8] dark:border-[#253244]">
             {[
               { label: "ABOUT US", href: "/about-us" },
               { label: "PRIVACY POLICY", href: "/terms-conditions-privacy-policy" },
               { label: "TERMS & CONDITIONS", href: "/terms-conditions-privacy-policy" },
             ].map(({ label, href }) => (
               <li key={label}>
-                <Link href={href} onClick={onClose} className="block px-6 py-3.25 text-[11.5px] font-normal tracking-[0.07em] text-[#888] uppercase no-underline hover:text-bd-dark transition-colors duration-150">
+                <Link href={href} onClick={onClose} className="block px-6 py-3.25 text-[11.5px] font-normal tracking-[0.07em] text-[#888] dark:text-[#6a8fa8] uppercase no-underline hover:text-bd-dark transition-colors duration-150">
                   {label}
                 </Link>
               </li>
@@ -420,7 +473,6 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
 
 export default function Header() {
   const [activeMenu, setActiveMenu] = useState<ActiveMenu>(null);
-  // Tracks the last active menu so content stays visible during the close transition
   const lastMenuRef = useRef<ActiveMenu>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
@@ -449,7 +501,6 @@ export default function Header() {
 
   useEffect(() => () => { if (leaveTimer.current) clearTimeout(leaveTimer.current); }, []);
 
-  // Keep lastMenuRef in sync so content doesn't flicker during close transition
   if (activeMenu) lastMenuRef.current = activeMenu;
   const menuToRender = activeMenu || lastMenuRef.current;
 
@@ -460,21 +511,18 @@ export default function Header() {
     <>
       {/* ── Desktop ── */}
 
-      {/* Announcement bar — scrolls away with the page */}
       <div className="hidden lg:block">
         <AnnouncementBar onSubscribeClick={() => setSubscribeOpen(true)} />
       </div>
 
-      {/* Sticky nav — sticks independently, slides out on scroll-down */}
       <header
-        className={`hidden lg:block sticky top-0 z-99 bg-white border-b border-[#e8e8e8] transition-transform duration-300 ease-in-out ${
+        className={`hidden lg:block sticky top-0 z-99 bg-white dark:bg-surface border-b border-[#e8e8e8] dark:border-[#253244] transition-transform duration-300 ease-in-out ${
           navVisible ? "translate-y-0" : "-translate-y-full"
         }`}
         onMouseLeave={handleLeave}
       >
         <div className="w-full px-10 h-20 flex items-center justify-center gap-50">
           <nav className="flex items-center gap-7" aria-label="Primary navigation">
-            {/* HOME — hovering closes any open mega menu */}
             <Link
               href="/"
               onMouseEnter={handleLeave}
@@ -483,7 +531,6 @@ export default function Header() {
               HOME
             </Link>
 
-            {/* PRODUCTS */}
             <button
               className={`${navLinkBase} ${(pathname.startsWith("/shop") || activeMenu === "products") ? "text-bd-dark" : "text-bd-muted hover:text-bd-dark"}`}
               onMouseEnter={() => handleEnter("products")}
@@ -495,11 +542,10 @@ export default function Header() {
           </nav>
 
           <Link href="/" aria-label="Bodidoc home" className="relative w-30 h-9 flex items-center">
-            <Image src="/images/logo.webp" alt="Bodidoc" fill className="object-contain" priority />
+            <Image src="/images/logo.webp" alt="Bodidoc" fill className="object-contain dark:brightness-0 dark:invert" priority />
           </Link>
 
           <nav className="flex items-center gap-7" aria-label="Secondary navigation">
-            {/* MOMENTS */}
             <button
               className={`${navLinkBase} ${(pathname.startsWith("/moments") || activeMenu === "moments") ? "text-bd-dark" : "text-bd-muted hover:text-bd-dark"}`}
               onMouseEnter={() => handleEnter("moments")}
@@ -509,7 +555,6 @@ export default function Header() {
               MOMENTS
             </button>
 
-            {/* CONTACT US — hovering closes any open mega menu */}
             <Link
               href="/contact-us"
               onMouseEnter={handleLeave}
@@ -520,9 +565,9 @@ export default function Header() {
           </nav>
         </div>
 
-        {/* Mega menu — always mounted, CSS transition for animate-in/out */}
+        {/* Mega menu */}
         <div
-          className={`absolute top-full left-0 right-0 z-98 bg-white border-t border-b border-[#e8e8e8] shadow-[0_4px_20px_rgba(0,0,0,0.08)] transition-[opacity,transform] duration-180 ease-out origin-top ${
+          className={`absolute top-full left-0 right-0 z-98 bg-white dark:bg-elevated border-t border-b border-[#e8e8e8] dark:border-[#253244] shadow-[0_4px_20px_rgba(0,0,0,0.08)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.4)] transition-[opacity,transform] duration-180 ease-out origin-top ${
             activeMenu
               ? "opacity-100 scale-y-100 translate-y-0 pointer-events-auto"
               : "opacity-0 scale-y-95 -translate-y-1 pointer-events-none"
@@ -540,7 +585,6 @@ export default function Header() {
 
       {/* ── Mobile ── */}
 
-      {/* Mobile announcement strip — scrolls away */}
       <div className="lg:hidden bg-[#1a2b3c] h-8.5 flex items-center justify-center w-full">
         <Link
           href="/shop?type=petroleum-jelly"
@@ -550,9 +594,8 @@ export default function Header() {
         </Link>
       </div>
 
-      {/* Mobile sticky nav */}
       <header
-        className={`lg:hidden sticky top-0 z-99 bg-white border-b border-[#e8e8e8] transition-transform duration-300 ease-in-out ${
+        className={`lg:hidden sticky top-0 z-99 bg-white dark:bg-surface border-b border-[#e8e8e8] dark:border-[#253244] transition-transform duration-300 ease-in-out ${
           navVisible ? "translate-y-0" : "-translate-y-full"
         }`}
       >
@@ -565,7 +608,7 @@ export default function Header() {
             </button>
 
             <Link href="/" className="absolute left-1/2 -translate-x-1/2 w-25 h-8 flex items-center">
-              <Image src="/images/logo.webp" alt="Bodidoc" fill className="object-contain" priority />
+              <Image src="/images/logo.webp" alt="Bodidoc" fill className="object-contain dark:brightness-0 dark:invert" priority />
             </Link>
 
             <button
@@ -580,15 +623,15 @@ export default function Header() {
             </button>
           </div>
 
-          {/* Mobile search bar — slides in below nav */}
+          {/* Mobile search bar */}
           <div className={`overflow-hidden transition-all duration-300 ease-in-out ${mobileSearchOpen ? "max-h-14" : "max-h-0"}`}>
-            <form action="/search" method="GET" className="flex items-center gap-2 px-4 py-2.5 border-t border-[#e8e8e8]">
+            <form action="/search" method="GET" className="flex items-center gap-2 px-4 py-2.5 border-t border-[#e8e8e8] dark:border-[#253244]">
               <input
                 type="text"
                 name="q"
                 placeholder="Search products and articles..."
                 autoFocus={mobileSearchOpen}
-                className="flex-1 bg-[#f5f5f5] border-0 outline-none text-[13px] text-bd-dark placeholder:text-[#aaa] px-3 py-2 rounded-full"
+                className="flex-1 bg-[#f5f5f5] dark:bg-subtle border-0 outline-none text-[13px] text-bd-dark placeholder:text-[#aaa] dark:placeholder:text-[#4a6a80] px-3 py-2 rounded-full"
               />
               <button type="submit" className="flex items-center justify-center w-8 h-8 rounded-full bg-[#112942] text-white border-0 shrink-0">
                 <SearchIcon />

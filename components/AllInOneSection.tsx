@@ -39,19 +39,19 @@ export default function AllInOneSection({
         {/* ── Left: heading ── */}
         <div className="md:w-56 shrink-0 flex flex-col gap-0.5 md:pr-8">
           <span
-            className="font-display italic text-[#112942] leading-none"
+            className="font-display italic text-[#112942] dark:text-bd-dark leading-none"
             style={{ fontSize: "clamp(72px, 7vw, 96px)" }}
           >
             {headingWord}
           </span>
-          <span className="text-[14px] font-light text-[#112942] tracking-wide">
+          <span className="text-[14px] font-light text-[#112942] dark:text-bd-dark tracking-wide">
             {headingSubWord}
           </span>
           <div className="mt-4 flex flex-col gap-0">
             {taglines.map((line) => (
               <span
                 key={line}
-                className="font-display font-normal text-[#112942] text-[19px] leading-snug"
+                className="font-display font-normal text-[#112942] dark:text-bd-dark text-[19px] leading-snug"
               >
                 {line}
               </span>
@@ -60,7 +60,7 @@ export default function AllInOneSection({
         </div>
 
         {/* ── Vertical divider ── */}
-        <div className="hidden md:block w-px bg-[#c8d4dc] self-stretch mx-2" />
+        <div className="hidden md:block w-px bg-[#c8d4dc] dark:bg-[#253244] self-stretch mx-2" />
 
         {/* ── Right: tab content ── */}
         <div className="flex-1 md:pl-12 flex flex-col gap-8">
@@ -68,12 +68,12 @@ export default function AllInOneSection({
           {/* Active tab content */}
           <div>
             <h3
-              className="font-display font-medium text-[#112942] leading-snug mb-2"
+              className="font-display font-medium text-[#112942] dark:text-bd-dark leading-snug mb-2"
               style={{ fontSize: "clamp(20px, 2vw, 27px)" }}
             >
               {current.title}
             </h3>
-            <p className="text-[14px] font-normal text-[#112942] leading-relaxed">
+            <p className="text-[14px] font-normal text-[#112942] dark:text-fg-body leading-relaxed">
               {current.description}
             </p>
           </div>
@@ -90,7 +90,7 @@ export default function AllInOneSection({
                   active === i ? "opacity-90" : "opacity-30 hover:opacity-45"
                 }`}
               >
-                <img src={tab.icon} alt="" className="w-9 h-9" />
+                <img src={tab.icon} alt="" className="w-9 h-9 dark:brightness-0 dark:invert" />
               </button>
             ))}
           </div>

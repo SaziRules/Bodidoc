@@ -5,21 +5,21 @@ import Image from "next/image";
 
 export default function AboutUsPage() {
   return (
-    <div className="w-full bg-white font-sans selection:bg-[#112942] selection:text-white">
+    <div className="w-full bg-white dark:bg-page font-sans selection:bg-[#112942] selection:text-white">
 
       {/* ── SECTION 1: TOP PART (Elementor ID: 2068f90) ── */}
-      <section className="w-full bg-white pt-24 pb-20 overflow-hidden">
+      <section className="w-full bg-white dark:bg-page pt-24 pb-20 overflow-hidden">
         <div className="max-w-300 mx-auto px-6">
           {/* Heading (Widget ID: 0891c79) */}
           <div className="text-center">
-            <h2 className="font-display text-[42px] text-[#112942] leading-tight font-normal">
+            <h2 className="font-display text-[42px] text-[#112942] dark:text-bd-dark leading-tight font-normal">
               About <em className="italic font-display font-normal">Us</em>
             </h2>
           </div>
 
           {/* Text Editor (Widget ID: 19bace5) */}
           <div className="max-w-250 mx-auto">
-            <div className="flex flex-col gap-8 text-center text-[14px] font-normal text-[#112942] leading-5.25">
+            <div className="flex flex-col gap-8 text-center text-[14px] font-normal text-[#112942] dark:text-fg-body leading-5.25">
               <p>
                 Life can get pretty hectic – work, social life, kids, bills… you’ve clearly got
                 enough to worry about without having to worry about your skin on top of it all.
@@ -46,7 +46,7 @@ export default function AboutUsPage() {
       </section>
 
       {/* ── SECTION 2: Mission Slider (elementor-c6beaef) ── */}
-      <div className="w-full bg-[#112942] py-24 md:py-32 overflow-hidden text-center text-white">
+      <div className="w-full bg-[#112942] dark:bg-[#1c3a5c] py-24 md:py-32 overflow-hidden text-center text-white">
         <div className="max-w-4xl mx-auto px-6">
           <div className="animate-fadeInUp">
             <p className=" text-[19px] leading-6.75 font-normal italic opacity-90">
@@ -59,7 +59,7 @@ export default function AboutUsPage() {
       </div>
 
       {/* ── SECTION 3: Image Slide-Up Grid (Responsive 2x2 on Mobile, 4-col on Desktop) ── */}
-      <div className="w-full bg-white py-16">
+      <div className="w-full bg-white dark:bg-elevated py-16">
         <div className="max-w-300 mx-auto px-4">
           {/* Mobile: 2 columns | Tablet/Desktop: 4 columns */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 items-start">

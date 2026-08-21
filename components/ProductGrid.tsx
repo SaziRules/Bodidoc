@@ -34,7 +34,7 @@ function StarRating({ rating, count }: { rating: number; count: number }) {
             <span
               key={star}
               className={`text-[14px] leading-none ${
-                filled ? "text-[#112942]" : half ? "text-[#112942]/60" : "text-[#ccc]"
+                filled ? "text-[#112942] dark:text-accent" : half ? "text-[#112942]/60 dark:text-accent/60" : "text-[#ccc] dark:text-fg-faint"
               }`}
             >
               ★
@@ -42,7 +42,7 @@ function StarRating({ rating, count }: { rating: number; count: number }) {
           );
         })}
       </div>
-      <span className="text-[12px] text-[#999] leading-none">({count})</span>
+      <span className="text-[12px] text-[#999] dark:text-fg-muted leading-none">({count})</span>
     </div>
   );
 }
@@ -54,7 +54,7 @@ function ProductCard({ product }: { product: GridProduct }) {
     <div className="group flex flex-col">
       <Link
         href={`/shop/${product.slug}`}
-        className="relative block w-full aspect-square bg-[#f7f7f7] overflow-hidden mb-3"
+        className="relative block w-full aspect-square bg-[#f7f7f7] dark:bg-subtle overflow-hidden mb-3"
       >
         <Image
           src={product.image}
@@ -66,12 +66,12 @@ function ProductCard({ product }: { product: GridProduct }) {
       </Link>
 
       <div className="flex flex-col">
-        <p className="text-[12px] font-normal tracking-normal text-[#112942] mb-0">
+        <p className="text-[12px] font-normal tracking-normal text-[#112942] dark:text-bd-dark mb-0">
           {product.category}
         </p>
         <Link
           href={`/shop/${product.slug}`}
-          className="text-[15px] font-medium text-[#112942] leading-snug no-underline hover:underline"
+          className="text-[15px] font-medium text-[#112942] dark:text-bd-dark leading-snug no-underline hover:underline"
         >
           {product.name}
         </Link>
@@ -90,7 +90,7 @@ export default function ProductGrid({ newArrivals, bestSelling }: Props) {
 
   return (
     <section className="w-full py-12 px-6 md:px-10 lg:px-16">
-      <h2 className="font-display text-center text-[28px] md:text-[42px] font-normal tracking-normal text-[#112942] mb-8">
+      <h2 className="font-display text-center text-[28px] md:text-[42px] font-normal tracking-normal text-[#112942] dark:text-bd-dark mb-8">
         YOUR SKIN&apos;S NEW BEST FRIEND.
       </h2>
 
@@ -106,8 +106,8 @@ export default function ProductGrid({ newArrivals, bestSelling }: Props) {
               border-b-2 transition-colors duration-200 cursor-pointer
               bg-transparent border-x-0 border-t-0
               ${activeTab === tab
-                ? "text-[#112942] border-[#112942]"
-                : "text-[#999] border-transparent hover:text-[#112942]"
+                ? "text-[#112942] dark:text-accent border-[#112942] dark:border-accent"
+                : "text-[#999] dark:text-fg-muted border-transparent hover:text-[#112942] dark:hover:text-bd-dark"
               }
             `}
           >

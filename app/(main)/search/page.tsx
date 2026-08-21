@@ -38,13 +38,13 @@ function StarRating({ rating = 0, count = 0 }: { rating?: number; count?: number
           const filled  = rating >= star;
           const half    = !filled && rating >= star - 0.5;
           return (
-            <span key={star} className={`text-[13px] leading-none ${filled ? "text-[#112942]" : half ? "text-[#112942]/50" : "text-[#ddd]"}`}>
+            <span key={star} className={`text-[13px] leading-none ${filled ? "text-[#112942] dark:text-accent" : half ? "text-[#112942]/50 dark:text-accent/50" : "text-[#ddd] dark:text-fg-faint"}`}>
               ★
             </span>
           );
         })}
       </div>
-      <span className="text-[11px] text-[#aaa] leading-none">({count})</span>
+      <span className="text-[11px] text-[#aaa] dark:text-fg-muted leading-none">({count})</span>
     </div>
   );
 }
@@ -52,7 +52,7 @@ function StarRating({ rating = 0, count = 0 }: { rating?: number; count?: number
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
     <h2
-      className="font-display font-normal text-[#112942] mb-8"
+      className="font-display font-normal text-[#112942] dark:text-bd-dark mb-8"
       style={{ fontSize: "clamp(28px, 4vw, 38px)" }}
     >
       {children}
@@ -77,7 +77,7 @@ function ProductCard({
       className="group flex flex-col no-underline"
     >
       {/* Image */}
-      <div className="relative w-full aspect-square overflow-hidden bg-[#f8f7f5] mb-4">
+      <div className="relative w-full aspect-square overflow-hidden bg-[#f8f7f5] dark:bg-subtle mb-4">
         {product.mainImage && (
           <Image
             src={urlFor(product.mainImage).width(600).height(600).url()}
@@ -90,10 +90,10 @@ function ProductCard({
       </div>
 
       {/* Meta */}
-      <p className="text-[11px] tracking-[0.15em] uppercase text-[#112942] font-light mb-1">
+      <p className="text-[11px] tracking-[0.15em] uppercase text-[#112942] dark:text-fg-muted font-light mb-1">
         {typeLabels[product.productType] ?? product.productType}
       </p>
-      <h3 className="font-display font-normal text-[#112942] text-[16px] leading-snug mb-2 group-hover:opacity-70 transition-opacity">
+      <h3 className="font-display font-normal text-[#112942] dark:text-bd-dark text-[16px] leading-snug mb-2 group-hover:opacity-70 transition-opacity">
         {product.name}
       </h3>
       <StarRating rating={rating} count={reviewCount} />
@@ -114,7 +114,7 @@ function PostCard({ post }: { post: Post }) {
       className="group flex flex-col no-underline"
     >
       {/* Cover image */}
-      <div className="relative w-full aspect-video overflow-hidden bg-[#f0f4f8] mb-4">
+      <div className="relative w-full aspect-video overflow-hidden bg-[#f0f4f8] dark:bg-subtle mb-4">
         {post.coverImage ? (
           <Image
             src={urlFor(post.coverImage).width(800).height(450).url()}
@@ -125,18 +125,18 @@ function PostCard({ post }: { post: Post }) {
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <span className="text-[#ccc] text-[12px] tracking-widest uppercase">No image</span>
+            <span className="text-[#ccc] dark:text-fg-faint text-[12px] tracking-widest uppercase">No image</span>
           </div>
         )}
       </div>
 
       {/* Meta */}
-      <p className="text-[11px] tracking-[0.15em] uppercase text-[#aaa] font-light mb-1.5">{date}</p>
-      <h3 className="font-display font-normal text-[#112942] text-[18px] leading-snug mb-2 group-hover:opacity-70 transition-opacity">
+      <p className="text-[11px] tracking-[0.15em] uppercase text-[#aaa] dark:text-fg-muted font-light mb-1.5">{date}</p>
+      <h3 className="font-display font-normal text-[#112942] dark:text-bd-dark text-[18px] leading-snug mb-2 group-hover:opacity-70 transition-opacity">
         {post.title}
       </h3>
       {post.excerpt && (
-        <p className="text-[13px] font-normal text-[#555] leading-relaxed line-clamp-3">
+        <p className="text-[13px] font-normal text-[#555] dark:text-fg-body leading-relaxed line-clamp-3">
           {post.excerpt}
         </p>
       )}
@@ -157,8 +157,8 @@ export default async function SearchPage({
   if (!query) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center px-6">
-        <h1 className="font-display font-normal text-[#112942] text-[32px] mb-3">Search</h1>
-        <p className="text-[14px] font-light text-[#aaa]">Enter a term above to search products and articles.</p>
+        <h1 className="font-display font-normal text-[#112942] dark:text-bd-dark text-[32px] mb-3">Search</h1>
+        <p className="text-[14px] font-light text-[#aaa] dark:text-fg-muted">Enter a term above to search products and articles.</p>
       </div>
     );
   }
@@ -197,22 +197,22 @@ export default async function SearchPage({
   const hasAny      = hasProducts || hasPosts;
 
   return (
-    <div className="w-full bg-white">
+    <div className="w-full bg-white dark:bg-page">
       <div className="max-w-360 mx-auto px-6 md:px-10 lg:px-16 py-14 md:py-20">
 
         {/* ── Header ── */}
         <div className="mb-12 md:mb-16">
-          <p className="text-[11px] tracking-[0.25em] uppercase text-[#aaa] font-light mb-2">
+          <p className="text-[11px] tracking-[0.25em] uppercase text-[#aaa] dark:text-fg-muted font-light mb-2">
             Search results
           </p>
           <h1
-            className="font-display font-normal text-[#112942] leading-tight"
+            className="font-display font-normal text-[#112942] dark:text-bd-dark leading-tight"
             style={{ fontSize: "clamp(30px, 5vw, 48px)" }}
           >
             &ldquo;{query}&rdquo;
           </h1>
           {hasAny && (
-            <p className="text-[13px] font-light text-[#888] mt-2">
+            <p className="text-[13px] font-light text-[#888] dark:text-fg-muted mt-2">
               {[
                 hasProducts && `${products.length} product${products.length !== 1 ? "s" : ""}`,
                 hasPosts    && `${posts.length} article${posts.length !== 1 ? "s" : ""}`,
@@ -224,13 +224,13 @@ export default async function SearchPage({
         {/* ── No results ── */}
         {!hasAny && (
           <div className="flex flex-col items-center justify-center py-20 text-center">
-            <div className="w-14 h-14 rounded-full border border-[#e8e8e8] flex items-center justify-center mb-5">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="1.5" strokeLinecap="round" className="w-6 h-6">
+            <div className="w-14 h-14 rounded-full border border-[#e8e8e8] dark:border-[#253244] flex items-center justify-center mb-5">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="w-6 h-6 text-[#ccc] dark:text-fg-faint">
                 <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
               </svg>
             </div>
-            <p className="font-display text-[22px] font-normal text-[#112942] mb-2">No results found</p>
-            <p className="text-[13px] font-light text-[#aaa] max-w-xs leading-relaxed mb-8">
+            <p className="font-display text-[22px] font-normal text-[#112942] dark:text-bd-dark mb-2">No results found</p>
+            <p className="text-[13px] font-light text-[#aaa] dark:text-fg-muted max-w-xs leading-relaxed mb-8">
               We couldn&apos;t find anything matching &ldquo;{query}&rdquo;. Try a different term or browse our full range.
             </p>
             <Link
@@ -264,7 +264,7 @@ export default async function SearchPage({
 
         {/* Divider between sections */}
         {hasProducts && hasPosts && (
-          <div className="h-px bg-[#e8e8e8] mb-16 md:mb-20" />
+          <div className="h-px bg-[#e8e8e8] dark:bg-[#253244] mb-16 md:mb-20" />
         )}
 
         {/* ── Moments section ── */}

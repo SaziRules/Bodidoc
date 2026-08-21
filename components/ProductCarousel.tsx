@@ -33,7 +33,7 @@ function StarRating({ rating, count }: { rating: number; count: number }) {
             <span
               key={star}
               className={`text-[14px] leading-none ${
-                filled ? "text-[#112942]" : half ? "text-[#112942]/60" : "text-[#ccc]"
+                filled ? "text-[#112942] dark:text-accent" : half ? "text-[#112942]/60 dark:text-accent/60" : "text-[#ccc] dark:text-fg-faint"
               }`}
             >
               ★
@@ -41,7 +41,7 @@ function StarRating({ rating, count }: { rating: number; count: number }) {
           );
         })}
       </div>
-      <span className="text-[12px] text-[#999] leading-none">({count})</span>
+      <span className="text-[12px] text-[#999] dark:text-fg-muted leading-none">({count})</span>
     </div>
   );
 }
@@ -56,7 +56,7 @@ function ProductCard({ product, width }: { product: CarouselProduct; width?: str
     <div className="group flex flex-col shrink-0" style={{ width: width ?? DESKTOP_CARD_WIDTH }}>
       <Link
         href={`/shop/${product.slug}`}
-        className="relative block w-full aspect-square bg-[#f7f7f7] overflow-hidden mb-3"
+        className="relative block w-full aspect-square bg-[#f7f7f7] dark:bg-subtle overflow-hidden mb-3"
       >
         <Image
           src={product.image}
@@ -67,12 +67,12 @@ function ProductCard({ product, width }: { product: CarouselProduct; width?: str
         />
         
       </Link>
-      <p className="text-[11px] font-light tracking-widest uppercase text-[#112942]/50 mb-1">
+      <p className="text-[11px] font-light tracking-widest uppercase text-[#112942]/50 dark:text-fg-muted mb-1">
         {product.category}
       </p>
       <Link
         href={`/shop/${product.slug}`}
-        className="text-[14px] font-normal text-[#112942] leading-snug no-underline hover:underline"
+        className="text-[14px] font-normal text-[#112942] dark:text-bd-dark leading-snug no-underline hover:underline"
       >
         {product.name}
       </Link>
@@ -202,8 +202,8 @@ function MobileSwipe({ products }: { products: CarouselProduct[] }) {
             aria-label={`Go to product ${i + 1}`}
             className={`rounded-full border-0 transition-all duration-300 cursor-pointer ${
               i === index
-                ? "w-5 h-2 bg-[#112942]"
-                : "w-2 h-2 bg-[#112942]/20 hover:bg-[#112942]/40"
+                ? "w-5 h-2 bg-[#112942] dark:bg-accent"
+                : "w-2 h-2 bg-[#112942]/20 dark:bg-[#5b9ac8]/20 hover:bg-[#112942]/40 dark:hover:bg-[#5b9ac8]/40"
             }`}
           />
         ))}

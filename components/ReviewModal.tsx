@@ -102,12 +102,11 @@ export default function ReviewModal({ productName, productSlug, onClose }: Props
   };
 
   const displayRating = hoverRating || selectedRating;
-
   const ratingLabel = ["", "Poor", "Fair", "Good", "Very Good", "Excellent"][selectedRating] ?? "";
 
   const fieldLabel = (text: string) => (
-    <p className="text-[14px] font-normal text-[#112942] mb-1.5">
-      {text} <span className="text-[#112942]">*</span>
+    <p className="text-[14px] font-normal text-[#112942] dark:text-bd-dark mb-1.5">
+      {text} <span className="text-[#112942] dark:text-bd-dark">*</span>
     </p>
   );
 
@@ -116,7 +115,7 @@ export default function ReviewModal({ productName, productSlug, onClose }: Props
       <p className="text-[11px] text-red-400 font-light mt-1">{fieldErrors[key]}</p>
     ) : null;
 
-  const inputClass = "w-full border border-[#d8d8d8] px-4 py-2.5 text-[13px] font-light text-[#333] placeholder:text-[#ccc] focus:outline-none focus:border-[#112942] transition-colors bg-white";
+  const inputClass = "w-full border border-[#d8d8d8] dark:border-[#253244] px-4 py-2.5 text-[13px] font-light text-[#333] dark:text-bd-dark placeholder:text-[#ccc] dark:placeholder:text-fg-faint focus:outline-none focus:border-[#112942] dark:focus:border-[#5b9ac8] transition-colors bg-white dark:bg-[#1a2535]";
 
   return (
     <div
@@ -126,14 +125,14 @@ export default function ReviewModal({ productName, productSlug, onClose }: Props
       <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
 
       <div
-        className="relative z-10 bg-white w-full max-w-2xl shadow-2xl max-h-[92vh] overflow-y-auto"
+        className="relative z-10 bg-white dark:bg-elevated w-full max-w-2xl shadow-2xl max-h-[92vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close */}
         <button
           onClick={onClose}
           aria-label="Close"
-          className="absolute top-4 right-4 w-7 h-7 flex items-center justify-center text-[#112942] hover:text-[#112942] transition-colors z-10 bg-transparent border-0 cursor-pointer"
+          className="absolute top-4 right-4 w-7 h-7 flex items-center justify-center text-[#112942] dark:text-bd-dark hover:opacity-70 transition-opacity z-10 bg-transparent border-0 cursor-pointer"
         >
           <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="w-4 h-4">
             <path d="M18 6L6 18M6 6l12 12" />
@@ -150,10 +149,10 @@ export default function ReviewModal({ productName, productSlug, onClose }: Props
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
               </div>
-              <p className="font-display text-[20px] font-normal text-[#112942] mb-2">
+              <p className="font-display text-[20px] font-normal text-[#112942] dark:text-bd-dark mb-2">
                 Thank you, {name}!
               </p>
-              <p className="text-[13px] font-light text-[#999] leading-relaxed mb-6">
+              <p className="text-[13px] font-light text-[#999] dark:text-fg-muted leading-relaxed mb-6">
                 Your review has been submitted and is<br />awaiting approval.
               </p>
               <button
@@ -167,10 +166,10 @@ export default function ReviewModal({ productName, productSlug, onClose }: Props
             <>
               {/* ── Header ── */}
               <div className="text-center mb-6">
-                <h2 className="font-medium text-[27px]  tracking-normal text-[#112942] uppercase">
+                <h2 className="font-medium text-[27px] tracking-normal text-[#112942] dark:text-bd-dark uppercase">
                   Give Your Opinion
                 </h2>
-                <div className="h-px bg-[#ebebeb] mt-4" />
+                <div className="h-px bg-[#ebebeb] dark:bg-[#253244] mt-4" />
               </div>
 
               <div className="flex flex-col gap-4">
@@ -187,14 +186,14 @@ export default function ReviewModal({ productName, productSlug, onClose }: Props
                         onMouseEnter={() => setHoverRating(s)}
                         onMouseLeave={() => setHoverRating(0)}
                         className={`text-[25px] leading-none transition-colors duration-100 cursor-pointer bg-transparent border-0 p-0.5 ${
-                          s <= displayRating ? "text-[#112942]" : "text-[#ddd]"
+                          s <= displayRating ? "text-[#112942] dark:text-accent" : "text-[#ddd] dark:text-fg-faint"
                         }`}
                       >
                         ★
                       </button>
                     ))}
                     {ratingLabel && (
-                      <span className="text-[11px] font-light text-[#aaa] ml-2">{ratingLabel}</span>
+                      <span className="text-[11px] font-light text-[#aaa] dark:text-fg-muted ml-2">{ratingLabel}</span>
                     )}
                   </div>
                   {fieldError("rating")}
@@ -246,10 +245,10 @@ export default function ReviewModal({ productName, productSlug, onClose }: Props
                           onClick={() => { setGender(val); setFieldErrors(er => ({ ...er, gender: "" })); }}
                           className={`px-4 py-1.5 text-[11px] tracking-[0.08em] uppercase font-light border transition-all duration-150 cursor-pointer ${
                             active
-                              ? "bg-[#112942] text-[white] border-[#112942]"
+                              ? "bg-[#112942] text-white border-[#112942]"
                               : fieldErrors.gender
-                              ? "bg-white text-[#112942] border-red-400 hover:border-[#112942]"
-                              : "bg-white text-[#112942] border-[#d8d8d8] hover:border-[#112942]"
+                              ? "bg-white dark:bg-[#1a2535] text-[#112942] dark:text-bd-dark border-red-400 hover:border-[#112942] dark:hover:border-[#5b9ac8]"
+                              : "bg-white dark:bg-[#1a2535] text-[#112942] dark:text-bd-dark border-[#d8d8d8] dark:border-[#253244] hover:border-[#112942] dark:hover:border-[#5b9ac8]"
                           }`}
                         >
                           {label}
@@ -273,7 +272,7 @@ export default function ReviewModal({ productName, productSlug, onClose }: Props
                       ? <p className="text-[11px] text-red-400 font-light">{fieldErrors.message}</p>
                       : <span />
                     }
-                    <p className="text-[10px] font-light text-[#ccc]">
+                    <p className="text-[10px] font-light text-[#ccc] dark:text-fg-faint">
                       {message.trim().split(/\s+/).filter(Boolean).length} / {MIN_WORDS} words min
                     </p>
                   </div>
@@ -289,13 +288,13 @@ export default function ReviewModal({ productName, productSlug, onClose }: Props
                           type="button"
                           onClick={() => { setRecommend(val); setFieldErrors(er => ({ ...er, recommend: "" })); }}
                           className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-colors duration-150 cursor-pointer bg-transparent p-0 shrink-0 ${
-                            recommend === val ? "border-[#112942] bg-[#112942]" : "border-[#112942] bg-[white] hover:border-[#112942]"
+                            recommend === val ? "border-[#112942] bg-[#112942]" : "border-[#112942] dark:border-[#5b9ac8] bg-white dark:bg-[#1a2535] hover:border-[#112942] dark:hover:border-[#5b9ac8]"
                           }`}
                           aria-label={val}
                         >
                           {recommend === val && <div className="w-4 h-4 rounded-full bg-[#112942]" />}
                         </button>
-                        <span onClick={() => { setRecommend(val); setFieldErrors(er => ({ ...er, recommend: "" })); }} className="text-[14px] font-[400px] tracking-widest uppercase text-[#112942] cursor-pointer">
+                        <span onClick={() => { setRecommend(val); setFieldErrors(er => ({ ...er, recommend: "" })); }} className="text-[14px] font-[400px] tracking-widest uppercase text-[#112942] dark:text-bd-dark cursor-pointer">
                           {val === "yes" ? "Yes" : "No"}
                         </span>
                       </label>
