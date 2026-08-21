@@ -8,6 +8,7 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
       attribute="class"
       defaultTheme="light"
       enableSystem={false}
+      storageKey="bodidoc-theme"
       disableTransitionOnChange={false}
     >
       {children}
