@@ -572,7 +572,7 @@ function LogoAndCopyright() {
   return (
     <div className="flex flex-col items-start gap-2">
       <Image
-        src="https://bodidoc1.optimizedit.co.za/wp-content/uploads/2024/12/Untitled-design-e1738357995562-300x120.png"
+        src="/images/footer-logo.avif"
         alt="Bodidoc"
         width={300}
         height={120}

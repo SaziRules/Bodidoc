@@ -39,7 +39,7 @@ export default function ArticleAwardWinning() {
         {/* PIXEL CONTROL: Parent container controls the Image size */}
         <div className="relative w-full max-w-175 aspect-700/500 overflow-hidden mx-auto">
           <Image
-            src="https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/04/cover-4.png"
+            src="/images/moments/4.png"
             alt="Bodidoc Award Winning Cream"
             fill
             sizes="(max-width: 768px) 100vw, 700px"

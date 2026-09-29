@@ -36,7 +36,7 @@ export default function ArticleEmbracingYourBodi() {
         </div>
         <div className="relative w-full max-w-175 aspect-700/500 overflow-hidden mx-auto">
           <Image
-            src="https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/04/cover.png"
+            src="/images/moments/embracing1.avif"
             alt="Bodidoc Women's Day group"
             fill
             sizes="(max-width: 768px) 100vw, 700px"
@@ -60,7 +60,7 @@ export default function ArticleEmbracingYourBodi() {
         {/* Mobile order fix: image (order-2) sits below text (order-1) on small screens */}
         <div className="relative w-full max-w-175 aspect-700/500 order-2 md:order-1 mx-auto">
           <Image
-            src="https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/04/3-1.png" 
+            src="/images/moments/embracing2.avif" 
             alt="Bodidoc testimonials grid"
             fill
             sizes="(max-width: 768px) 100vw, 700px"

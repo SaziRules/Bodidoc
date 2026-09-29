@@ -44,7 +44,7 @@ export default function ArticleBeyondTheBin() {
         {/* IMAGE CONTROL: Max-width 700 to match the original layout asset */}
         <div className="relative w-full max-w-175 aspect-700/500 overflow-hidden mx-auto">
           <Image
-            src="https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/04/cover-3.png"
+            src="/images/moments/3.png"
             alt="Repurposed Bodidoc jars"
             fill
             sizes="(max-width: 768px) 100vw, 700px"
@@ -58,7 +58,7 @@ export default function ArticleBeyondTheBin() {
         {/* Mobile order fix: image comes second on mobile to keep text on top */}
         <div className="relative w-full max-w-175 aspect-700/500 order-2 md:order-1 mx-auto">
           <Image
-            src="https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/04/11.png"
+            src="/images/moments/2.png"
             alt="Reuse Recycle Graphic"
             fill
             sizes="(max-width: 768px) 100vw, 700px"

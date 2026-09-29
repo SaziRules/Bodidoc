@@ -5,42 +5,42 @@ import Image from "next/image";
 const publications = [
   {
     name: "Aspire Lifestyle",
-    logo: "https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/04/5.png",
+    logo: "/images/as-seen-in/5.avif",
     url: "https://aspirelifestyle.co.za/spring-skincare-myths-debunked/",
   },
   {
     name: "Tell A Friend",
-    logo: "https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/04/4.png",
+    logo: "/images/as-seen-in/4.avif",
     url: "https://tellafriend.co.za/spring-skincare-myths-debunked/",
   },
   {
     name: "SA Life",
-    logo: "https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/04/1.png",
+    logo: "/images/as-seen-in/1.avif",
     url: "https://www.salifemag.com/post/spring-skincare-myths-debunked",
   },
   {
     name: "Glamour",
-    logo: "https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/04/3.png",
+    logo: "/images/as-seen-in/3.avif",
     url: "https://www.glamour.co.za/beauty/skincare/spring-skincare-myths-debunked-97e2ec1a-c8ef-4b6a-bcea-bd01b706e33b",
   },
   {
     name: "Mother & Child",
-    logo: "https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/04/6.png",
+    logo: "/images/as-seen-in/6.avif",
     url: "https://www.motherandchild.co.za/three-in-one-solution-for-glowing-skin/",
   },
   {
     name: "Online Mags",
-    logo: "https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/04/8.png",
+    logo: "/images/as-seen-in/8.avif",
     url: "https://www.onlinemags.co.za/bodidoc/",
   },
   {
     name: "Get It",
-    logo: "https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/04/7.png",
+    logo: "/images/as-seen-in/7.avif",
     url: "https://getitmagazine.co.za/blog/2023/11/13/5-steps-to-sexy-sun-kissed-summer-skin/",
   },
   {
     name: "Get It",
-    logo: "https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/04/2.png",
+    logo: "/images/as-seen-in/2.avif",
     url: "https://getitmagazine.co.za/blog/2023/11/13/5-steps-to-sexy-sun-kissed-summer-skin/",
   },
 ];

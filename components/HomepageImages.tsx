@@ -7,7 +7,7 @@ export default function HomePageImages() {
       {/* Image — always visible on all breakpoints */}
       <div className="w-full mb-6">
         <Image
-          src="https://bodidoc1.optimizedit.co.za/wp-content/uploads/2024/12/home-page-images.png"
+          src="/images/home-page-icons.avif"
           alt="Bodidoc product range"
           width={1784}
           height={432}

@@ -8,57 +8,57 @@ export const revalidate = 86400;
 const women = [
   {
     name: "Minenhle Mkhize",
-    photo: "https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/04/Minenhle-Mkhize.jpg",
+    photo: "/images/moments/stories/Minenhle%20Mkhize.jpg",
     instagram: "https://www.instagram.com/tv/CSHqZ01Ds6H/?igshid=YmMyMTA2M2Y=",
   },
   {
     name: "Julia Petersen",
-    photo: "https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/04/Julia-Petersen.jpg",
+    photo: "/images/moments/stories/Julia%20Petersen.jpg",
     instagram: "https://www.instagram.com/p/CSM0MaLIJt8/?igshid=YmMyMTA2M2Y=",
   },
   {
     name: "Nolwazi Thuli",
-    photo: "https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/04/Nolwazi-thuli.jpg",
+    photo: "/images/moments/stories/Nolwazi%20thuli.jpg",
     instagram: "https://www.instagram.com/tv/CSUdh2RjSdE/?igshid=YmMyMTA2M2Y=",
   },
   {
     name: "Nokukhanya Bulose",
-    photo: "https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/04/Nokukhanya-Bulose.jpg",
+    photo: "/images/moments/stories/Nokukhanya%20Bulose.jpg",
     instagram: "https://www.instagram.com/p/CSeC_CNIPvY/?igshid=YmMyMTA2M2Y=",
   },
   {
     name: "Jameela",
-    photo: "https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/04/Jameela.jpg",
+    photo: "/images/moments/stories/Jameela.jpg",
     instagram: "https://www.instagram.com/tv/CSkA1hZjbFT/?igshid=YmMyMTA2M2Y=",
   },
   {
     name: "Nobuntu Swaartbooi",
-    photo: "https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/04/Nobuntu-Swaartbooi.jpg",
+    photo: "/images/moments/stories/Nobuntu%20Swaartbooi.jpg",
     instagram: "https://www.instagram.com/p/CSuNRMbowWq/?igshid=YmMyMTA2M2Y%3D",
   },
   {
     name: "Aaliyah Kinsey",
-    photo: "https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/04/Aaliyah-Kinsey.jpg",
+    photo: "/images/moments/stories/Aaliyah%20Kinsey.jpg",
     instagram: "https://www.instagram.com/tv/CSUdh2RjSdE/?igshid=YmMyMTA2M2Y=",
   },
   {
     name: "Carla Pertersen",
-    photo: "https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/04/Carla-Pertersen.jpg",
+    photo: "/images/moments/stories/Carla%20Pertersen.jpg",
     instagram: "https://www.instagram.com/p/CS6pSVyIizx/?igshid=YmMyMTA2M2Y=",
   },
   {
     name: "Jordyn Brown",
-    photo: "https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/04/Jordyn-Brown.jpg",
+    photo: "/images/moments/stories/Jordyn%20Brown.jpg",
     instagram: "https://www.instagram.com/p/CS7OpV8olXL/?igshid=YmMyMTA2M2Y%3D",
   },
   {
     name: "Shan Bruce",
-    photo: "https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/04/Shan-Bruce.jpg",
+    photo: "/images/moments/stories/Shan%20Bruce.jpg",
     instagram: "https://www.instagram.com/tv/CTC1QRDjDGU/?igshid=YmMyMTA2M2Y%3D",
   },
   {
     name: "Angel Ndimande",
-    photo: "https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/04/Angel-Ndimande.jpg",
+    photo: "/images/moments/stories/Angel%20Ndimande.jpg",
     instagram: "https://www.instagram.com/p/CTIJYZio8z2/?igshid=YmMyMTA2M2Y%3D",
   },
 ];

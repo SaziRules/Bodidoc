@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/05/7-1536x536.webp",
+        url: "https://www.bodidoc.com/images/home-banner.avif",
         width: 1536,
         height: 536,
         alt: "Bodidoc skincare products",
@@ -191,14 +191,17 @@ export default async function Home() {
         bestSelling={bestSelling.length ? bestSelling : fallback}
       />
       <FullWidthBanner
-        src="https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/05/7-1536x536.webp"
+        src="/images/home-banner.avif"
+        mobileSrc="/images/home-banner-mobile.png"
+        mobileWidth={810}
+        mobileHeight={836}
         alt="Bodidoc banner"
         href="shop/bodidoc-aqueous-cream-for-all-skin-types"
       />
       <Testimonials testimonials={liveTestimonials.length ? liveTestimonials : undefined} />
       <VideoBanner
-        videoSrc="https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/05/98of-women-agree.mp4"
-        mobileSrc="https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/04/Helps-reduce-the-appearance-of-stretch-marks-uneven-skin-tone-dry-skin-7.webp"
+        videoSrc="/video/clinical.mp4"
+        mobileSrc="/images/video-mobile.webp"
         mobileWidth={2372}
         mobileHeight={1997}
         alt="98% of women agree"

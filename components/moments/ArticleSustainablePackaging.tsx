@@ -36,7 +36,7 @@ export default function ArticleSustainablePackaging() {
         </div>
         <div className="relative w-full max-w-175 aspect-700/500 overflow-hidden mx-auto">
           <Image
-            src="https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/04/6-1.png"
+            src="/images/moments/6.png"
             alt="Bodidoc jars — PET 1 recyclable"
             fill
             sizes="(max-width: 768px) 100vw, 700px"
@@ -50,7 +50,7 @@ export default function ArticleSustainablePackaging() {
         {/* order-2 md:order-1 puts image below text on mobile, but left on desktop */}
         <div className="relative w-full max-w-175 aspect-700/500 overflow-hidden mx-auto order-2 md:order-1">
           <Image
-            src="https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/04/8-1.png"
+            src="/images/moments/8.png"
             alt="Bodidoc lotion bottles — recyclable PETG"
             fill
             sizes="(max-width: 768px) 100vw, 700px"
@@ -73,7 +73,7 @@ export default function ArticleSustainablePackaging() {
         </div>
         <div className="relative w-full max-w-175 aspect-700/500 overflow-hidden mx-auto">
           <Image
-            src="https://bodidoc1.optimizedit.co.za/wp-content/uploads/2025/04/7-1.png"
+            src="/images/moments/7.png"
             alt="Bodidoc Tissue Oil — PP 5 recyclable"
             fill
             sizes="(max-width: 768px) 100vw, 700px"

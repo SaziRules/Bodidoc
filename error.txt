@@ -1,64 +1,60 @@
-10:51:34.564 Running build in Washington, D.C., USA (East) – iad1 (Enhanced Build Machine)
-10:51:34.565 Build machine configuration: 8 cores, 16 GB
-10:51:34.720 Cloning github.com/SaziRules/Bodidoc (Branch: main, Commit: 078c180)
-10:51:38.296 Cloning completed: 3.576s
-10:51:38.464 Restored build cache from previous deployment (2Str3KTDUMHQJAVNvgMj6hWnDzcz)
-10:51:39.172 Running "vercel build"
-10:51:39.183 Vercel CLI 59.1.4
-10:51:39.429 Installing dependencies...
-10:51:40.414 npm warn ERESOLVE overriding peer dependency
-10:51:40.414 npm warn Found: @sanity/client@6.29.1
-10:51:40.414 npm warn node_modules/@sanity/visual-editing/node_modules/@sanity/client
-10:51:40.414 npm warn   @sanity/client@"^6.22.4" from @sanity/mutate@0.11.0-canary.4
-10:51:40.414 npm warn   node_modules/@sanity/visual-editing/node_modules/@sanity/mutate
-10:51:40.414 npm warn     @sanity/mutate@"0.11.0-canary.4" from @sanity/visual-editing@4.0.3
-10:51:40.414 npm warn     node_modules/@sanity/visual-editing
-10:51:40.414 npm warn
-10:51:40.414 npm warn Could not resolve dependency:
-10:51:40.414 npm warn peerOptional @sanity/client@"^7.13.1" from @sanity/visual-editing@4.0.3
-10:51:40.414 npm warn node_modules/@sanity/visual-editing
-10:51:40.414 npm warn   @sanity/visual-editing@"^4.0.3" from next-sanity@11.6.12
-10:51:40.414 npm warn   node_modules/next-sanity
-10:51:41.360 
-10:51:41.360 added 1 package, removed 5 packages, and changed 3 packages in 2s
-10:51:41.360 
-10:51:41.360 290 packages are looking for funding
-10:51:41.360   run `npm fund` for details
-10:51:41.361 npm warn allow-scripts 3 packages have install scripts not yet covered by allowScripts:
-10:51:41.361 npm warn allow-scripts   esbuild@0.27.0 (postinstall: node install.js)
-10:51:41.361 npm warn allow-scripts   sharp@0.34.5 (install: node install/check.js || npm run build)
-10:51:41.361 npm warn allow-scripts   unrs-resolver@1.11.1 (postinstall: napi-postinstall unrs-resolver 1.11.1 check)
-10:51:41.361 npm warn allow-scripts
-10:51:41.361 npm warn allow-scripts Run `npm approve-scripts --allow-scripts-pending` to review, or `npm approve-scripts <pkg>` to allow.
-10:51:41.391 Detected Next.js version: 16.1.6
-10:51:41.399 Running "npm run build"
-10:51:41.478 
-10:51:41.478 > bodidoc@0.1.0 build
-10:51:41.478 > next build
-10:51:41.478 
-10:51:42.284 ▲ Next.js 16.1.6 (Turbopack)
-10:51:42.284 
-10:51:42.289 ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
-10:51:42.315   Creating an optimized production build ...
-10:52:02.265 
-10:52:02.265 > Build error occurred
-10:52:02.268 Error: Turbopack build failed with 1 errors:
-10:52:02.268 ./app/(main)/page.tsx:11:1
-10:52:02.268 Module not found: Can't resolve '@/components/HomepageImages'
-10:52:02.268    9 | import Testimonials from "@/components/Testimonials";
-10:52:02.268   10 | import VideoBanner from "@/components/VideoBanner";
-10:52:02.268 > 11 | import HomePageImages from "@/components/HomepageImages";
-10:52:02.269      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-10:52:02.269   12 | import AutoSubscribeModal from "@/components/AutoSubscribeModal";
-10:52:02.269   13 | import CookieAlert from "@/components/CookieAlert";
-10:52:02.269   14 |
-10:52:02.269 
-10:52:02.269 Import map: aliased to relative './components/HomepageImages' inside of [project]/
-10:52:02.269 
-10:52:02.269 
-10:52:02.269 https://nextjs.org/docs/messages/module-not-found
-10:52:02.269 
-10:52:02.269 
-10:52:02.269     at <unknown> (./app/(main)/page.tsx:11:1)
-10:52:02.269     at <unknown> (https://nextjs.org/docs/messages/module-not-found)
-10:52:02.378 Error: Command "npm run build" exited with 1
+16:11:08.529 Running build in Washington, D.C., USA (East) – iad1 (Enhanced Build Machine)
+16:11:08.530 Build machine configuration: 8 cores, 16 GB
+16:11:08.675 Cloning github.com/SaziRules/Bodidoc (Branch: main, Commit: 34f8235)
+16:11:11.463 Cloning completed: 2.788s
+16:11:11.515 Restored build cache from previous deployment (EWDkN2knUF571vBCcTcZhJTdBNzY)
+16:11:12.104 Running "vercel build"
+16:11:12.117 Vercel CLI 59.1.4
+16:11:12.371 Installing dependencies...
+16:11:13.460 npm warn ERESOLVE overriding peer dependency
+16:11:13.460 npm warn Found: @sanity/client@6.29.1
+16:11:13.460 npm warn node_modules/@sanity/visual-editing/node_modules/@sanity/client
+16:11:13.460 npm warn   @sanity/client@"^6.22.4" from @sanity/mutate@0.11.0-canary.4
+16:11:13.460 npm warn   node_modules/@sanity/visual-editing/node_modules/@sanity/mutate
+16:11:13.460 npm warn     @sanity/mutate@"0.11.0-canary.4" from @sanity/visual-editing@4.0.3
+16:11:13.460 npm warn     node_modules/@sanity/visual-editing
+16:11:13.460 npm warn
+16:11:13.460 npm warn Could not resolve dependency:
+16:11:13.460 npm warn peerOptional @sanity/client@"^7.13.1" from @sanity/visual-editing@4.0.3
+16:11:13.460 npm warn node_modules/@sanity/visual-editing
+16:11:13.460 npm warn   @sanity/visual-editing@"^4.0.3" from next-sanity@11.6.12
+16:11:13.460 npm warn   node_modules/next-sanity
+16:11:14.237 
+16:11:14.237 up to date in 2s
+16:11:14.237 
+16:11:14.238 290 packages are looking for funding
+16:11:14.238   run `npm fund` for details
+16:11:14.238 npm warn allow-scripts 3 packages have install scripts not yet covered by allowScripts:
+16:11:14.238 npm warn allow-scripts   esbuild@0.27.0 (postinstall: node install.js)
+16:11:14.238 npm warn allow-scripts   sharp@0.34.5 (install: node install/check.js || npm run build)
+16:11:14.238 npm warn allow-scripts   unrs-resolver@1.11.1 (postinstall: napi-postinstall unrs-resolver 1.11.1 check)
+16:11:14.238 npm warn allow-scripts
+16:11:14.238 npm warn allow-scripts Run `npm approve-scripts --allow-scripts-pending` to review, or `npm approve-scripts <pkg>` to allow.
+16:11:14.263 Detected Next.js version: 16.1.6
+16:11:14.269 Running "npm run build"
+16:11:14.342 
+16:11:14.343 > bodidoc@0.1.0 build
+16:11:14.343 > next build
+16:11:14.343 
+16:11:15.149 ▲ Next.js 16.1.6 (Turbopack)
+16:11:15.149 
+16:11:15.155 ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+16:11:15.182   Creating an optimized production build ...
+16:11:35.249 
+16:11:35.250 > Build error occurred
+16:11:35.252 Error: Turbopack build failed with 1 errors:
+16:11:35.252 ./app/(main)/competitions/page.tsx:82:29
+16:11:35.252 Parsing ecmascript source code failed
+16:11:35.252   80 |             </h2>
+16:11:35.252   81 |             <div className="text-[14px] leading-relaxed text-[#333] dark:text-fg-body space-y-4">
+16:11:35.252 > 82 |               <ol className=”list-decimal pl-6 space-y-2 text-[14px] leading-relaxed text-[#333] dark:text-fg-body”>
+16:11:35.252      |                             ^
+16:11:35.252   83 |                 <li>
+16:11:35.252   84 |                   This competition is run by Amka Products (Pty) Ltd
+16:11:35.252   85 |                   ("Amka") on behalf of Bodidoc, a brand of
+16:11:35.252 
+16:11:35.252 Unexpected character '”'
+16:11:35.252 
+16:11:35.252 
+16:11:35.252     at <unknown> (./app/(main)/competitions/page.tsx:82:29)
+16:11:35.359 Error: Command "npm run build" exited with 1
