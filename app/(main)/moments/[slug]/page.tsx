@@ -11,8 +11,9 @@ import ArticleSustainablePackaging from "@/components/moments/ArticleSustainable
 import ArticleBeyondTheBin        from "@/components/moments/ArticleBeyondTheBin";
 import ArticleEmbracingYourBodi   from "@/components/moments/ArticleEmbracingYourBodi";
 
-// ─── Generic Sanity renderer (your existing setup) ───────────────────────────
+// ─── Sanity renderers ────────────────────────────────────────────────────────
 import GenericPost from "@/components/moments/GenericPost";
+import TemplatePost from "@/components/moments/TemplatePost";
 
 const BESPOKE: Record<string, React.ComponentType> = {
   "transform-dry-uneven-skin-with-the-award-winning-bodidoc-tissue-oil-cream-with-urea": ArticleAwardWinning,
@@ -80,6 +81,13 @@ export default async function MomentPage({
   const post = await getPostBySlug(slug);
   if (!post) notFound();
 
+  // Template layout: has a non-generic template and at least one section
+  const isTemplated =
+    post.template &&
+    post.template !== "generic" &&
+    post.templateSections &&
+    post.templateSections.length > 0;
+
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -112,7 +120,7 @@ export default async function MomentPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
-      <GenericPost post={post} />
+      {isTemplated ? <TemplatePost post={post} /> : <GenericPost post={post} />}
     </>
   );
 }

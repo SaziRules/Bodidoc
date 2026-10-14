@@ -1,10 +1,220 @@
 import { defineType, defineField } from "sanity";
+import { TemplateSelector } from "../components/TemplateSelector";
+import { ContentRowInput } from "../components/ContentRowInput";
 
 export const postType = defineType({
   name: "post",
   title: "Blog Post",
   type: "document",
   fields: [
+    // ─── 1. Layout picker (shown first so the editor chooses the layout before anything else) ───
+    defineField({
+      name: "template",
+      title: "Article Layout",
+      type: "string",
+      description:
+        "Pick the layout for this article. Choose first — it controls which fields appear below.",
+      initialValue: "generic",
+      components: { input: TemplateSelector },
+    }),
+
+    // ─── 2. Article sections (template-based articles only) ──────────────────────────────────
+    defineField({
+      name: "templateSections",
+      title: "Article Sections",
+      description:
+        "Build the article by adding sections below. Each section maps to a block in the chosen layout.",
+      type: "array",
+      hidden: ({ document }: any) =>
+        !document?.template || document?.template === "generic",
+      of: [
+        // ── Intro / Lead ─────────────────────────────────────────────────────────────────────
+        {
+          type: "object",
+          name: "introBlock",
+          title: "Intro / Lead paragraph",
+          fields: [
+            {
+              name: "body",
+              title: "Intro text",
+              description: "Opening paragraph(s) shown centred at the top of the article.",
+              type: "array",
+              of: [
+                {
+                  type: "block",
+                  styles: [{ title: "Normal", value: "normal" }],
+                  marks: {
+                    decorators: [
+                      { title: "Bold", value: "strong" },
+                      { title: "Italic", value: "em" },
+                    ],
+                  },
+                },
+              ],
+            },
+          ],
+          preview: {
+            select: { title: "body" },
+            prepare({ title }: any) {
+              const text = title?.[0]?.children?.[0]?.text ?? "Intro block";
+              return { title: `📝 Intro — ${text.slice(0, 50)}` };
+            },
+          },
+        },
+
+        // ── Content Row (Text + Image side-by-side) ───────────────────────────────────────────
+        {
+          type: "object",
+          name: "contentRow",
+          title: "Content Row — Text + Image",
+          components: { input: ContentRowInput },
+          fields: [
+            {
+              name: "imagePosition",
+              title: "Image position",
+              description: "Should the image appear on the left or right side of the text?",
+              type: "string",
+              options: {
+                list: [
+                  { title: "Image on the RIGHT, text on the left", value: "right" },
+                  { title: "Image on the LEFT, text on the right", value: "left" },
+                ],
+                layout: "radio",
+              },
+              initialValue: "right",
+            },
+            {
+              name: "image",
+              title: "Image",
+              description: "The image that sits beside the text in this row.",
+              type: "image",
+              options: { hotspot: true },
+            },
+            {
+              name: "imageAlt",
+              title: "Image alt text",
+              description: "Describe the image for accessibility (e.g. 'Woman applying body cream').",
+              type: "string",
+            },
+            {
+              name: "body",
+              title: "Text content",
+              description: "The paragraph(s) that appear beside the image. Supports bold, italic and bullet points.",
+              type: "array",
+              of: [
+                {
+                  type: "block",
+                  styles: [{ title: "Normal", value: "normal" }],
+                  marks: {
+                    decorators: [
+                      { title: "Bold", value: "strong" },
+                      { title: "Italic", value: "em" },
+                    ],
+                  },
+                  lists: [{ title: "Bullet", value: "bullet" }],
+                },
+              ],
+            },
+          ],
+          preview: {
+            select: { title: "imageAlt", subtitle: "imagePosition", media: "image" },
+            prepare({ title, subtitle, media }: any) {
+              const label = title ? `Row — ${title}` : "Content Row";
+              const pos = subtitle === "left" ? "🖼 Image LEFT" : "🖼 Image RIGHT";
+              return { title: label, subtitle: pos, media };
+            },
+          },
+        },
+
+        // ── Full Width Text ───────────────────────────────────────────────────────────────────
+        {
+          type: "object",
+          name: "fullTextBlock",
+          title: "Full Width Text",
+          fields: [
+            {
+              name: "body",
+              title: "Text",
+              description: "A block of text that spans the full width of the article.",
+              type: "array",
+              of: [
+                {
+                  type: "block",
+                  styles: [{ title: "Normal", value: "normal" }],
+                  marks: {
+                    decorators: [
+                      { title: "Bold", value: "strong" },
+                      { title: "Italic", value: "em" },
+                    ],
+                  },
+                },
+              ],
+            },
+            {
+              name: "centered",
+              title: "Center text",
+              description: "Tick to centre the text horizontally on the page.",
+              type: "boolean",
+              initialValue: true,
+            },
+          ],
+          preview: {
+            select: { title: "body" },
+            prepare({ title }: any) {
+              const text = title?.[0]?.children?.[0]?.text ?? "Text block";
+              return { title: `📄 Text — ${text.slice(0, 50)}` };
+            },
+          },
+        },
+
+        // ── Call to Action ────────────────────────────────────────────────────────────────────
+        {
+          type: "object",
+          name: "ctaBlock",
+          title: "Call to Action button",
+          fields: [
+            {
+              name: "body",
+              title: "Closing text (optional)",
+              description: "A short sentence or two above the button.",
+              type: "array",
+              of: [
+                {
+                  type: "block",
+                  styles: [{ title: "Normal", value: "normal" }],
+                  marks: {
+                    decorators: [
+                      { title: "Bold", value: "strong" },
+                      { title: "Italic", value: "em" },
+                    ],
+                  },
+                },
+              ],
+            },
+            {
+              name: "buttonLabel",
+              title: "Button label",
+              description: "The text that appears on the button (e.g. 'Shop Now').",
+              type: "string",
+            },
+            {
+              name: "buttonHref",
+              title: "Button link",
+              description: "Internal path (e.g. /shop) or a full URL.",
+              type: "string",
+            },
+          ],
+          preview: {
+            select: { title: "buttonLabel" },
+            prepare({ title }: any) {
+              return { title: `🔘 CTA — ${title ?? "(no label yet)"}` };
+            },
+          },
+        },
+      ],
+    }),
+
+    // ─── 3. Core article fields ───────────────────────────────────────────────────────────────
     defineField({
       name: "title",
       title: "Title",
@@ -46,6 +256,7 @@ export const postType = defineType({
     defineField({
       name: "coverImage",
       title: "Cover Image",
+      description: "Used as the article hero image and for social sharing previews.",
       type: "image",
       options: { hotspot: true },
       validation: (r) => r.required(),
@@ -53,15 +264,20 @@ export const postType = defineType({
     defineField({
       name: "excerpt",
       title: "Excerpt",
-      description: "Short summary shown on the blog listing card",
+      description: "Short summary shown on the blog listing card (max 200 characters).",
       type: "text",
       rows: 3,
       validation: (r) => r.max(200),
     }),
+
+    // ─── 4. Standard (generic) article body — hidden for template articles ────────────────────
     defineField({
       name: "body",
       title: "Body",
+      description: "Article body — only used when the layout is set to Standard.",
       type: "array",
+      hidden: ({ document }: any) =>
+        document?.template && document?.template !== "generic",
       of: [
         {
           type: "block",
@@ -87,7 +303,6 @@ export const postType = defineType({
             ],
           },
         },
-        // Inline image
         {
           type: "image",
           options: { hotspot: true },
@@ -96,7 +311,6 @@ export const postType = defineType({
             { name: "caption", type: "string", title: "Caption" },
           ],
         },
-        // Inline video (URL embed — YouTube/Vimeo)
         {
           name: "videoEmbed",
           title: "Video Embed",
@@ -107,13 +321,9 @@ export const postType = defineType({
           ],
           preview: {
             select: { title: "url" },
-            prepare: (value: Record<string, any>) => {
-              const title = value.title || "";
-              return { title: `Video: ${title}` };
-            },
+            prepare: (value: Record<string, any>) => ({ title: `Video: ${value.title || ""}` }),
           },
         },
-        // Featured product reference
         {
           name: "featuredProduct",
           title: "Featured Product",
@@ -126,10 +336,7 @@ export const postType = defineType({
           ],
           preview: {
             select: { title: "productName" },
-            prepare: (value: Record<string, any>) => {
-              const title = value.title || "";
-              return { title: `Featured: ${title}` };
-            },
+            prepare: (value: Record<string, any>) => ({ title: `Featured: ${value.title || ""}` }),
           },
         },
       ],
@@ -137,8 +344,10 @@ export const postType = defineType({
     defineField({
       name: "ctaButtons",
       title: "CTA Buttons",
-      description: "Optional call-to-action buttons shown at the end of the article",
+      description: "Optional call-to-action buttons shown at the end of a Standard article.",
       type: "array",
+      hidden: ({ document }: any) =>
+        document?.template && document?.template !== "generic",
       of: [
         {
           name: "ctaButton",

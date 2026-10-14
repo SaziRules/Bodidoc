@@ -2,12 +2,26 @@ import { createClient } from "@sanity/client";
 import imageUrlBuilder from "@sanity/image-url";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
+const isDev = process.env.NODE_ENV === "development";
+
 export const client = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET ?? "production",
   apiVersion: "2024-01-01",
-  useCdn: true,
+  // Bypass CDN in dev so published content is visible immediately
+  useCdn: !isDev,
 });
+
+// In dev: no caching so every page load hits the Sanity API fresh.
+// In prod: 1-hour ISR with tag-based on-demand revalidation via webhook.
+type FetchOpts =
+  | { cache: "no-store" }
+  | { next: { revalidate: number; tags: string[] } };
+
+function fetchOpts(tags: string[]): FetchOpts {
+  if (isDev) return { cache: "no-store" };
+  return { next: { revalidate: 3600, tags } };
+}
 
 const builder = imageUrlBuilder(client);
 export const urlFor = (source: SanityImageSource) => builder.image(source);
@@ -30,6 +44,8 @@ export type Post = {
     style: "primary" | "outline";
     openInNewTab: boolean;
   }>;
+  template?: string;
+  templateSections?: TemplateSection[];
 };
 
 export type BodyBlock =
@@ -37,6 +53,22 @@ export type BodyBlock =
   | { _type: "image"; asset: SanityImageSource; alt?: string; caption?: string }
   | { _type: "videoEmbed"; url: string; caption?: string }
   | { _type: "featuredProduct"; productName: string; productSlug: string; productImage?: SanityImageSource; callToAction?: string };
+
+// ─── Template section types ───────────────────────────────────────────────────
+
+export type SectionBody = Array<{ _type: "block"; [key: string]: unknown }>;
+
+export type TemplateSection =
+  | { _type: "introBlock";    _key: string; body?: SectionBody }
+  | {
+      _type: "contentRow";    _key: string;
+      imagePosition?: "left" | "right";
+      image?: SanityImageSource;
+      imageAlt?: string;
+      body?: SectionBody;
+    }
+  | { _type: "fullTextBlock"; _key: string; body?: SectionBody; centered?: boolean }
+  | { _type: "ctaBlock";      _key: string; body?: SectionBody; buttonLabel?: string; buttonHref?: string };
 
 // ─── Queries ───────────────────────────────────────────────────────────────────
 
@@ -46,17 +78,28 @@ export async function getAllPosts(): Promise<Post[]> {
       _id, title, slug, publishedAt, author, category, coverImage, excerpt
     }`,
     {},
-    { next: { revalidate: 3600, tags: ["posts"] } }
+    fetchOpts(["posts"])
   );
 }
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {
   return client.fetch(
     `*[_type == "post" && slug.current == $slug][0] {
-      _id, title, slug, publishedAt, author, category, coverImage, excerpt, body, ctaButtons
+      _id, title, slug, publishedAt, author, category, coverImage, excerpt, body, ctaButtons,
+      template,
+      templateSections[] {
+        _type, _key,
+        body,
+        centered,
+        imagePosition,
+        imageAlt,
+        image { asset-> },
+        buttonLabel,
+        buttonHref
+      }
     }`,
     { slug },
-    { next: { revalidate: 3600, tags: ["posts"] } }
+    fetchOpts(["posts"])
   );
 }
 
@@ -66,7 +109,7 @@ export async function getPostsByCategory(category: string): Promise<Post[]> {
       _id, title, slug, publishedAt, author, category, coverImage, excerpt
     }`,
     { category },
-    { next: { revalidate: 3600, tags: ["posts"] } }
+    fetchOpts(["posts"])
   );
 }
 
@@ -123,7 +166,7 @@ export async function getAllProducts(): Promise<Product[]> {
       inStoreLinks[] { retailer, url, logo { asset-> } }
     }`,
     {},
-    { next: { revalidate: 3600, tags: ["products"] } }
+    fetchOpts(["products"])
   );
 }
 
@@ -138,7 +181,7 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
       isBestseller, isNewArrival, isFeatured, rating, reviewCount
     }`,
     { slug },
-    { next: { revalidate: 3600, tags: ["products"] } }
+    fetchOpts(["products"])
   );
 }
 
@@ -149,7 +192,7 @@ export async function getFeaturedProducts(): Promise<Product[]> {
       shortDescription, mainImage, isBestseller, rating, reviewCount
     }`,
     {},
-    { next: { revalidate: 3600, tags: ["products"] } }
+    fetchOpts(["products"])
   );
 }
 
@@ -181,7 +224,7 @@ export async function getRangePage(range: string): Promise<RangePage | null> {
       "dermBannerMobileImageDimensions": dermBannerMobileImage.asset->metadata.dimensions
     }`,
     { range },
-    { next: { revalidate: 3600, tags: ["range-pages"] } }
+    fetchOpts(["range-pages"])
   );
 }
 
@@ -207,9 +250,46 @@ export async function getHeroSlides(): Promise<HeroSlide[]> {
       }
     }`,
     {},
-    { next: { revalidate: 3600, tags: ["hero-slides"] } }
+    fetchOpts(["hero-slides"])
   );
   return doc?.slides ?? [];
+}
+
+// ─── Competition Types ────────────────────────────────────────────────────────
+
+export type CompetitionTerm = {
+  _key: string;
+  clause: string;
+  subItems?: string[];
+  note?: string;
+};
+
+export type Competition = {
+  _id: string;
+  isActive: boolean;
+  pageTitle?: string;
+  introParagraph1?: string;
+  introParagraph2?: string;
+  heroImageDesktop?: SanityImageSource;
+  heroImageMobile?: SanityImageSource;
+  competitionTitle?: string;
+  terms?: CompetitionTerm[];
+};
+
+// ─── Competition Query ────────────────────────────────────────────────────────
+
+export async function getActiveCompetition(): Promise<Competition | null> {
+  return client.fetch(
+    `*[_type == "competition" && isActive == true][0] {
+      _id, isActive, pageTitle, introParagraph1, introParagraph2,
+      heroImageDesktop { asset-> },
+      heroImageMobile { asset-> },
+      competitionTitle,
+      terms[] { _key, clause, subItems, note }
+    }`,
+    {},
+    fetchOpts(["competition"])
+  );
 }
 
 // ─── Search Queries ───────────────────────────────────────────────────────────
@@ -227,7 +307,7 @@ export async function searchProducts(query: string): Promise<Product[]> {
       shortDescription, mainImage, isBestseller, isNewArrival
     }`,
     { pattern },
-    { next: { revalidate: 300, tags: ["products"] } }
+    fetchOpts(["products"])
   );
 }
 
@@ -241,6 +321,6 @@ export async function searchPosts(query: string): Promise<Post[]> {
       _id, title, slug, publishedAt, coverImage, excerpt, category
     }`,
     { pattern },
-    { next: { revalidate: 300, tags: ["posts"] } }
+    fetchOpts(["posts"])
   );
 }

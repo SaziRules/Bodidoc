@@ -12,11 +12,14 @@ import {structureTool} from 'sanity/structure'
 import {apiVersion, dataset, projectId} from './sanity/env'
 import {schema} from './sanity/schemaTypes'
 import {structure} from './sanity/structure'
+import {StudioIcon} from './sanity/components/StudioIcon'
 
 export default defineConfig({
   basePath: '/studio',
   projectId,
   dataset,
+  title: 'Bodidoc CMS',
+  icon: StudioIcon,
   // Add and edit the content schema in the './sanity/schemaTypes' folder
   schema,
   plugins: [

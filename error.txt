@@ -1,60 +1,35 @@
-16:11:08.529 Running build in Washington, D.C., USA (East) – iad1 (Enhanced Build Machine)
-16:11:08.530 Build machine configuration: 8 cores, 16 GB
-16:11:08.675 Cloning github.com/SaziRules/Bodidoc (Branch: main, Commit: 34f8235)
-16:11:11.463 Cloning completed: 2.788s
-16:11:11.515 Restored build cache from previous deployment (EWDkN2knUF571vBCcTcZhJTdBNzY)
-16:11:12.104 Running "vercel build"
-16:11:12.117 Vercel CLI 59.1.4
-16:11:12.371 Installing dependencies...
-16:11:13.460 npm warn ERESOLVE overriding peer dependency
-16:11:13.460 npm warn Found: @sanity/client@6.29.1
-16:11:13.460 npm warn node_modules/@sanity/visual-editing/node_modules/@sanity/client
-16:11:13.460 npm warn   @sanity/client@"^6.22.4" from @sanity/mutate@0.11.0-canary.4
-16:11:13.460 npm warn   node_modules/@sanity/visual-editing/node_modules/@sanity/mutate
-16:11:13.460 npm warn     @sanity/mutate@"0.11.0-canary.4" from @sanity/visual-editing@4.0.3
-16:11:13.460 npm warn     node_modules/@sanity/visual-editing
-16:11:13.460 npm warn
-16:11:13.460 npm warn Could not resolve dependency:
-16:11:13.460 npm warn peerOptional @sanity/client@"^7.13.1" from @sanity/visual-editing@4.0.3
-16:11:13.460 npm warn node_modules/@sanity/visual-editing
-16:11:13.460 npm warn   @sanity/visual-editing@"^4.0.3" from next-sanity@11.6.12
-16:11:13.460 npm warn   node_modules/next-sanity
-16:11:14.237 
-16:11:14.237 up to date in 2s
-16:11:14.237 
-16:11:14.238 290 packages are looking for funding
-16:11:14.238   run `npm fund` for details
-16:11:14.238 npm warn allow-scripts 3 packages have install scripts not yet covered by allowScripts:
-16:11:14.238 npm warn allow-scripts   esbuild@0.27.0 (postinstall: node install.js)
-16:11:14.238 npm warn allow-scripts   sharp@0.34.5 (install: node install/check.js || npm run build)
-16:11:14.238 npm warn allow-scripts   unrs-resolver@1.11.1 (postinstall: napi-postinstall unrs-resolver 1.11.1 check)
-16:11:14.238 npm warn allow-scripts
-16:11:14.238 npm warn allow-scripts Run `npm approve-scripts --allow-scripts-pending` to review, or `npm approve-scripts <pkg>` to allow.
-16:11:14.263 Detected Next.js version: 16.1.6
-16:11:14.269 Running "npm run build"
-16:11:14.342 
-16:11:14.343 > bodidoc@0.1.0 build
-16:11:14.343 > next build
-16:11:14.343 
-16:11:15.149 ▲ Next.js 16.1.6 (Turbopack)
-16:11:15.149 
-16:11:15.155 ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
-16:11:15.182   Creating an optimized production build ...
-16:11:35.249 
-16:11:35.250 > Build error occurred
-16:11:35.252 Error: Turbopack build failed with 1 errors:
-16:11:35.252 ./app/(main)/competitions/page.tsx:82:29
-16:11:35.252 Parsing ecmascript source code failed
-16:11:35.252   80 |             </h2>
-16:11:35.252   81 |             <div className="text-[14px] leading-relaxed text-[#333] dark:text-fg-body space-y-4">
-16:11:35.252 > 82 |               <ol className=”list-decimal pl-6 space-y-2 text-[14px] leading-relaxed text-[#333] dark:text-fg-body”>
-16:11:35.252      |                             ^
-16:11:35.252   83 |                 <li>
-16:11:35.252   84 |                   This competition is run by Amka Products (Pty) Ltd
-16:11:35.252   85 |                   ("Amka") on behalf of Bodidoc, a brand of
-16:11:35.252 
-16:11:35.252 Unexpected character '”'
-16:11:35.252 
-16:11:35.252 
-16:11:35.252     at <unknown> (./app/(main)/competitions/page.tsx:82:29)
-16:11:35.359 Error: Command "npm run build" exited with 1
+## Error Type
+Build Error
+
+## Error Message
+Parsing ecmascript source code failed
+
+## Build Output
+./sanity/schemaTypes/post.ts:96:73
+Parsing ecmascript source code failed
+  94 |               name: "imageAlt",
+  95 |               title: "Image alt text",
+> 96 |               description: "Describe the image for accessibility (e.g. "Woman applying body cream").",
+     |                                                                         ^^^^^
+  97 |               type: "string",
+  98 |             },
+  99 |             {
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./sanity/schemaTypes/post.ts [Client Component Browser]
+    ./sanity/schemaTypes/index.ts [Client Component Browser]
+    ./sanity.config.ts [Client Component Browser]
+    ./sanity.config.ts [Server Component]
+    ./app/studio/[[...tool]]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./sanity/schemaTypes/post.ts [Client Component SSR]
+    ./sanity/schemaTypes/index.ts [Client Component SSR]
+    ./sanity.config.ts [Client Component SSR]
+    ./sanity.config.ts [Server Component]
+    ./app/studio/[[...tool]]/page.tsx [Server Component]
+
+Next.js version: 16.1.6 (Turbopack)
