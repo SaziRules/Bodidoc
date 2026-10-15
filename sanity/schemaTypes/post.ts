@@ -224,6 +224,8 @@ export const postType = defineType({
     defineField({
       name: "slug",
       title: "Slug",
+      description:
+        "Always click Generate to auto-fill from the title. Do not type or edit it manually. Changing it after publishing will break the article URL.",
       type: "slug",
       options: { source: "title", maxLength: 96 },
       validation: (r) => r.required(),
@@ -256,7 +258,9 @@ export const postType = defineType({
     defineField({
       name: "coverImage",
       title: "Cover Image",
-      description: "Used as the article hero image and for social sharing previews.",
+      description:
+        "Recommended: 1400 x 800 px landscape. Minimum: 1200 x 630 px. " +
+        "Keep the main subject centred and use the hotspot tool to pin the focal point.",
       type: "image",
       options: { hotspot: true },
       validation: (r) => r.required(),

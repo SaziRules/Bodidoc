@@ -1,4 +1,4 @@
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -22,6 +22,7 @@ export async function POST(req: NextRequest) {
       revalidatePath("/", "page");
       break;
     case "post":
+      revalidateTag("posts");
       revalidatePath("/moments", "page");
       revalidatePath("/moments/[slug]", "page");
       break;
