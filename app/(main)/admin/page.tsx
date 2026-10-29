@@ -39,7 +39,29 @@ type Contact = {
   created_at: string;
 };
 
-type Tab = "reviews" | "subscriptions" | "contacts";
+type PRRegistration = {
+  id: string;
+  first_name: string;
+  last_name: string;
+  gender: string;
+  email: string;
+  phone: string;
+  city: string;
+  province: string;
+  brand_interests: string[];
+  active_platforms: string[];
+  facebook_url: string | null;
+  instagram_url: string | null;
+  tiktok_url: string | null;
+  youtube_url: string | null;
+  twitter_url: string | null;
+  content_niches: string[];
+  rate_card_url: string | null;
+  status: "new" | "contacted" | "archived";
+  created_at: string;
+};
+
+type Tab = "reviews" | "subscriptions" | "contacts" | "creators";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -653,11 +675,202 @@ function ContactsTab() {
   );
 }
 
+// ─── PR Registrations Tab ─────────────────────────────────────────────────────
+
+const PR_PER_PAGE = 15;
+
+function DetailRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <p className="text-[11px] tracking-[0.1em] uppercase text-[#aaa] mb-0.5">{label}</p>
+      <p className="text-[13px] font-normal text-[#444]">{value}</p>
+    </div>
+  );
+}
+
+function SocialLink({ platform, url }: { platform: string; url: string }) {
+  return (
+    <div className="flex items-center gap-2">
+      <span className="text-[11px] tracking-[0.1em] uppercase text-[#aaa] w-24 shrink-0">{platform}</span>
+      <a href={url} target="_blank" rel="noopener noreferrer"
+        className="text-[12px] font-normal text-[#112942] underline underline-offset-2 hover:text-[#1a3a5c] truncate max-w-xs">
+        {url}
+      </a>
+    </div>
+  );
+}
+
+function PRRegistrationsTab() {
+  const [items, setItems]       = useState<PRRegistration[]>([]);
+  const [loading, setLoading]   = useState(true);
+  const [filter, setFilter]     = useState<"new" | "contacted" | "archived" | "all">("new");
+  const [expanded, setExpanded] = useState<string | null>(null);
+  const [counts, setCounts]     = useState({ new: 0, contacted: 0, archived: 0, all: 0 });
+  const [page, setPage]         = useState(1);
+  const [total, setTotal]       = useState(0);
+  const totalPages              = Math.ceil(total / PR_PER_PAGE);
+
+  const fetchCounts = useCallback(async () => {
+    const data = await api("/api/admin/pr-registrations?type=counts");
+    if (data) setCounts(data);
+  }, []);
+
+  const fetchItems = useCallback(async () => {
+    setLoading(true);
+    setExpanded(null);
+    const data = await api(`/api/admin/pr-registrations?filter=${filter}&page=${page}`);
+    if (data) { setItems(data.data); setTotal(data.count); }
+    setLoading(false);
+  }, [filter, page]);
+
+  useEffect(() => { setPage(1); }, [filter]);
+  useEffect(() => { fetchCounts(); fetchItems(); }, [fetchCounts, fetchItems]);
+
+  const updateStatus = async (id: string, status: PRRegistration["status"]) => {
+    await api(`/api/admin/pr-registrations/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status }),
+    });
+    setItems((prev) => prev.map((r) => r.id === id ? { ...r, status } : r));
+    fetchCounts();
+  };
+
+  const remove = async (id: string) => {
+    await api(`/api/admin/pr-registrations/${id}`, { method: "DELETE" });
+    setItems((prev) => prev.filter((r) => r.id !== id));
+    setTotal((t) => t - 1);
+    fetchCounts();
+  };
+
+  return (
+    <div>
+      <div className="flex items-center gap-2 mb-7 flex-wrap">
+        <FilterPill label="New"       active={filter === "new"}       count={counts.new}       onClick={() => setFilter("new")} />
+        <FilterPill label="Contacted" active={filter === "contacted"} count={counts.contacted} onClick={() => setFilter("contacted")} />
+        <FilterPill label="Archived"  active={filter === "archived"}  count={counts.archived}  onClick={() => setFilter("archived")} />
+        <FilterPill label="All"       active={filter === "all"}       count={counts.all}       onClick={() => setFilter("all")} />
+        <button onClick={() => { fetchCounts(); fetchItems(); }} className="ml-auto text-[11px] tracking-[0.15em] uppercase font-normal text-[#bbb] hover:text-[#112942] transition-colors bg-transparent border-0 cursor-pointer">
+          Refresh
+        </button>
+      </div>
+
+      {loading ? <Spinner /> : items.length === 0 ? (
+        <EmptyState label={`No ${filter === "all" ? "" : filter + " "}registrations`} />
+      ) : (
+        <>
+          <div className="flex flex-col divide-y divide-[#f0f0f0]">
+            {items.map((r) => (
+              <div key={r.id} className="py-5">
+                <div className="flex items-start gap-4">
+                  <div className="flex-1 min-w-0 cursor-pointer" onClick={() => setExpanded(expanded === r.id ? null : r.id)}>
+                    <div className="flex items-center gap-2 flex-wrap mb-1.5">
+                      <span className="text-[14px] font-semibold text-[#112942]">{r.first_name} {r.last_name}</span>
+                      <span className="text-[12px] text-[#bbb]">·</span>
+                      <span className="text-[13px] font-normal text-[#888]">{r.email}</span>
+                      <span className="text-[12px] text-[#bbb]">·</span>
+                      <span className="text-[12px] font-normal text-[#aaa]">{formatDate(r.created_at)}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      {r.active_platforms.map((p) => (
+                        <span key={p} className="text-[10px] tracking-[0.1em] uppercase px-2 py-0.5 bg-[#112942]/5 text-[#112942]/70 font-normal">{p}</span>
+                      ))}
+                      <span className="text-[12px] text-[#bbb] mx-1">·</span>
+                      {r.brand_interests.map((b) => (
+                        <span key={b} className="text-[10px] tracking-[0.1em] uppercase px-2 py-0.5 bg-emerald-50 text-emerald-700 font-normal">{b}</span>
+                      ))}
+                      <span className={`ml-1 text-[10px] tracking-[0.15em] uppercase px-2.5 py-1 font-normal ${
+                        r.status === "new"       ? "bg-amber-50 text-amber-700"    :
+                        r.status === "contacted" ? "bg-[#112942]/8 text-[#112942]" :
+                                                    "bg-[#f0f0f0] text-[#aaa]"
+                      }`}>{r.status}</span>
+                    </div>
+                  </div>
+                  <button onClick={() => remove(r.id)}
+                    className="w-8 h-8 flex items-center justify-center text-[#ddd] hover:text-red-400 transition-colors bg-transparent border-0 cursor-pointer shrink-0 mt-0.5">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="w-4 h-4">
+                      <polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14H6L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4h6v2" />
+                    </svg>
+                  </button>
+                </div>
+
+                {expanded === r.id && (
+                  <div className="mt-4 pl-5 border-l-2 border-[#112942]/10">
+                    <div className="grid grid-cols-2 gap-x-8 gap-y-3 mb-5">
+                      <DetailRow label="Phone"    value={r.phone} />
+                      <DetailRow label="Location" value={`${r.city}, ${r.province}`} />
+                      <DetailRow label="Gender"   value={r.gender} />
+                    </div>
+
+                    <div className="mb-4">
+                      <p className="text-[11px] tracking-[0.15em] uppercase text-[#aaa] mb-2">Social Profiles</p>
+                      <div className="flex flex-col gap-1.5">
+                        {r.facebook_url  && <SocialLink platform="Facebook"    url={r.facebook_url} />}
+                        {r.instagram_url && <SocialLink platform="Instagram"   url={r.instagram_url} />}
+                        {r.tiktok_url    && <SocialLink platform="TikTok"      url={r.tiktok_url} />}
+                        {r.youtube_url   && <SocialLink platform="YouTube"     url={r.youtube_url} />}
+                        {r.twitter_url   && <SocialLink platform="Twitter / X" url={r.twitter_url} />}
+                      </div>
+                    </div>
+
+                    <div className="mb-4">
+                      <p className="text-[11px] tracking-[0.15em] uppercase text-[#aaa] mb-2">Content Niches</p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {r.content_niches.map((n) => (
+                          <span key={n} className="text-[11px] px-2.5 py-1 border border-[#e8e8e8] text-[#666] font-normal">{n}</span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {r.rate_card_url && (
+                      <div className="mb-5">
+                        <a href={r.rate_card_url} target="_blank" rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 text-[12px] font-normal text-[#112942] underline underline-offset-2 hover:text-[#1a3a5c]">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="w-3.5 h-3.5">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+                          </svg>
+                          View Rate Card / Media Kit
+                        </a>
+                      </div>
+                    )}
+
+                    <div className="flex items-center gap-3 flex-wrap">
+                      {r.status !== "contacted" && (
+                        <button onClick={() => updateStatus(r.id, "contacted")}
+                          className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#112942] text-white text-[11px] tracking-[0.2em] uppercase font-normal hover:bg-[#1a3a5c] transition-colors border-0 cursor-pointer">
+                          Mark as Contacted
+                        </button>
+                      )}
+                      {r.status !== "archived" && (
+                        <button onClick={() => updateStatus(r.id, "archived")}
+                          className="px-4 py-2.5 border border-[#e0e0e0] text-[#888] text-[11px] tracking-[0.15em] uppercase font-normal hover:border-[#112942]/30 hover:text-[#112942] transition-colors bg-transparent cursor-pointer">
+                          Archive
+                        </button>
+                      )}
+                      {r.status === "archived" && (
+                        <button onClick={() => updateStatus(r.id, "new")}
+                          className="px-4 py-2.5 border border-[#e0e0e0] text-[#888] text-[11px] tracking-[0.15em] uppercase font-normal hover:border-[#112942]/30 hover:text-[#112942] transition-colors bg-transparent cursor-pointer">
+                          Restore
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+          <Pagination page={page} totalPages={totalPages} onPrev={() => setPage((p) => p - 1)} onNext={() => setPage((p) => p + 1)} />
+        </>
+      )}
+    </div>
+  );
+}
+
 // ─── Dashboard ────────────────────────────────────────────────────────────────
 
 function Dashboard({ onLogout, onRefresh }: { onLogout: () => void; onRefresh: () => void }) {
   const [tab, setTab]     = useState<Tab>("reviews");
-  const [counts, setCounts] = useState({ reviews: 0, subscriptions: 0, contacts: 0 });
+  const [counts, setCounts] = useState({ reviews: 0, subscriptions: 0, contacts: 0, creators: 0 });
 
   useEffect(() => {
     api("/api/admin/counts").then((data) => { if (data) setCounts(data); });
@@ -693,16 +906,18 @@ function Dashboard({ onLogout, onRefresh }: { onLogout: () => void; onRefresh: (
           <TabBtn label="Reviews"       active={tab === "reviews"}       count={counts.reviews}       onClick={() => setTab("reviews")} />
           <TabBtn label="Subscriptions" active={tab === "subscriptions"} count={counts.subscriptions} onClick={() => setTab("subscriptions")} />
           <TabBtn label="Contact"       active={tab === "contacts"}      count={counts.contacts}      onClick={() => setTab("contacts")} />
+          <TabBtn label="Creators"      active={tab === "creators"}      count={counts.creators}      onClick={() => setTab("creators")} />
         </div>
 
         <div className="mb-7">
           <h2 className="font-display text-[26px] font-normal text-[#112942]">
-            {tab === "reviews" ? "Product Reviews" : tab === "subscriptions" ? "Subscribers" : "Contact Messages"}
+            {tab === "reviews" ? "Product Reviews" : tab === "subscriptions" ? "Subscribers" : tab === "contacts" ? "Contact Messages" : "PR & Creator Registrations"}
           </h2>
           <p className="text-[13px] font-normal text-[#aaa] mt-1">
             {tab === "reviews"       && "Approve or remove customer reviews before they appear on the site."}
             {tab === "subscriptions" && "Everyone who has subscribed via the website or footer."}
             {tab === "contacts"      && "Messages submitted through the contact form. Click any message to expand, reply, and track it."}
+            {tab === "creators"      && "Influencer and brand partner registrations submitted via the PR form. Expand any row to see full profile details."}
           </p>
         </div>
 
@@ -710,6 +925,7 @@ function Dashboard({ onLogout, onRefresh }: { onLogout: () => void; onRefresh: (
           {tab === "reviews"       && <ReviewsTab />}
           {tab === "subscriptions" && <SubscriptionsTab />}
           {tab === "contacts"      && <ContactsTab />}
+          {tab === "creators"      && <PRRegistrationsTab />}
         </div>
       </div>
     </div>
