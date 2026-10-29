@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
       revalidatePath("/", "page");
       break;
     case "post":
-      revalidateTag("posts");
+      revalidateTag("posts", "default");
       revalidatePath("/moments", "page");
       revalidatePath("/moments/[slug]", "page");
       break;
