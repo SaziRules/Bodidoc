@@ -292,6 +292,25 @@ export async function getActiveCompetition(): Promise<Competition | null> {
   );
 }
 
+// ─── Menu Post Types ──────────────────────────────────────────────────────────
+
+export type MenuPost = {
+  title: string;
+  slug: { current: string };
+  coverImage: SanityImageSource;
+  excerpt?: string;
+};
+
+export async function getMenuPosts(): Promise<MenuPost[]> {
+  return client.fetch(
+    `*[_type == "post"] | order(publishedAt desc) [0..5] {
+      title, slug, coverImage, excerpt
+    }`,
+    {},
+    fetchOpts(["posts"])
+  );
+}
+
 // ─── Search Queries ───────────────────────────────────────────────────────────
 
 export async function searchProducts(query: string): Promise<Product[]> {

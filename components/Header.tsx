@@ -6,6 +6,8 @@ import Image from "next/image";
 import { useTheme } from "next-themes";
 import SubscriptionModal from "@/components/SubscriptionModal";
 import { usePathname } from "next/navigation";
+import { urlFor } from "@/sanity/lib/sanity";
+import type { MenuPost } from "@/sanity/lib/sanity";
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
 
@@ -285,37 +287,62 @@ function ProductsMegaMenu({ onLinkClick }: { onLinkClick: () => void }) {
   );
 }
 
-function MomentsMegaMenu({ onLinkClick }: { onLinkClick: () => void }) {
+function MomentsMegaMenu({ posts, onLinkClick }: { posts: MenuPost[]; onLinkClick: () => void }) {
+  const [card1, card2] = posts;
+  const linkPosts = posts.slice(2, 4);
+
   return (
     <div className="max-w-300 mx-auto px-10 py-10 grid grid-cols-[1.5fr_1px_1.5fr_1px_1.5fr] min-h-80">
       <div className="pr-12">
-        <Link href="/moments/transform-dry-uneven-skin-with-the-award-winning-bodidoc-tissue-oil-cream-with-urea" onClick={onLinkClick} className="block no-underline group">
-          <div className="relative w-full aspect-16/10 overflow-hidden rounded-sm bg-gray-50 dark:bg-subtle mb-5">
-            <Image src="/images/moments-award.png" alt="Award Winning" fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
-          </div>
-          <p className="text-[15px] font-medium text-bd-dark leading-3.75 mb-2.5 group-hover:text-bd-muted transition-colors">
-            Voted The #1 Smoothing Cream With Urea
-          </p>
-          <p className="text-[13px] text-[#2f2f2f] dark:text-fg-body leading-relaxed m-0">
-            It&apos;s easy to see why Bodidoc Tissue Oil Cream with Urea for Dry Skin won ...
-          </p>
-        </Link>
+        {card1 && (
+          <Link href={`/moments/${card1.slug.current}`} onClick={onLinkClick} className="block no-underline group">
+            <div className="relative w-full aspect-16/10 overflow-hidden rounded-sm bg-gray-50 dark:bg-subtle mb-5">
+              {card1.coverImage && (
+                <Image
+                  src={urlFor(card1.coverImage).width(600).url()}
+                  alt={card1.title}
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              )}
+            </div>
+            <p className="text-[15px] font-medium text-bd-dark leading-3.75 mb-2.5 group-hover:text-bd-muted transition-colors line-clamp-2">
+              {card1.title}
+            </p>
+            {card1.excerpt && (
+              <p className="text-[13px] text-[#2f2f2f] dark:text-fg-body leading-relaxed m-0 line-clamp-2">
+                {card1.excerpt}
+              </p>
+            )}
+          </Link>
+        )}
       </div>
 
       <div className="bg-[#eee] dark:bg-[#253244] self-stretch" />
 
       <div className="px-12">
-        <Link href="/moments/our-commitment-to-sustainable-packaging" onClick={onLinkClick} className="block no-underline group">
-          <div className="relative w-full aspect-16/10 overflow-hidden rounded-sm bg-gray-50 dark:bg-subtle mb-5">
-            <Image src="/images/moments-sustainability.png" alt="Sustainability" fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
-          </div>
-          <p className="text-[15px] font-medium text-bd-dark leading-3.75 mb-2.5 group-hover:text-bd-muted transition-colors">
-            Our Commitment to Sustainable Packaging
-          </p>
-          <p className="text-[13px] text-[#2f2f2f] dark:text-fg-body leading-relaxed m-0">
-            At Bodidoc, we believe that taking care of your skin shouldn&apos;t cost the earth.
-          </p>
-        </Link>
+        {card2 && (
+          <Link href={`/moments/${card2.slug.current}`} onClick={onLinkClick} className="block no-underline group">
+            <div className="relative w-full aspect-16/10 overflow-hidden rounded-sm bg-gray-50 dark:bg-subtle mb-5">
+              {card2.coverImage && (
+                <Image
+                  src={urlFor(card2.coverImage).width(600).url()}
+                  alt={card2.title}
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              )}
+            </div>
+            <p className="text-[15px] font-medium text-bd-dark leading-3.75 mb-2.5 group-hover:text-bd-muted transition-colors line-clamp-2">
+              {card2.title}
+            </p>
+            {card2.excerpt && (
+              <p className="text-[13px] text-[#2f2f2f] dark:text-fg-body leading-relaxed m-0 line-clamp-2">
+                {card2.excerpt}
+              </p>
+            )}
+          </Link>
+        )}
       </div>
 
       <div className="bg-[#eee] dark:bg-[#253244] self-stretch" />
@@ -323,14 +350,15 @@ function MomentsMegaMenu({ onLinkClick }: { onLinkClick: () => void }) {
       <div className="pl-12">
         <p className="text-[15px] font-bold tracking-normal text-bd-dark uppercase mb-2">LEARN MORE</p>
         <ul className="flex flex-col gap-2 list-none p-0 m-0">
-          {[
-            { label: "See All", href: "/moments" },
-            { label: "Embracing Your Bodi: A Journey of Self-Love and Acceptance", href: "/moments/embracing-your-bodi-a-journey-of-self-love-and-acceptance" },
-            { label: "Beyond The Bin: Give Your Bodidoc Packaging A Second Life", href: "/moments/beyond-the-bin-give-your-bodidoc-packaging-a-second-life" },
-          ].map(({ label, href }) => (
-            <li key={href}>
-              <Link href={href} onClick={onLinkClick} className="text-[14px] font-normal text-[#888] dark:text-[#6a8fa8] hover:text-bd-dark transition-colors duration-200 no-underline leading-normal block">
-                {label}
+          <li>
+            <Link href="/moments" onClick={onLinkClick} className="text-[14px] font-normal text-[#888] dark:text-[#6a8fa8] hover:text-bd-dark transition-colors duration-200 no-underline leading-normal block">
+              See All
+            </Link>
+          </li>
+          {linkPosts.map((post) => (
+            <li key={post.slug.current}>
+              <Link href={`/moments/${post.slug.current}`} onClick={onLinkClick} className="text-[14px] font-normal text-[#888] dark:text-[#6a8fa8] hover:text-bd-dark transition-colors duration-200 no-underline leading-normal block">
+                {post.title}
               </Link>
             </li>
           ))}
@@ -342,7 +370,7 @@ function MomentsMegaMenu({ onLinkClick }: { onLinkClick: () => void }) {
 
 // ─── Mobile Drawer ─────────────────────────────────────────────────────────────
 
-function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
+function MobileDrawer({ open, onClose, menuPosts }: { open: boolean; onClose: () => void; menuPosts: MenuPost[] }) {
   const [productsOpen, setProductsOpen] = useState(false);
   const [momentsOpen, setMomentsOpen] = useState(false);
 
@@ -360,8 +388,10 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
     ],
     moments: [
       { label: "SEE ALL", href: "/moments" },
-      { label: "Embracing Your Bodi: A Journey of Self-Love and Acceptance", href: "/moments/embracing-your-bodi-a-journey-of-self-love-and-acceptance" },
-      { label: "Beyond The Bin: Give Your Bodidoc Packaging A Second Life", href: "/moments/beyond-the-bin-give-your-bodidoc-packaging-a-second-life" },
+      ...menuPosts.slice(0, 2).map((p) => ({
+        label: p.title,
+        href: `/moments/${p.slug.current}`,
+      })),
     ],
   };
 
@@ -471,7 +501,7 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
 
 // ─── Main Header ──────────────────────────────────────────────────────────────
 
-export default function Header() {
+export default function Header({ menuPosts }: { menuPosts: MenuPost[] }) {
   const [activeMenu, setActiveMenu] = useState<ActiveMenu>(null);
   const lastMenuRef = useRef<ActiveMenu>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -578,7 +608,7 @@ export default function Header() {
         >
           {menuToRender === "products"
             ? <ProductsMegaMenu onLinkClick={closeMenu} />
-            : <MomentsMegaMenu onLinkClick={closeMenu} />
+            : <MomentsMegaMenu posts={menuPosts} onLinkClick={closeMenu} />
           }
         </div>
       </header>
@@ -642,7 +672,7 @@ export default function Header() {
           </div>
       </header>
 
-      <MobileDrawer open={mobileOpen} onClose={() => setMobileOpen(false)} />
+      <MobileDrawer open={mobileOpen} onClose={() => setMobileOpen(false)} menuPosts={menuPosts} />
 
       {subscribeOpen && <SubscriptionModal onClose={() => setSubscribeOpen(false)} />}
     </>
